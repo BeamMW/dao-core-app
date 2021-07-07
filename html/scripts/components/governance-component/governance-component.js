@@ -35,10 +35,6 @@ class GovernanceComponent extends HTMLElement {
   
     render() {
       this.innerHTML = this.getTemplate();
-    };
-  
-    connectedCallback() {
-      this.render();
 
       $('#governance-show-key').click(() => {
         let event = new CustomEvent("global-event", {
@@ -48,6 +44,10 @@ class GovernanceComponent extends HTMLElement {
         });
         document.dispatchEvent(event);
       });
+    };
+  
+    connectedCallback() {
+      this.render();
     }
     
     attributeChangedCallback(name, oldValue, newValue) {

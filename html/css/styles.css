@@ -86,34 +86,6 @@ staking-component {
     margin-top: 20px;
 }
 
-/* staking not empty - end */
-
-
-/* staking empty - start */
-
-.staking-empty {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: auto;
-}
-
-.staking-empty__text {
-    opacity: 0.5;
-    font-family: SFProDisplay;
-    font-size: 16px;
-    font-style: italic;
-    color: #ffffff;
-}
-
-.staking-empty__deposit-button {
-    background-color: #da68f5;
-    margin-top: 20px;
-}
-
-/* staking empty - end */
-
 
 
 

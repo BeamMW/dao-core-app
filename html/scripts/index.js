@@ -142,6 +142,9 @@ class DaoCore {
                 this.pluginData.locked_demoX = shaderOut.user.beamX;
                 this.pluginData.locked_beams = shaderOut.user.beams_locked;
                 this.loadPreallocated();
+                if (!this.pluginData.mainLoaded) {
+                    this.pluginData.mainLoaded = true;
+                }
             } else if (apiCallId === "farm_update") {
                 if (apiResult.raw_data === undefined || apiResult.raw_data.length < 1) {
                     throw 'Failed to load raw data';

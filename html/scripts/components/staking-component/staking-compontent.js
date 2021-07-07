@@ -27,7 +27,7 @@ class StakingComponent extends HTMLElement {
       `<div class="farmed-empty-text">You have nothing farmed yet.</div>`;
 
     const TEMPLATE_EMPTY = 
-      `<div class="staking">
+      `<div class="staking-empty-container">
           <div class="container__header">STAKING</div>
           <div class="staking-empty">
               <div class="staking-empty__text">Deposit your BEAMs and get BEAMXs</div>
