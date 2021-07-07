@@ -1,0 +1,10 @@
+@import './css/styles.css';
+@import './css/fonts.css';
+
+@import './scripts/components/staking-component/staking-component.css';
+@import './scripts/components/governance-component/governance-component.css';
+@import './scripts/components/allocation-component/allocation-component.css';
+@import './scripts/components/public-key-popup-component/public-key-popup-component.css';
+@import './scripts/components/claim-rewards-popup-component/claim-rewards-popup-component.css';
+@import './scripts/components/deposit-popup-component/deposit-popup-component.css';
+@import './scripts/components/withdraw-popup-component/withdraw-popup-component.css';
