@@ -227,12 +227,7 @@ Utils.onLoad(async (beamAPI) => {
     Utils.getById();
 
     document.addEventListener("global-event", (e) => { 
-        if (e.detail.type === 'page') {
-            // $('#main-page').hide();
-            // $('#' + e.detail.to).show();
-            // daoCore.selector.selectedValue = e.detail.activeSelector;
-            // daoCore.selectorStateUpdate();
-        } else if (e.detail.type === 'deposit-process') {
+        if (e.detail.type === 'deposit-process') {
             Utils.callApi("farm_update", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
@@ -272,64 +267,4 @@ Utils.onLoad(async (beamAPI) => {
             component.attr('is_allocation', e.detail.is_allocation | 0);
         }
     });
-
-  
-
-
-    // $('#selector-control').click(() => {
-    //     const amount = new Big($('#deposit-input').val()).times(GROTHS_IN_BEAM)
-    //     Utils.callApi("farm_update", "invoke_contract", {
-    //         create_tx: false,
-    //         args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + ",bLockOrUnlock="
-    //         + (daoCore.selector.selectedValue === daoCore.selector.selectorValues.DEPOSIT ? 1 : 0)
-    //         +",amountBeam=" + amount.toFixed()
-    //     })
-    // });
-
-
-    // Utils.getById('deposit').addEventListener('click', (ev) => {
-    //     Utils.show('deposit-popup');
-    // });
-    
-
-    // Utils.getById('cancel-button-popup-dep').addEventListener('click', (ev) => {
-    //     Utils.hide('deposit-popup');
-    // });
-
-    // Utils.getById('deposit-input').addEventListener('keydown', (event) => {
-    //     const specialKeys = [
-    //         'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
-    //         'Control', 'Delete', 'F5'
-    //       ];
-
-    //     if (specialKeys.indexOf(event.key) !== -1) {
-    //         return;
-    //     }
-
-    //     const current = Utils.getById('deposit-input').value;
-    //     const next = current.concat(event.key);
-      
-    //     if (!Utils.handleString(next)) {
-    //         event.preventDefault();
-    //     }
-    // })
-
-    // Utils.getById('deposit-input').addEventListener('paste', (event) => {
-    //     const text = event.clipboardData.getData('text');
-    //     if (!Utils.handleString(text)) {
-    //         event.preventDefault();
-    //     }
-    // })
-
-    // Utils.getById('deposit-button-popup').addEventListener('click', (ev) => {
-    //     const bigValue = new Big(Utils.getById('deposit-input').value);
-    //     const value = bigValue.times(GROTHS_IN_BEAM);
-    //     Utils.callApi("lock", "invoke_contract", {
-    //         create_tx: false,
-    //         args: `role=manager,action=lock,amount=${parseInt(value)},cid=${CONTRACT_ID}`
-    //     });
-    //     Utils.hide('deposit-popup');
-    //     ev.preventDefault();
-    //     return false;
-    // });
 });

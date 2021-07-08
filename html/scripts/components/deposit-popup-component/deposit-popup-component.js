@@ -78,6 +78,31 @@ class DepositPopupComponent extends HTMLElement {
             $('.popup__content.deposit-tmpl').css('height', 'unset');
             $('deposit-popup-component').show();
 
+            $('#deposit-input').keydown((event) => {
+                const specialKeys = [
+                    'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
+                    'Control', 'Delete', 'F5'
+                  ];
+
+                if (specialKeys.indexOf(event.key) !== -1) {
+                    return;
+                }
+
+                const current = $('#deposit-input').val();
+                const next = current.concat(event.key);
+            
+                if (!Utils.handleString(next)) {
+                    event.preventDefault();
+                }
+            })
+
+            $('#deposit-input').bind('paste', (event) => {
+                const text = event.clipboardData.getData('text');
+                if (!Utils.handleString(text)) {
+                    event.preventDefault();
+                }
+            })
+
             Utils.loadStyles();
         }
     };

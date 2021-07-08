@@ -61,7 +61,7 @@ class WithdrawPopupComponent extends HTMLElement {
             this.innerHTML = this.getTemplate();
 
             $('#withdraw-cancel').click(() => {
-                $('deposit-popup-component').hide();
+                $('withdraw-popup-component').hide();
             });
 
             $('#withdraw-confirm').click(() => {
@@ -78,6 +78,31 @@ class WithdrawPopupComponent extends HTMLElement {
 
             $('.popup__content.withdraw-tmpl').css('height', 'unset');
             $('withdraw-popup-component').show();
+
+            $('#withdraw-input').keydown((event) => {
+                const specialKeys = [
+                    'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
+                    'Control', 'Delete', 'F5'
+                  ];
+
+                if (specialKeys.indexOf(event.key) !== -1) {
+                    return;
+                }
+
+                const current = $('#withdraw-input').val();
+                const next = current.concat(event.key);
+            
+                if (!Utils.handleString(next)) {
+                    event.preventDefault();
+                }
+            })
+
+            $('#withdraw-input').bind('paste', (event) => {
+                const text = event.clipboardData.getData('text');
+                if (!Utils.handleString(text)) {
+                    event.preventDefault();
+                }
+            })
 
             Utils.loadStyles();
         }
