@@ -1,8 +1,10 @@
 import Utils from "./../../utils.js";
+import * as consts from "./../../consts.js"; 
 
 class WithdrawPopupComponent extends HTMLElement {
     componentParams = {
-      beamxValue: ''
+      loaded: 0,
+      isAllocation: 0
     }
 
     constructor() {
@@ -12,17 +14,26 @@ class WithdrawPopupComponent extends HTMLElement {
     getTemplate() {
         const TEMPLATE =
         `<div class="popup">
-            <div class="popup__content claim-rewards">
-                <div class="popup__content__title">Claim rewards</div>
-                <div class="popup__value claim-rewards">
-                    <span class="claim-rewards-value">
-                        You have farmed 
-                        <span class="bold">${this.componentParams.beamxValue} BEAMX</span>
-                        available for claim 
-                    </span>
+            <div class="popup__content withdraw-tmpl">
+                <div class="popup__content__title">Withdraw</div>
+                <div class="popup__value">
+                    <div class="withdraw-area__input">
+                        <input type="text" class="withdraw-area__input__elem" placeholder="0" id="withdraw-input"/>
+                        <span class="withdraw-area__input__text">
+                            ${this.componentParams.isAllocation ? 'BEAMX' : 'BEAM'}
+                        </span>
+                    </div>
+                    <div class="withdraw-area__rate">100 USD</div>
+                    <div class="withdraw-area__fee">
+                        <div class="withdraw-area__fee__title">Fee</div>
+                        <div class="withdraw-area__fee__value">
+                            <div class="withdraw-area__fee__value__beam">0,011 BEAM</div>
+                            <div class="withdraw-area__fee__value__rate">2 USD</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="popup__content__controls claim-controls">
-                    <button class="container__main__controls__cancel ui-button" id="claim-cancel">
+                <div class="withdraw-area__controls">
+                    <button class="container__main__controls__cancel ui-button" id="withdraw-cancel">
                         <span class="ui-button__inner-wrapper">
                             <div class="ui-button__icon">
                                 <img src="./icons/icon-cancel.svg"/>
@@ -30,12 +41,12 @@ class WithdrawPopupComponent extends HTMLElement {
                             <span class="ui-button__text cancel-text">cancel</span>
                         </span>
                     </button>
-                    <button class="container__main__controls__confirm ui-button" id="claim-confirm">
+                    <button class="withdraw-area__controls__withdraw ui-button" id="withdraw-confirm">
                         <span class="ui-button__inner-wrapper">
                             <div class="ui-button__icon">
-                                <img src="./icons/icon-star-blue.svg"/>
+                                <img src="./icons/icon-withdraw.svg"/>
                             </div>
-                            <span class="ui-button__text confirm-text">confirm</span>
+                            <span class="ui-button__text confirm-text">withdraw</span>
                         </span>
                     </button>
                 </div>
@@ -46,25 +57,27 @@ class WithdrawPopupComponent extends HTMLElement {
     }
   
     render() {
-        if (this.componentParams.beamxValue > 0) {
+        if (this.componentParams.loaded > 0) {
             this.innerHTML = this.getTemplate();
 
-            $('#claim-cancel').click(() => {
-                $('claim-rewards-popup-component').hide();
+            $('#withdraw-cancel').click(() => {
+                $('deposit-popup-component').hide();
             });
 
-            $('#claim-confirm').click(() => {
+            $('#withdraw-confirm').click(() => {
                 let event = new CustomEvent("global-event", {
                     detail: {
-                      type: 'claim-rewards-process'
-                      //todo send amount
+                      type: 'withdraw-process',
+                      is_allocation: this.componentParams.isAllocation,
+                      amount: (Big($('#withdraw-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed()
                     }
                   });
                 document.dispatchEvent(event);
-                $('claim-rewards-popup-component').hide();
+                $('withdraw-popup-component').hide();
             })
 
-            $('.popup__content.popup-key').css('height', 'unset');
+            $('.popup__content.withdraw-tmpl').css('height', 'unset');
+            $('withdraw-popup-component').show();
 
             Utils.loadStyles();
         }
@@ -75,20 +88,21 @@ class WithdrawPopupComponent extends HTMLElement {
     }
     
     attributeChangedCallback(name, oldValue, newValue) {    
-        let value = '';
         switch(name) {
-            case 'value':
-                this.componentParams.beamxValue = newValue;
-                $('claim-rewards-popup-component').show();
+            case 'loaded':
+                this.componentParams.loaded = newValue;
                 this.render();
-
+                break;
+            case 'is_allocation':
+                this.componentParams.isAllocation = newValue;
+                this.render();
                 break;
         }
     }
   
     
     static get observedAttributes() {
-      return ['value'];
+      return ['loaded', 'is_allocation'];
     }
   }
 

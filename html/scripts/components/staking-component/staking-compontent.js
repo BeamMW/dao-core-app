@@ -133,6 +133,16 @@ class StakingComponent extends HTMLElement {
       });
       document.dispatchEvent(event);
     })
+
+    $('#withdraw').click((ev) => {
+      let event = new CustomEvent("global-event", {
+        detail: {
+          type: 'withdraw-popup-open',
+          is_allocation: false
+        }
+      });
+      document.dispatchEvent(event);
+    })
   };
 
   connectedCallback() {

@@ -52,7 +52,7 @@ class PublicKeyPopupComponent extends HTMLElement {
                 textArea.focus();
                 textArea.select();
                 try {
-                    return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+                    return document.execCommand("copy");
                 } catch (ex) {
                     return false;
                 } finally {

@@ -87,7 +87,6 @@ class DepositPopupComponent extends HTMLElement {
     }
     
     attributeChangedCallback(name, oldValue, newValue) {    
-        let value = '';
         switch(name) {
             case 'loaded':
                 this.componentParams.loaded = newValue;

@@ -145,7 +145,7 @@ class DaoCore {
                 if (!this.pluginData.mainLoaded) {
                     this.pluginData.mainLoaded = true;
                 }
-            } else if (apiCallId === "farm_update") {
+            } else if (apiCallId === "farm_update" || apiCallId === "prealloc_withdraw") {
                 if (apiResult.raw_data === undefined || apiResult.raw_data.length < 1) {
                     throw 'Failed to load raw data';
                 }
@@ -235,8 +235,23 @@ Utils.onLoad(async (beamAPI) => {
         } else if (e.detail.type === 'deposit-process') {
             Utils.callApi("farm_update", "invoke_contract", {
                 create_tx: false,
-                args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + ",bLockOrUnlock=1,amountBeam=" + e.detail.amount
+                args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
+                    ",bLockOrUnlock=1,amountBeam=" + e.detail.amount
             });
+        } else if (e.detail.type === 'withdraw-process') {
+            if (e.detail.is_allocation > 0) {
+                Utils.callApi("prealloc_withdraw", "invoke_contract", {
+                    create_tx: false,
+                    args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
+                        ",amount=" + e.detail.amount
+                });
+            } else {
+                Utils.callApi("farm_update", "invoke_contract", {
+                    create_tx: false,
+                    args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
+                        ",bLockOrUnlock=0,amountBeam=" + e.detail.amount
+                });
+            }
         } else if (e.detail.type === 'show-public-key') {
             Utils.callApi("my_xid", "invoke_contract", {
                 create_tx: false,
@@ -250,7 +265,11 @@ Utils.onLoad(async (beamAPI) => {
             })
         } else if (e.detail.type === 'deposit-popup-open') {
             const component = $('deposit-popup-component');
-            component.attr('loaded', daoCore.pluginData.mainLoaded ? 1 : 0);
+            component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
+        } else if (e.detail.type === 'withdraw-popup-open') {
+            const component = $('withdraw-popup-component');
+            component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
+            component.attr('is_allocation', e.detail.is_allocation | 0);
         }
     });
 

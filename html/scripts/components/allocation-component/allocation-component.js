@@ -78,6 +78,16 @@ class AllocationComponent extends HTMLElement {
                 (this.componentParams.locked / this.componentParams.total)) + 'px'
             : 0;
         $('#allocation-progress-available').css('margin-left',availablePosition);
+
+        $('#allocation-claim').click(() => {
+            let event = new CustomEvent("global-event", {
+                detail: {
+                  type: 'withdraw-popup-open',
+                  is_allocation: true
+                }
+              });
+              document.dispatchEvent(event);
+        });
     };
   
     connectedCallback() {
