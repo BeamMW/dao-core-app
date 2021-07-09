@@ -54,9 +54,9 @@ class GovernanceComponent extends HTMLElement {
       let value = '';
       switch(name) {
         case 'emission':
-          this.componentParams.locked = newValue;
+          this.componentParams.available = newValue;
           value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
-          this.componentParams.lockedStr = value.toFixed();
+          this.componentParams.availableStr = value.toFixed();
           this.render();
           break;
       }

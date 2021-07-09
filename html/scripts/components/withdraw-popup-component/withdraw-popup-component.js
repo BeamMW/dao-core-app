@@ -20,7 +20,7 @@ class WithdrawPopupComponent extends HTMLElement {
                     <div class="withdraw-area__input">
                         <input type="text" class="withdraw-area__input__elem" placeholder="0" id="withdraw-input"/>
                         <span class="withdraw-area__input__text">
-                            ${this.componentParams.isAllocation ? 'BEAMX' : 'BEAM'}
+                            ${this.componentParams.isAllocation > 0 ? 'BEAMX' : 'BEAM'}
                         </span>
                     </div>
                     <div class="withdraw-area__rate">100 USD</div>
