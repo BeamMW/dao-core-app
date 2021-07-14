@@ -1,4 +1,4 @@
-import * as consts from "./../../consts.js";
+import * as consts from "./../../consts/consts.js";
 
 class GovernanceComponent extends HTMLElement {
     componentParams = {

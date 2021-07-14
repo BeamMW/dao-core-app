@@ -40,6 +40,10 @@ export default class Utils {
         return `rgba(${r},${g},${b},${alpha})`;
     };
 
+    static formateValue(value) {
+        return parseFloat(value.toFixed(2)).toString();
+    }
+
     static getById = (id)  => {
         return document.getElementById(id);
     }
@@ -54,6 +58,14 @@ export default class Utils {
     
     static hide(id) {
         this.getById(id).classList.add("hidden");
+    }
+
+    static numberWithCommas(x) {
+        return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    static numberWithSpaces(x) {
+        return x.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
     static callApi(callid, method, params) {

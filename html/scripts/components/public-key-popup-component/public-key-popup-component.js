@@ -1,4 +1,4 @@
-import Utils from "./../../utils.js";
+import Utils from "./../../libs/utils.js";
 
 class PublicKeyPopupComponent extends HTMLElement {
     componentParams = {

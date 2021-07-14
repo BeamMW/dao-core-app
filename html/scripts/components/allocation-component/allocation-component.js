@@ -1,4 +1,5 @@
-import * as consts from "./../../consts.js";
+import Utils from "./../../libs/utils.js";
+import * as consts from "./../../consts/consts.js";
 
 class AllocationComponent extends HTMLElement {
     componentParams = {
@@ -26,16 +27,20 @@ class AllocationComponent extends HTMLElement {
             <div class="allocation__stats">
                 <div class="allocation__stats__allocated">
                     <div class="allocation-title">Allocated</div>
-                    <div class="allocated-value">1,000,000 BEAMX</div>
+                    <div class="allocated-value">
+                        ${Utils.numberWithCommas(this.componentParams.allocatedStr)} BEAMX
+                    </div>
                 </div>
                 <div class="allocation-total-temporary">
                     <div class="allocation__stats__vested">
                         <div class="allocation-title">Total vested</div>
-                        <div class="vested-value"> ${this.componentParams.totalStr} BEAMX</div>
+                        <div class="vested-value">
+                            ${Utils.numberWithCommas(this.componentParams.totalStr)} BEAMX
+                        </div>
                     </div>
                     <div class="farmed-claim" id="allocation-claim">
                         <img class="farmed-claim__icon" src="./icons/icon-star.svg">
-                        <span class="farmed-claim__text">claim</span>
+                        <span class="farmed-claim__text">claim rewards</span>
                     </div>
                 </div>
             </div>
@@ -43,15 +48,21 @@ class AllocationComponent extends HTMLElement {
                 <div class="allocation__calculated__content">
                     <div class="allocation__calculated__content__distributed">
                         <div class="allocation-title">Distributed</div>
-                        <div class="distributed-value">${this.componentParams.distributedStr} BEAMX</div>
+                        <div class="distributed-value">
+                            ${Utils.numberWithCommas(this.componentParams.distributedStr)} BEAMX
+                        </div>
                     </div>
                     <div class="allocation__calculated__content__available">
                         <div class="allocation-title">Available</div>
-                        <div class="available-value">${this.componentParams.availableStr} BEAMX</div>
+                        <div class="available-value">
+                            ${Utils.numberWithCommas(this.componentParams.availableStr)} BEAMX
+                        </div>
                     </div>
                     <div class="allocation__calculated__content__locked">
                         <div class="allocation-title">Locked</div>
-                        <div class="locked-value"> ${this.componentParams.lockedStr} BEAMX</div>
+                        <div class="locked-value">
+                            ${Utils.numberWithCommas(this.componentParams.lockedStr)} BEAMX
+                        </div>
                     </div>
                 </div>
                 <div class="allocation__calculated__graph" id="allocation-progress">
@@ -80,13 +91,10 @@ class AllocationComponent extends HTMLElement {
         $('#allocation-progress-available').css('margin-left',availablePosition);
 
         $('#allocation-claim').click(() => {
-            let event = new CustomEvent("global-event", {
-                detail: {
-                  type: 'withdraw-popup-open',
-                  is_allocation: true
-                }
-              });
-              document.dispatchEvent(event);
+            const component = $('claim-rewards-popup-component');
+            component.attr('is_allocation', 1);
+            component.attr('value_str', this.componentParams.lockedStr);
+            component.attr('value', this.componentParams.locked);
         });
     };
   
@@ -95,50 +103,30 @@ class AllocationComponent extends HTMLElement {
     }
     
     attributeChangedCallback(name, oldValue, newValue) {    
-        let value = '';
-        switch(name) {
-            case 'total':
-                this.componentParams.total = newValue;
-                value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
-                this.componentParams.totalStr = value.toFixed();
-                this.render();
-
-                break;
-            case 'avail_total':
-                this.componentParams.available = newValue;
-                value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
-                this.componentParams.availableStr = value.toFixed();
-                this.render();
-
-                break;
-            case 'received':
-                this.componentParams.distributed = newValue;
-                value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
-                this.componentParams.distributedStr = value.toFixed();
-                this.render();
-
-                break;
-            case 'avail_remaining':
-                this.componentParams.locked = newValue;
-                value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
-                this.componentParams.lockedStr = value.toFixed();
-                this.render();
-
-                break;
+        let value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+        if (name === 'total') {
+            this.componentParams.total = newValue;
+            this.componentParams.totalStr = Utils.formateValue(value);
+        } else if (name === 'avail_total') {
+            this.componentParams.available = newValue;
+            this.componentParams.availableStr = Utils.formateValue(value);
+        } else if (name === 'received') {
+            this.componentParams.distributed = newValue;
+            this.componentParams.distributedStr = Utils.formateValue(value);
+        } else if (name === 'avail_remaining') {
+            this.componentParams.locked = newValue;
+            this.componentParams.lockedStr = Utils.formateValue(value);
+        } else if (name === 'allocated') {
+            this.componentParams.allocated = newValue;
+            this.componentParams.allocatedStr = Utils.formateValue(value);
         }
+        this.render();
     }
   
     
     static get observedAttributes() {
-      return ['total', 'received', 'avail_total', 'avail_remaining'];
+      return ['total', 'received', 'avail_total', 'avail_remaining', 'allocated'];
     }
   }
 
   customElements.define('allocation-component', AllocationComponent);
-
-
-  
-//   total='0'
-//   received='0'
-//   avail_total='0'
-//   avail_remaining='0'

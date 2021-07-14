@@ -1,15 +1,24 @@
-import Utils from "./../../utils.js";
-import * as consts from "./../../consts.js"; 
+import Utils from "./../../libs/utils.js";
+import * as consts from "./../../consts/consts.js"; 
 
 class WithdrawPopupComponent extends HTMLElement {
     componentParams = {
       loaded: 0,
-      isAllocation: 0
+      rate: 0,
+      isAllocation: 0,
+      maxValue: 0,
+      isValid: true
     }
 
     constructor() {
       super();
     }
+
+    getRateStr(value) {
+        return (this.componentParams.rate > 0
+          ? Utils.numberWithSpaces(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
+          : '0') + ' USD';
+    }    
 
     getTemplate() {
         const TEMPLATE =
@@ -17,20 +26,39 @@ class WithdrawPopupComponent extends HTMLElement {
             <div class="popup__content withdraw-tmpl">
                 <div class="popup__content__title">Withdraw</div>
                 <div class="popup__value">
-                    <div class="withdraw-area__input">
-                        <input type="text" class="withdraw-area__input__elem" placeholder="0" id="withdraw-input"/>
-                        <span class="withdraw-area__input__text">
-                            ${this.componentParams.isAllocation > 0 ? 'BEAMX' : 'BEAM'}
-                        </span>
+                    <div class="popup__value__input-area">
+                        <div class="withdraw-area__input">
+                            <input type="text" class="withdraw-area__input__elem"
+                                placeholder="0" id="withdraw-input"/>
+                            <span class="withdraw-area__input__text">
+                                ${this.componentParams.isAllocation > 0 ? 'BEAMX' : 'BEAM'}
+                            </span>
+                        </div>
+                        <div class="withdraw-area__add-max" id="add-max-control">
+                            <img class="withdraw-area__add-max__icon" src="./icons/add-max-icon.svg"/>
+                            <div class="withdraw-area__add-max__text">max</div>
+                        </div>
                     </div>
-                    <div class="withdraw-area__rate">100 USD</div>
+                    <div class="withdraw-area__rate" id="withdraw-input-rate">
+                        0 USD
+                    </div>
                     <div class="withdraw-area__fee">
                         <div class="withdraw-area__fee__title">Fee</div>
                         <div class="withdraw-area__fee__value">
-                            <div class="withdraw-area__fee__value__beam">0,011 BEAM</div>
-                            <div class="withdraw-area__fee__value__rate">2 USD</div>
+                            <div class="withdraw-area__fee__value__beam">
+                                ${consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM} BEAM
+                            </div>
+                            <div class="withdraw-area__fee__value__rate">
+                                ${ this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM) }
+                            </div>
                         </div>
                     </div>
+                    <div class="ivalid-state-message" id="max-value-invalid">
+                        Insufficient funds to complete the transaction.<br>
+                        Maximum amount is 
+                        ${Utils.numberWithSpaces(Utils.formateValue(this.componentParams.maxValue))} BEAM.
+                    </div>
+                    
                 </div>
                 <div class="withdraw-area__controls">
                     <button class="container__main__controls__cancel ui-button" id="withdraw-cancel">
@@ -59,6 +87,7 @@ class WithdrawPopupComponent extends HTMLElement {
     render() {
         if (this.componentParams.loaded > 0) {
             this.innerHTML = this.getTemplate();
+            $('#max-value-invalid').hide();
 
             $('#withdraw-cancel').click(() => {
                 $('withdraw-popup-component').hide();
@@ -78,6 +107,23 @@ class WithdrawPopupComponent extends HTMLElement {
 
             $('.popup__content.withdraw-tmpl').css('height', 'unset');
             $('withdraw-popup-component').show();
+
+            $('#withdraw-input').on('input', (event) => {
+                const value = $('#withdraw-input').val();
+                $('#withdraw-input-rate').text(this.getRateStr(value.length > 0 ? value : 0));
+
+                this.componentParams.isValid = parseFloat(value.length > 0 ? value : 0) 
+                    < parseFloat(this.componentParams.maxValue.toFixed());
+                if (this.componentParams.isValid) {
+                    $('#max-value-invalid').hide();
+                    $('.withdraw-area__fee').show();
+                    $('.withdraw-area__rate').show();
+                } else {
+                    $('#max-value-invalid').show();
+                    $('.withdraw-area__fee').hide();
+                    $('.withdraw-area__rate').hide();
+                }
+             });
 
             $('#withdraw-input').keydown((event) => {
                 const specialKeys = [
@@ -104,6 +150,11 @@ class WithdrawPopupComponent extends HTMLElement {
                 }
             })
 
+            $('#add-max-control').click(() => {
+                $('#withdraw-input').val(this.componentParams.maxValue);
+                $('#withdraw-input-rate').text(this.getRateStr(this.componentParams.maxValue))
+            })
+
             Utils.loadStyles();
         }
     };
@@ -113,21 +164,22 @@ class WithdrawPopupComponent extends HTMLElement {
     }
     
     attributeChangedCallback(name, oldValue, newValue) {    
-        switch(name) {
-            case 'loaded':
-                this.componentParams.loaded = newValue;
-                this.render();
-                break;
-            case 'is_allocation':
-                this.componentParams.isAllocation = newValue;
-                this.render();
-                break;
+        if (name === 'loaded') {
+            this.componentParams.loaded = newValue;
+            this.render();
+        } else if (name === 'is_allocation') {
+            this.componentParams.isAllocation = newValue;
+        } else if (name === 'rate') {
+            this.componentParams.rate = newValue;
+        } else if (name === 'max_val') {
+            let value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+            this.componentParams.maxValue = value;
         }
     }
   
     
     static get observedAttributes() {
-      return ['loaded', 'is_allocation'];
+      return ['loaded', 'is_allocation', 'rate', 'max_val'];
     }
   }
 

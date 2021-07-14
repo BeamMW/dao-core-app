@@ -1,5 +1,5 @@
-import Utils from "./../../utils.js";
-import * as consts from "./../../consts.js"; 
+import Utils from "./../../libs/utils.js";
+import * as consts from "./../../consts/consts.js"; 
 
 class DepositPopupComponent extends HTMLElement {
     componentParams = {
