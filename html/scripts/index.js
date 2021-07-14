@@ -15,7 +15,8 @@ class DaoCore {
             stake: 0,
             inProgress: false,
             mainLoaded: false,
-            beamTotalLocked: 0
+            beamTotalLocked: 0,
+            farmTotal: 0,
         }
 
         $('public-key-popup-component').hide();
@@ -180,7 +181,7 @@ class DaoCore {
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
                 stakingComponent.attr('beamx-value', shaderOut.user.beamX);
                 stakingComponent.attr('loaded', this.pluginData.mainLoaded | 0);
-                $('governance-component').attr('emission', shaderOut.farming.emission);
+                //$('governance-component').attr('emission', shaderOut.farming.emission);
                 
                 this.pluginData.lockedDemoX = shaderOut.user.beamX;
                 this.pluginData.lockedBeams = shaderOut.user.beams_locked;
@@ -222,6 +223,11 @@ class DaoCore {
                 if (shaderOut.total === undefined) {
                     throw "Failed to load farming totals";
                 }
+
+                this.pluginData.farmTotal = shaderOut.total;
+                this.pluginData.farmAvail = shaderOut.avail;
+                this.pluginData.farmReceived = shaderOut.received;
+
                 const stakingComponent = $('staking-component');
                 stakingComponent.attr('beam_total_locked', shaderOut.beam_locked);
                 this.loadPreallocStats();
@@ -231,6 +237,14 @@ class DaoCore {
                 if (shaderOut.total === undefined) {
                     throw "Failed to load prealloc totals";
                 }
+
+                const govComponent = $('governance-component')
+                const availTotal = shaderOut.avail + this.pluginData.farmAvail;
+                const receivedTotal = shaderOut.received + this.pluginData.farmReceived;
+                govComponent.attr('total', shaderOut.total + this.pluginData.farmTotal);
+                govComponent.attr('avail', availTotal);
+                govComponent.attr('received', receivedTotal);
+                govComponent.attr('distributed', availTotal - receivedTotal);
 
                 const component = $('allocation-component');
                 component.attr('allocated', shaderOut.total);

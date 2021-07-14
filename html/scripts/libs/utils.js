@@ -41,7 +41,9 @@ export default class Utils {
     };
 
     static formateValue(value) {
-        return parseFloat(value.toFixed(2)).toString();
+        if (value > 0) {
+            return parseFloat(value.toFixed(2)).toString();
+        }
     }
 
     static getById = (id)  => {
@@ -61,11 +63,15 @@ export default class Utils {
     }
 
     static numberWithCommas(x) {
-        return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if (x > 0) {
+            return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     }
 
     static numberWithSpaces(x) {
-        return x.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        if (x > 0) {
+            return x.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
     }
 
     static callApi(callid, method, params) {
