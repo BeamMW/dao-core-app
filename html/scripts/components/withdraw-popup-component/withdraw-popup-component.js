@@ -94,15 +94,17 @@ class WithdrawPopupComponent extends HTMLElement {
             });
 
             $('#withdraw-confirm').click(() => {
-                let event = new CustomEvent("global-event", {
-                    detail: {
-                      type: 'withdraw-process',
-                      is_allocation: this.componentParams.isAllocation,
-                      amount: (Big($('#withdraw-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed()
-                    }
-                  });
-                document.dispatchEvent(event);
-                $('withdraw-popup-component').hide();
+                if (this.componentParams.isValid) {
+                    let event = new CustomEvent("global-event", {
+                        detail: {
+                        type: 'withdraw-process',
+                        is_allocation: this.componentParams.isAllocation,
+                        amount: (Big($('#withdraw-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed()
+                        }
+                    });
+                    document.dispatchEvent(event);
+                    $('withdraw-popup-component').hide();
+                }
             })
 
             $('.popup__content.withdraw-tmpl').css('height', 'unset');
@@ -115,13 +117,12 @@ class WithdrawPopupComponent extends HTMLElement {
                 this.componentParams.isValid = parseFloat(value.length > 0 ? value : 0) 
                     < parseFloat(this.componentParams.maxValue.toFixed());
                 if (this.componentParams.isValid) {
-                    $('#max-value-invalid').hide();
-                    $('.withdraw-area__fee').show();
-                    $('.withdraw-area__rate').show();
+                    this.setValidState();
                 } else {
                     $('#max-value-invalid').show();
-                    $('.withdraw-area__fee').hide();
-                    $('.withdraw-area__rate').hide();
+                    $('.withdraw-area__fee, .withdraw-area__rate').hide();
+                    $('.withdraw-area__inputб .withdraw-area__input__text').addClass('invalid');
+                    $('.withdraw-area__input__elem, .withdraw-area__controls__withdraw').addClass('invalid');
                 }
              });
 
@@ -152,12 +153,21 @@ class WithdrawPopupComponent extends HTMLElement {
 
             $('#add-max-control').click(() => {
                 $('#withdraw-input').val(this.componentParams.maxValue);
-                $('#withdraw-input-rate').text(this.getRateStr(this.componentParams.maxValue))
+                $('#withdraw-input-rate').text(this.getRateStr(this.componentParams.maxValue));
+                this.componentParams.isValid = true;
+                this.setValidState();
             })
 
             Utils.loadStyles();
         }
     };
+
+    setValidState() {
+        $('#max-value-invalid').hide();
+        $('.withdraw-area__fee, .withdraw-area__rate').show();
+        $('.withdraw-area__input, .withdraw-area__input__text').removeClass('invalid');
+        $('.withdraw-area__input__elem, .withdraw-area__controls__withdraw').removeClass('invalid');
+    }
   
     connectedCallback() {
       this.render();

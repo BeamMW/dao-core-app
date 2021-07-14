@@ -20,6 +20,10 @@
     align-items: center;
 }
 
+.withdraw-area__input.invalid {
+    background-color: rgba(255, 116, 107, .15);
+}
+
 .withdraw-area__add-max {
     margin-left: 15px;
     margin-top: 20px;
@@ -49,6 +53,11 @@
     width: 265px;
 }
 
+.withdraw-area__input__elem.invalid,
+.withdraw-area__input__elem.invalid:focus {
+    color: #ff746b;
+}
+
 .withdraw-area__input__elem:focus {
     outline-width: 0;
     color: #0bccf7;
@@ -62,6 +71,10 @@
     margin-right: 15px;
     font-size: 16px;
     color: #ffffff;
+}
+
+.withdraw-area__input__text.invalid {
+    color: #ff746b;
 }
 
 .withdraw-area__rate {
@@ -112,6 +125,11 @@
 .withdraw-area__controls__withdraw {
     background-color: #0bccf7;
     margin-left: 30px;
+}
+
+.withdraw-area__controls__withdraw.invalid {
+    opacity: .3;
+    cursor: default;
 }
 
 .ivalid-state-message {
