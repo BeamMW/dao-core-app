@@ -43,6 +43,8 @@ export default class Utils {
     static formateValue(value) {
         if (value > 0) {
             return parseFloat(value.toFixed(2)).toString();
+        } else {
+            return value;
         }
     }
 
@@ -65,12 +67,16 @@ export default class Utils {
     static numberWithCommas(x) {
         if (x > 0) {
             return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        } else {
+            return x;
         }
     }
 
     static numberWithSpaces(x) {
         if (x > 0) {
             return x.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        } else {
+            return x;
         }
     }
 

@@ -3,18 +3,37 @@ import * as consts from "./../../consts/consts.js";
 
 class DepositPopupComponent extends HTMLElement {
     switcherValues = {
-        'switch-one-week': '1 week',
-        'switch-two-weeks': '2 w',
-        'switch-one-month': '1 M',
-        'switch-two-months': '2 M',
-        'switch-three-months': '3 M',
-        'switch-six-months': '6 M'
+        'switch-one-week': {
+            value: '1 week',
+            height: 10080
+        },
+        'switch-two-weeks': {
+            value: '2 w',
+            height: 20160
+        },
+        'switch-one-month': {
+            value: '1 M',
+            height: 43200
+        },
+        'switch-two-months': {
+            value: '2 M',
+            height: 86400
+        },
+        'switch-three-months': {
+            value: '3 M',
+            height: 129600
+        },
+        'switch-six-months': {
+            value: '6 M',
+            height: 259200
+        }
     }
 
     componentParams = {
         loaded: 0,
         rate: 0,
-        estimation,
+        yeild: 0,
+        yeildStr: '0',
         switcherSelectedValue: this.switcherValues['switch-one-week']
     }
 
@@ -82,7 +101,7 @@ class DepositPopupComponent extends HTMLElement {
                         <div class="switch__item" id="switch-three-months" hval="129600">3 M</div>
                         <div class="switch__item" id="switch-six-months" hval="259200">6 M</div>
                         <div class="selector">
-                            ${ this.componentParams.switcherSelectedValue }
+                            ${ this.componentParams.switcherSelectedValue.value }
                         </div>
                     </div>
                     <div class="calc-area__reward">
@@ -100,7 +119,7 @@ class DepositPopupComponent extends HTMLElement {
                         <div class="calc-area__farming__value">
                             <img class="calc-area-icon" src="./icons/icon-beamx.png"/>
                             <span class="calc-area-estimation">
-                                ${ this.componentParams.estimation } BEAMX
+                                ${ this.componentParams.yeildStr } BEAMX
                             </span>
                         </div>
                     </div>
@@ -110,6 +129,17 @@ class DepositPopupComponent extends HTMLElement {
 
       return TEMPLATE;
     }
+
+    triggerYeildCalc() {
+        let event = new CustomEvent("global-event", {
+            detail: {
+              type: 'calc-yeild',
+              amount: (Big($('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
+              hPeriod: this.componentParams.switcherSelectedValue.height
+            }
+          });
+        document.dispatchEvent(event);
+    }
   
     render() {
         if (this.componentParams.loaded > 0) {
@@ -117,6 +147,8 @@ class DepositPopupComponent extends HTMLElement {
 
             $('#deposit-cancel').click(() => {
                 $('deposit-popup-component').hide();
+                this.componentParams.yeild = 0;
+                this.componentParams.yeildStr = '0';
             });
 
             $('#deposit-confirm').click(() => {
@@ -133,9 +165,11 @@ class DepositPopupComponent extends HTMLElement {
             $('.popup__content.deposit-tmpl').css('height', 'unset');
             $('deposit-popup-component').show();
 
-            $('#deposit-input').on('input', (event) => {
+            $('#deposit-input').on('input', (e) => {
                 const value = $('#deposit-input').val();
                 $('#deposit-input-rate').text(this.getRateStr(value.length > 0 ? value : 0));
+
+                this.triggerYeildCalc();
              });
 
             $('#deposit-input').keydown((event) => {
@@ -165,12 +199,13 @@ class DepositPopupComponent extends HTMLElement {
 
             $('.switch__item').click((event) => {
                 let targetItem = $(event.target);
-                this.componentParams.switcherSelectedValue = targetItem.attr('id');
+                this.componentParams.switcherSelectedValue = this.switcherValues[targetItem.attr('id')];
                 
                 let selectorItem = $('.selector');
-                selectorItem.text(this.switcherValues[this.componentParams.switcherSelectedValue]);
+                selectorItem.text(this.componentParams.switcherSelectedValue.value);
                 selectorItem.width(targetItem.width() + 22);
                 selectorItem.css('left', targetItem.position().left);
+                this.triggerYeildCalc();
             })
 
             Utils.loadStyles();
@@ -187,14 +222,20 @@ class DepositPopupComponent extends HTMLElement {
             this.render();
         } else if (name === 'rate') {
             this.componentParams.rate = newValue;
-        } else if (name === 'estimation') {
-            this.componentParams.estimation = newValue;
+        } else if (name === 'yeild') {
+            let value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+            this.componentParams.yeild = newValue;
+            this.componentParams.yeildStr = value;
+            $('.calc-area-estimation').text(
+                (this.componentParams.yeildStr > 0 
+                ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.yeildStr)) 
+                : '0') + ' BEAMX');
         }
     }
   
     
     static get observedAttributes() {
-      return ['loaded', 'rate', 'estimation'];
+      return ['loaded', 'rate', 'yeild'];
     }
   }
 

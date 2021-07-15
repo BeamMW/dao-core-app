@@ -15,7 +15,7 @@ class WithdrawPopupComponent extends HTMLElement {
     }
 
     getRateStr(value) {
-        return (this.componentParams.rate > 0
+        return (this.componentParams.rate > 0 && value > 0
           ? Utils.numberWithSpaces(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
           : '0') + ' USD';
     }    

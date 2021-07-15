@@ -200,15 +200,13 @@ class DaoCore {
                 return this.refresh(true);
             } else if (apiCallId === "prealloc_view") {
                 let shaderOut = this.parseShaderResult(apiResult);
-                if (shaderOut.total === undefined) {
-                    throw "Failed to load preallocated info";
+                if (shaderOut.total !== undefined) {
+                    const component = $('allocation-component');
+                    component.attr('total', shaderOut.total);
+                    component.attr('received', shaderOut.received);
+                    component.attr('avail_total', shaderOut.avail_total);
+                    component.attr('avail_remaining', shaderOut.avail_remaining);
                 }
-
-                const component = $('allocation-component');
-                component.attr('total', shaderOut.total);
-                component.attr('received', shaderOut.received);
-                component.attr('avail_total', shaderOut.avail_total);
-                component.attr('avail_remaining', shaderOut.avail_remaining);
                 this.loadFarmStats();
                 this.showStaking();
             } else if (apiCallId === "my_xid") {
@@ -251,6 +249,15 @@ class DaoCore {
 
                 const component = $('allocation-component');
                 component.attr('allocated', shaderOut.total);
+            } else if (apiCallId === "farm_get_yield") {
+                let shaderOut = this.parseShaderResult(apiResult);
+                
+                if (shaderOut.yield === undefined) {
+                    throw "Failed to load yeild";
+                }
+
+                const depositComponent = $('deposit-popup-component');
+                depositComponent.attr('yeild', shaderOut.yield);
             }
 
             // if (apiCallId == "tx-list") {
@@ -350,6 +357,12 @@ Utils.onLoad(async (beamAPI) => {
             component.attr('is_allocation', e.detail.is_allocation | 0);
             component.attr('max_val', daoCore.pluginData.lockedBeams);
             component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
+        } else if (e.detail.type === 'calc-yeild') {
+            Utils.callApi("farm_get_yield", "invoke_contract", {
+                create_tx: false,
+                args: "role=manager,action=farm_get_yield,cid=" + CONTRACT_ID + ",amount=" + 
+                    e.detail.amount + ",hPeriod=" + e.detail.hPeriod
+            });
         }
     });
 });
