@@ -117,3 +117,119 @@
     background-color: #da68f5;
     margin-left: 30px;
 }
+
+.calc-area__info {
+    margin-top: 20px;
+    opacity: 0.7;
+    font-size: 14px;
+    font-style: italic;
+    color: #ffffff;
+}
+
+.calc-area__reward {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.calc-area-title {
+    opacity: 0.5;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+.calc-area-value {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.calc-area__reward__yearly,
+.calc-area__reward__weekly {
+    display: flex;
+    flex-direction: column;
+}
+
+.calc-area__reward__weekly {
+    margin-left: 15px;
+}
+
+.calc-area__farming {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+}
+
+.calc-area__farming__value {
+    display: flex;
+    flex-direction: row;
+    margin-top: 4px;
+    align-items: center;
+}
+
+.calc-area-icon {
+    width: 17px;
+    height: 17px;
+}
+
+.calc-area-estimation {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.switch {
+    top: -2px;
+    display: flex;
+    align-items: center;
+    place-self: flex-start;
+    margin-top: 10px;
+    
+    height: 30px;
+    line-height: normal;border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    position: relative;
+}
+  
+.switch__item {
+    cursor: pointer;
+    position: relative;
+    display: block;
+    float: left;
+    -webkit-transition: 300ms ease-in;
+    -moz-transition: 300ms ease-in;
+    transition: 300ms ease-in;
+    padding: 12px;
+    font-size: 14px;
+    letter-spacing: 0.02px;
+    color: rgba(255, 255, 255, .5);
+}
+
+.switch__usd.selected,
+.switch__btc.selected {
+    color: rgba(255, 255, 255, 0);
+}
+
+.selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    box-sizing: border-box;
+    height: 32px;
+    top: -1px;
+    text-align: center;
+    cursor: default;
+    border-radius: 16px;
+    border: solid 1px #00f6d2;
+    background-color: rgba(0, 252, 207, 0.1);
+    font-size: 14px;
+    color: #00f6d2;
+    box-shadow: 0 0 2px rgba(0, 246, 210, 0.5);
+    opacity: 1;
+    left: -1px;
+    width: 65px;
+}

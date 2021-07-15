@@ -43,6 +43,9 @@ class DaoCore {
 
                     const withdrawComponent = $('withdraw-popup-component');
                     withdrawComponent.attr('rate', response.beam.usd);
+
+                    const depositComponent = $('deposit-popup-component');
+                    depositComponent.attr('rate', response.beam.usd);
                 }
             }
         };
