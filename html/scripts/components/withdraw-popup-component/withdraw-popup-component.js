@@ -15,10 +15,11 @@ class WithdrawPopupComponent extends HTMLElement {
     }
 
     getRateStr(value) {
+        const rateVal = Utils.formateValue(new Big(value).times(this.componentParams.rate));
         return (this.componentParams.rate > 0 && value > 0
-          ? Utils.numberWithSpaces(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
-          : '0') + ' USD';
-    }    
+          ? (rateVal > 0.1 ? (Utils.numberWithSpaces(rateVal) + ' USD') : '< 1 cent')
+          : '0 USD');
+    }
 
     getTemplate() {
         const TEMPLATE =

@@ -8,9 +8,8 @@
 }
 
 .governance__title {
-    opacity: 0.5;
     font-size: 12px;
-    color: #ffffff;
+    color: rgba(255, 255, 255, .5);
     margin-top: 20px;
     display: flex;
     flex-direction: row;
@@ -40,7 +39,8 @@
     font-size: 16px;
     color: #00f6d2;
     cursor: pointer;
-    width: 110px;
+    width: 150px;
+    align-items: center;
 }
 
 .gov-container {
@@ -102,6 +102,7 @@
     color: #042548;
 }
 
+.governance__pkey__icon,
 .governance__title__icon {
     width: 16px;
     height: 16px;

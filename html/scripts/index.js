@@ -127,6 +127,9 @@ class DaoCore {
             $('#staking-page-back').hide();
             Utils.hide('error-full-container');
             Utils.hide('error-common');
+
+            const stakingComponent = $('staking-component');
+            stakingComponent.attr('loaded', this.pluginData.mainLoaded | 0);
         }
     
         this.refresh(false);
@@ -176,14 +179,9 @@ class DaoCore {
                     throw "Failed to farm view";
                 }
 
-                if (!this.pluginData.mainLoaded) {
-                    this.pluginData.mainLoaded = true;
-                }
-
                 const stakingComponent = $('staking-component');
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
                 stakingComponent.attr('beamx-value', shaderOut.user.beamX);
-                stakingComponent.attr('loaded', this.pluginData.mainLoaded | 0);
                 //$('governance-component').attr('emission', shaderOut.farming.emission);
                 
                 this.pluginData.lockedDemoX = shaderOut.user.beamX;
@@ -208,7 +206,6 @@ class DaoCore {
                     component.attr('avail_remaining', shaderOut.avail_remaining);
                 }
                 this.loadFarmStats();
-                this.showStaking();
             } else if (apiCallId === "my_xid") {
                 let shaderOut = this.parseShaderResult(apiResult);
 
@@ -249,6 +246,7 @@ class DaoCore {
 
                 const component = $('allocation-component');
                 component.attr('allocated', shaderOut.total);
+                this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
                 
@@ -256,7 +254,9 @@ class DaoCore {
                     throw "Failed to load yeild";
                 }
 
-                const depositComponent = $('deposit-popup-component');
+                const depositComponent = this.pluginData.yieldType === 'deposit' 
+                    ? $('deposit-popup-component')
+                    : $('staking-component');
                 depositComponent.attr('yeild', shaderOut.yield);
             }
 
@@ -358,6 +358,7 @@ Utils.onLoad(async (beamAPI) => {
             component.attr('max_val', daoCore.pluginData.lockedBeams);
             component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
         } else if (e.detail.type === 'calc-yeild') {
+            daoCore.pluginData.yieldType = e.detail.from;
             Utils.callApi("farm_get_yield", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=farm_get_yield,cid=" + CONTRACT_ID + ",amount=" + 

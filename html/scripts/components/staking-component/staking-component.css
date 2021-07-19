@@ -88,8 +88,8 @@
 }
 
 .info-arp-w {
-    margin-left: 29px;
-    margin-right: 74px;
+    margin-left: auto;
+    margin-right: 187px;
     display: flex;
     flex-direction: column;
 }

@@ -10,7 +10,8 @@ class StakingComponent extends HTMLElement {
     rate: 0,
     beamTotalLockedStr: '0',
     beamTotalLocked: 0,
-    loaded: false
+    loaded: false,
+    yeildStr: '0'
   }
 
   constructor() {
@@ -74,16 +75,14 @@ class StakingComponent extends HTMLElement {
                   ${ this.getRateStr(this.componentParams.beamTotalLockedStr) }
                 </div>
               </div>
-              <div class="info-arp-y">
-                <div class="info-title">Yearly reward</div>
-                <div class="info-arp-y__value">10-14 BEAMX</div>
-              </div>
               <div class="info-arp-w">
                 <div class="info-arp-w__container">
                   <span class="info-title">Weekly reward</span>
                   <img class="info-arp-w__container__icon" src="./icons/icon-info.svg" />
                 </div>
-                <div class="info-arp-w__value">0.23-0.67 BEAMX</div>
+                <div class="info-arp-w__value">
+                  ${this.componentParams.yeildStr}
+                </div>
               </div>
             </div>
           </div>
@@ -185,18 +184,34 @@ class StakingComponent extends HTMLElement {
       this.componentParams.beamxStr = Utils.formateValue(value);
     } else if (name === 'loaded') {
       this.componentParams.loaded = newValue;
+
+      let event = new CustomEvent("global-event", {
+        detail: {
+          type: 'calc-yeild',
+          from: 'staking',
+          amount: this.componentParams.beamTotalLocked,
+          hPeriod: 10080
+        }
+      });
+      document.dispatchEvent(event);
     } else if (name === 'rate') {
       this.componentParams.rate = newValue;
     } else if (name === 'beam_total_locked') {
       this.componentParams.beamTotalLocked = newValue;
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);
+    } else if (name === 'yeild') {
+      const yeild= Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+          
+      this.componentParams.yeildStr = (parseFloat(yeild) > 0 
+          ? Utils.numberWithSpaces(Utils.formateValue(yeild)) 
+          : '0') + ' BEAMX';
     }
     this.render();
   }
 
   
   static get observedAttributes() {
-    return ['beam-value', 'beamx-value', 'loaded', 'rate', 'beam_total_locked'];
+    return ['beam-value', 'beamx-value', 'loaded', 'rate', 'beam_total_locked', 'yeild'];
   }
 }
 

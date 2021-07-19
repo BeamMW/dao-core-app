@@ -5,27 +5,33 @@ class DepositPopupComponent extends HTMLElement {
     switcherValues = {
         'switch-one-week': {
             value: '1 week',
-            height: 10080
+            height: 10080,
+            wCount: 1,
         },
         'switch-two-weeks': {
             value: '2 w',
-            height: 20160
+            height: 20160,
+            wCount: 2,
         },
         'switch-one-month': {
             value: '1 M',
-            height: 43200
+            height: 43200,
+            wCount: 4.4,
         },
         'switch-two-months': {
             value: '2 M',
-            height: 86400
+            height: 86400,
+            wCount: 8.8,
         },
         'switch-three-months': {
             value: '3 M',
-            height: 129600
+            height: 129600,
+            wCount: 13.2,
         },
         'switch-six-months': {
             value: '6 M',
-            height: 259200
+            height: 259200,
+            wCount: 26.4,
         }
     }
 
@@ -34,6 +40,7 @@ class DepositPopupComponent extends HTMLElement {
         rate: 0,
         yeild: 0,
         yeildStr: '0',
+        weeklyRewardStr: '0',
         switcherSelectedValue: this.switcherValues['switch-one-week']
     }
 
@@ -42,9 +49,10 @@ class DepositPopupComponent extends HTMLElement {
     }
 
     getRateStr(value) {
+        const rateVal = Utils.formateValue(new Big(value).times(this.componentParams.rate));
         return (this.componentParams.rate > 0 && value > 0
-          ? Utils.numberWithSpaces(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
-          : '0') + ' USD';
+          ? (rateVal > 0.1 ? (Utils.numberWithSpaces(rateVal) + ' USD') : '< 1 cent')
+          : '0 USD');
     }
 
     getTemplate() {
@@ -94,24 +102,38 @@ class DepositPopupComponent extends HTMLElement {
                     <div class="area-header">Staking calculator</div>
                     <div class="calc-area__info">The longer you stake for, the higher the reward is.</div>
                     <div class="switch">
-                        <div class="switch__item" id="switch-one-week" hval="10080">1 week</div>
-                        <div class="switch__item" id="switch-two-weeks" hval="20160">2 w</div>
-                        <div class="switch__item" id="switch-one-month" hval="43200">1 M</div>
-                        <div class="switch__item" id="switch-two-months" hval="86400">2 M</div>
-                        <div class="switch__item" id="switch-three-months" hval="129600">3 M</div>
-                        <div class="switch__item" id="switch-six-months" hval="259200">6 M</div>
+                        <div class="switch__item" id="switch-one-week" 
+                                hval="${this.switcherValues['switch-one-week'].height}">
+                            ${this.switcherValues['switch-one-week'].value}
+                        </div>
+                        <div class="switch__item" id="switch-two-weeks" 
+                                hval="${this.switcherValues['switch-two-weeks'].height}">
+                            ${this.switcherValues['switch-two-weeks'].value}
+                        </div>
+                        <div class="switch__item" id="switch-one-month" 
+                                hval="${this.switcherValues['switch-one-month'].height}">
+                            ${this.switcherValues['switch-one-month'].value}
+                        </div>
+                        <div class="switch__item" id="switch-two-months" 
+                                hval="${this.switcherValues['switch-two-months'].height}">
+                            ${this.switcherValues['switch-two-months'].value}
+                        </div>
+                        <div class="switch__item" id="switch-three-months" 
+                                hval="${this.switcherValues['switch-three-months'].height}">
+                            ${this.switcherValues['switch-three-months'].value}
+                        </div>
+                        <div class="switch__item" id="switch-six-months"
+                                hval="${this.switcherValues['switch-six-months'].height}">
+                            ${this.switcherValues['switch-six-months'].value}
+                        </div>
                         <div class="selector">
                             ${ this.componentParams.switcherSelectedValue.value }
                         </div>
                     </div>
                     <div class="calc-area__reward">
-                        <div class="calc-area__reward__yearly">
-                            <div class="calc-area-title">Yearly reward</div>
-                            <div class="calc-area-value">12-14 BEAMX</div>
-                        </div>
                         <div class="calc-area__reward__weekly">
                             <div class="calc-area-title">Weekly reward</div>
-                            <div class="calc-area-value">0.23-0.67 BEAMX</div>
+                            <div class="calc-area-value">${this.componentParams.weeklyRewardStr} BEAMX</div>
                         </div>
                     </div>
                     <div class="calc-area__farming">
@@ -131,14 +153,18 @@ class DepositPopupComponent extends HTMLElement {
     }
 
     triggerYeildCalc() {
-        let event = new CustomEvent("global-event", {
-            detail: {
-              type: 'calc-yeild',
-              amount: (Big($('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
-              hPeriod: this.componentParams.switcherSelectedValue.height
-            }
-          });
-        document.dispatchEvent(event);
+        const value = $('#deposit-input').val();
+        if (value > 0) {
+            let event = new CustomEvent("global-event", {
+                detail: {
+                type: 'calc-yeild',
+                from: 'deposit',
+                amount: (Big($('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
+                hPeriod: this.componentParams.switcherSelectedValue.height
+                }
+            });
+            document.dispatchEvent(event);
+        }
     }
   
     render() {
@@ -223,11 +249,16 @@ class DepositPopupComponent extends HTMLElement {
         } else if (name === 'rate') {
             this.componentParams.rate = newValue;
         } else if (name === 'yeild') {
-            let value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
             this.componentParams.yeild = newValue;
-            this.componentParams.yeildStr = value;
+            this.componentParams.yeildStr = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+            this.componentParams.weeklyRewardStr = 
+                this.componentParams.yeildStr.div(this.componentParams.switcherSelectedValue.wCount);
+            
+            $('.calc-area-value').text((parseFloat(this.componentParams.weeklyRewardStr) > 0 
+                ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.weeklyRewardStr)) 
+                : '0') + ' BEAMX');
             $('.calc-area-estimation').text(
-                (this.componentParams.yeildStr > 0 
+                (parseFloat(this.componentParams.yeildStr) > 0 
                 ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.yeildStr)) 
                 : '0') + ' BEAMX');
         }

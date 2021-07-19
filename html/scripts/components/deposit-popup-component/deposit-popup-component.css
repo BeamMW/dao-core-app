@@ -151,10 +151,6 @@
     flex-direction: column;
 }
 
-.calc-area__reward__weekly {
-    margin-left: 15px;
-}
-
 .calc-area__farming {
     margin-top: 36px;
     display: flex;

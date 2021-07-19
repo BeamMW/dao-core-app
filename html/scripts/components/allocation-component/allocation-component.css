@@ -88,6 +88,7 @@
 .allocation__calculated__graph {
     height: 32px;
     border-radius: 4px;
+    overflow: hidden;
     margin-top: auto;
     display: flex;
     background-color: rgba(0, 246, 210, .5);
