@@ -26,19 +26,28 @@ class StakingComponent extends HTMLElement {
 
   getTemplate() {
     const FARMED = 
-      `<div class="farmed-value">
+      `<div class="staking__farmed">
+        <div class="container-title">Farmed</div>
+        <div class="staking__farmed__container">
+        <div class="farmed-value">
           <img class="farmed-value__beamx-icon" src="./icons/icon-beamx.png"/>
           <span class="farmed-value__beamx-amount" id="beamx-value">
             ${ Utils.numberWithSpaces(this.componentParams.beamxStr) } BEAMX
           </span>
-      </div>
-      <div class="farmed-claim" id="staking-claim-rewards">
+        </div>
+        <div class="farmed-claim" id="staking-claim-rewards">
           <img class="farmed-claim__icon" src="./icons/icon-star.svg">
           <span class="farmed-claim__text">claim rewards</span>
+        </div>
+        </div>
       </div>`;
 
     const FARMED_EMPTY =
-      `<div class="farmed-empty-text">You have nothing farmed yet.</div>`;
+      `<div class="staking__farmed">
+        <div class="staking__farmed__container empty-farmed">  
+          <div class="farmed-empty-text">You have nothing farmed yet.</div>
+        </div>
+      </div>`;
 
     const TEMPLATE_EMPTY = 
       `<div class="staking-empty-container">
@@ -114,12 +123,7 @@ class StakingComponent extends HTMLElement {
                   </div>
               </div>
               <div class="staking__separator"></div>
-              <div class="staking__farmed">
-                  <div class="container-title">Farmed</div>
-                  <div class="staking__farmed__container">
-                      ${ this.componentParams.beamx > 0 ? FARMED : FARMED_EMPTY }
-                  </div>
-              </div>
+              ${ this.componentParams.beamx > 0 ? FARMED : FARMED_EMPTY }
           </div>
       </div>`;
 

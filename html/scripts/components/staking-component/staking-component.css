@@ -231,6 +231,11 @@
     flex-direction: row;
 }
 
+.staking__farmed__container.empty-farmed {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
 .farmed-value {
     display: flex;
     flex-direction: row;
