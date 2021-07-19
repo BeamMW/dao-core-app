@@ -27,11 +27,6 @@ class DepositPopupComponent extends HTMLElement {
             value: '3 M',
             height: 129600,
             wCount: 13.2,
-        },
-        'switch-six-months': {
-            value: '6 M',
-            height: 259200,
-            wCount: 26.4,
         }
     }
 
@@ -121,10 +116,6 @@ class DepositPopupComponent extends HTMLElement {
                         <div class="switch__item" id="switch-three-months" 
                                 hval="${this.switcherValues['switch-three-months'].height}">
                             ${this.switcherValues['switch-three-months'].value}
-                        </div>
-                        <div class="switch__item" id="switch-six-months"
-                                hval="${this.switcherValues['switch-six-months'].height}">
-                            ${this.switcherValues['switch-six-months'].value}
                         </div>
                         <div class="selector">
                             ${ this.componentParams.switcherSelectedValue.value }
