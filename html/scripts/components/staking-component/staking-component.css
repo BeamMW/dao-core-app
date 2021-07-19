@@ -238,6 +238,7 @@
 
 .farmed-value {
     display: flex;
+    align-items: center;
     flex-direction: row;
 }
 
@@ -249,8 +250,8 @@
 }
 
 .farmed-value__beamx-icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
 }
 
 .farmed-value__beamx-amount {

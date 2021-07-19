@@ -1,0 +1,9 @@
+.info-popup {
+    height: 42px;
+    border-radius: 10px;
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    background-color: rgba(189, 189, 189, 0.19);
+    padding: 14px 14px 14px 20px;
+    
+}

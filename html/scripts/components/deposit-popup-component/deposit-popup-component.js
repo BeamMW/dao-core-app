@@ -130,7 +130,7 @@ class DepositPopupComponent extends HTMLElement {
                     <div class="calc-area__farming">
                         <div class="calc-area-title">Farming estimation</div>
                         <div class="calc-area__farming__value">
-                            <img class="calc-area-icon" src="./icons/icon-beamx.png"/>
+                            <img class="calc-area-icon" src="./icons/icon-beamx.svg"/>
                             <span class="calc-area-estimation">
                                 ${ this.componentParams.yeildStr } BEAMX
                             </span>

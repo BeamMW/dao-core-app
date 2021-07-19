@@ -30,7 +30,7 @@ class StakingComponent extends HTMLElement {
         <div class="container-title">Farmed</div>
         <div class="staking__farmed__container">
         <div class="farmed-value">
-          <img class="farmed-value__beamx-icon" src="./icons/icon-beamx.png"/>
+          <img class="farmed-value__beamx-icon" src="./icons/icon-beamx.svg"/>
           <span class="farmed-value__beamx-amount" id="beamx-value">
             ${ Utils.numberWithSpaces(this.componentParams.beamxStr) } BEAMX
           </span>
