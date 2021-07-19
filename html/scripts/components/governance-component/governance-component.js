@@ -66,7 +66,7 @@ class GovernanceComponent extends HTMLElement {
           </div>
           <div class="governance__separator"></div>
           <div class="governance__pkey" id="governance-show-key">
-            <span class="governance__pkey__text">Show public key</span>  
+            <span class="governance__pkey__text">Show my public key</span>  
             <img class="governance__pkey__icon" src="./icons/icon-info.svg" />
           </div>
       </div>`;
