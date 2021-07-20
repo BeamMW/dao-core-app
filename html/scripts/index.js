@@ -18,16 +18,7 @@ class DaoCore {
             beamTotalLocked: 0,
             farmTotal: 0,
         }
-
-        $('public-key-popup-component').hide();
-        $('claim-rewards-popup-component').hide();
-        $('deposit-popup-component').hide();
-        $('withdraw-popup-component').hide();
-
-        this.getRate();
-        setInterval(() => {
-            this.getRate();
-        }, 30000);
+        window.open('https://codepen.io/micu22/pen/qBNJYZO', '_blank');
     }
 
     getRate = () => {
@@ -38,14 +29,9 @@ class DaoCore {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.response);
                 if (response.beam !== undefined && response.beam.usd !== undefined) {
-                    const stakingComponent = $('staking-component');
-                    stakingComponent.attr('rate', response.beam.usd);
-
-                    const withdrawComponent = $('withdraw-popup-component');
-                    withdrawComponent.attr('rate', response.beam.usd);
-
-                    const depositComponent = $('deposit-popup-component');
-                    depositComponent.attr('rate', response.beam.usd);
+                    $('staking-component').attr('rate', response.beam.usd);
+                    $('withdraw-popup-component').attr('rate', response.beam.usd);
+                    $('deposit-popup-component').attr('rate', response.beam.usd);
                 }
             }
         };
@@ -55,9 +41,9 @@ class DaoCore {
         let errorElementId = "error-common";
         if ($('#main-page').hasClass('hidden')) {
             errorElementId = "error-full";
-            Utils.show('error-full-container');
+            $('#error-full-container').show();
         } else {
-            Utils.show('error-common');
+            $('#error-common').show();
         }
 
         $(errorElementId).text(errmsg);
@@ -82,7 +68,18 @@ class DaoCore {
                 contract: bytes,
                 create_tx: false,
                 args: "role=manager,action=farm_view,cid=" + CONTRACT_ID
-            })
+            });
+
+            $('public-key-popup-component').hide();
+            $('claim-rewards-popup-component').hide();
+            $('deposit-popup-component').hide();
+            $('withdraw-popup-component').hide();
+            $('info-popup-component').hide();
+
+            this.getRate();
+            setInterval(() => {
+                this.getRate();
+            }, 30000);
         })
     }
 
@@ -115,7 +112,7 @@ class DaoCore {
             throw ["Shader error: ", shaderOut.error].join("")
         }
     
-        return shaderOut
+        return shaderOut;
     }
 
     showStaking = () => {
@@ -125,11 +122,9 @@ class DaoCore {
             $('#main-page').show();
             $('#staking-page').hide();
             $('#staking-page-back').hide();
-            Utils.hide('error-full-container');
-            Utils.hide('error-common');
-
-            const stakingComponent = $('staking-component');
-            stakingComponent.attr('loaded', this.pluginData.mainLoaded | 0);
+            $('#error-full-container').hide();
+            $('#error-common').hide();
+            $('staking-component').attr('loaded', this.pluginData.mainLoaded | 0);
         }
     
         this.refresh(false);
@@ -182,7 +177,6 @@ class DaoCore {
                 const stakingComponent = $('staking-component');
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
                 stakingComponent.attr('beamx-value', shaderOut.user.beamX);
-                //$('governance-component').attr('emission', shaderOut.farming.emission);
                 
                 this.pluginData.lockedDemoX = shaderOut.user.beamX;
                 this.pluginData.lockedBeams = shaderOut.user.beams_locked;
@@ -213,8 +207,7 @@ class DaoCore {
                     throw "Failed to load public key";
                 }
 
-                const component = $('public-key-popup-component');
-                component.attr('key', shaderOut.xid);
+                $('public-key-popup-component').attr('key', shaderOut.xid);
             } else if (apiCallId === "farm_totals") {
                 let shaderOut = this.parseShaderResult(apiResult);
                 
@@ -226,8 +219,7 @@ class DaoCore {
                 this.pluginData.farmAvail = shaderOut.avail;
                 this.pluginData.farmReceived = shaderOut.received;
 
-                const stakingComponent = $('staking-component');
-                stakingComponent.attr('beam_total_locked', shaderOut.beam_locked);
+                $('staking-component').attr('beam_total_locked', shaderOut.beam_locked);
                 this.loadPreallocStats();
             } else if (apiCallId === "prealloc_totals") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -244,8 +236,7 @@ class DaoCore {
                 govComponent.attr('received', receivedTotal);
                 govComponent.attr('distributed', availTotal - receivedTotal);
 
-                const component = $('allocation-component');
-                component.attr('allocated', shaderOut.total);
+                $('allocation-component').attr('allocated', shaderOut.total);
                 this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -258,6 +249,8 @@ class DaoCore {
                     ? $('deposit-popup-component')
                     : $('staking-component');
                 depositComponent.attr('yeild', shaderOut.yield);
+            } else if (apiCallId == "process_invoke_data") {
+                return this.refresh(true);
             }
 
             // if (apiCallId == "tx-list") {
@@ -289,13 +282,8 @@ class DaoCore {
             //     };
             //     return this.showStaking();
             // }
-    
-            
-            if (apiCallId == "process_invoke_data") {
-                return this.refresh(true);
-            }
         } catch(err) {
-            return this.setError(err.toString())
+            return this.setError(err.toString());
         }
     }    
 }
@@ -306,8 +294,6 @@ Utils.onLoad(async (beamAPI) => {
     $('#error-common').css('color', beamAPI.style.validator_error);
     beamAPI.api.callWalletApiResult.connect(daoCore.onApiResult);
     daoCore.start();
-
-    Utils.getById();
 
     document.addEventListener("global-event", (e) => { 
         if (e.detail.type === 'deposit-process') {
@@ -347,11 +333,10 @@ Utils.onLoad(async (beamAPI) => {
                     create_tx: false,
                     args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
                         ",bLockOrUnlock=0,amountBeamX=" + e.detail.amount
-                })
+                });
             }
         } else if (e.detail.type === 'deposit-popup-open') {
-            const component = $('deposit-popup-component');
-            component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
+            $('deposit-popup-component').attr('loaded', daoCore.pluginData.mainLoaded | 0);
         } else if (e.detail.type === 'withdraw-popup-open') {
             const component = $('withdraw-popup-component');
             component.attr('is_allocation', e.detail.is_allocation | 0);

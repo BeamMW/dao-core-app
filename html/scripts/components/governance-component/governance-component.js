@@ -7,13 +7,13 @@ class GovernanceComponent extends HTMLElement {
       locked: 0,
       available: 0,
       totalSupply: 0,
-      distributedStr: '0',
-      lockedStr: '0',
-      availableStr: '0',
-      totalSupplyStr: '0',
-      totalGraph: '0',
-      distrGraph: '0',
-      availGraph: '0'
+      distributedStr: '',
+      lockedStr: '',
+      availableStr: '',
+      totalSupplyStr: '',
+      totalGraph: '',
+      distrGraph: '',
+      availGraph: ''
     }
   
     constructor() {
@@ -28,37 +28,41 @@ class GovernanceComponent extends HTMLElement {
             <div class="gov-container__left">
               <div class="governance__title">Total supply</div>
               <div class="governance__value total">
-                ${ Utils.numberWithCommas(Utils.formateValue(this.componentParams.totalSupplyStr)) } BEAMX
+                <span id="gov-total-value">0</span> BEAMX
               </div>
               <div class="governance__title">
                 <span>Locked</span>
-                <img class="governance__title__icon" src="./icons/icon-info.svg" />
+                <img class="governance__title__icon" id="locked-info" src="./icons/icon-info.svg" />
+                <info-popup-component id="locked-info-popup"></info-popup-component>
               </div>
               <div class="governance__value">
-                ${ Utils.numberWithCommas(Utils.formateValue(this.componentParams.lockedStr)) } BEAMX
+                <span id="gov-locked-value">0</span> BEAMX
               </div>
               <div class="governance__title">
                 <span>Available</span>
-                <img class="governance__title__icon" src="./icons/icon-info.svg" />  
+                <img class="governance__title__icon" id="avail-info" src="./icons/icon-info.svg" />
+                <info-popup-component id="avail-info-popup"></info-popup-component>
               </div>
               <div class="governance__value">
-                ${ Utils.numberWithCommas(Utils.formateValue(this.componentParams.availableStr)) } BEAMX
+                <span id="gov-full-avail-value">0</span> BEAMX
               </div>
               <div class="governance__title">Distributed</div>
               <div class="governance__value">
-                ${ Utils.numberWithCommas(Utils.formateValue(this.componentParams.distributedStr)) } BEAMX
+                <span id="gov-distr-full-value">0</span> BEAMX
               </div>
             </div>
             <div class="gov-container__right">
-              <span class="gov-graph-supply"> ${ Utils.numberWithSpaces(this.componentParams.totalGraph) }k</span>
+              <span class="gov-graph-supply"> 
+                <span id="gov-supply-value">0</span>k
+              </span>
               <div class="gov__graph">
                 <span class="gov-graph-avail">
-                  ${ Utils.numberWithSpaces(this.componentParams.availGraph) }k
+                  <span id="gov-avail-value">0</span>k
                 </span>
                 <div class="gov__graph__available" id="gov-progress-available"></div>
                 <div class="gov__graph__value" id="gov-progress-value">
                   <span class="gov-graph-distr">
-                    ${ Utils.numberWithSpaces(this.componentParams.distrGraph) }k
+                    <span id="gov-distr-value">0</span>k
                   </span>
                 </div>
               </div>
@@ -67,7 +71,8 @@ class GovernanceComponent extends HTMLElement {
           <div class="governance__separator"></div>
           <div class="governance__pkey" id="governance-show-key">
             <span class="governance__pkey__text">Show my public key</span>  
-            <img class="governance__pkey__icon" src="./icons/icon-info.svg" />
+            <img class="governance__pkey__icon" id="key-info" src="./icons/icon-info.svg" />
+            <info-popup-component id="key-info-popup"></info-popup-component>
           </div>
       </div>`;
 
@@ -86,6 +91,27 @@ class GovernanceComponent extends HTMLElement {
         document.dispatchEvent(event);
       });
 
+      this.updateGraph();
+
+      $('#locked-info').click(() => {
+          $('#locked-info-popup').attr('type', 'locked');
+      });
+
+      $('#avail-info').click(() => {
+        $('#avail-info-popup').attr('type', 'avail');
+      });
+
+      $('#key-info').click((ev) => {
+        ev.stopPropagation();
+        $('#key-info-popup').attr('type', 'key');
+      });
+    };
+  
+    connectedCallback() {
+      this.render();
+    }
+
+    updateGraph() {
       const progressWidth = this.componentParams.totalSupply > 0 && this.componentParams.distributed > 0 
         ? Math.ceil($('.gov__graph').height() * 
             (this.componentParams.distributed / this.componentParams.totalSupply)) + 'px'
@@ -97,10 +123,6 @@ class GovernanceComponent extends HTMLElement {
             (this.componentParams.locked / this.componentParams.totalSupply)) + 'px'
         : 0;
       $('#gov-progress-available').css('margin-bottom', availablePosition);
-    };
-  
-    connectedCallback() {
-      this.render();
     }
     
     attributeChangedCallback(name, oldValue, newValue) {
@@ -110,19 +132,27 @@ class GovernanceComponent extends HTMLElement {
         this.componentParams.totalGraph = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM).div(1000).toFixed(0);
         this.componentParams.totalSupply = newValue;
         this.componentParams.totalSupplyStr = value;
+        $('#gov-total-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.totalSupplyStr)));
+        $('#gov-supply-value').text(Utils.numberWithSpaces(this.componentParams.totalGraph));
       } else if (name === 'received') {
         this.componentParams.locked = newValue;
         this.componentParams.lockedStr = value;
+        $('#gov-locked-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.lockedStr)));
       } else if (name === 'avail') {
         this.componentParams.availGraph = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM).div(1000).toFixed(0);
         this.componentParams.available = newValue;
         this.componentParams.availableStr = value;
+        $('#gov-avail-value').text(Utils.numberWithSpaces(this.componentParams.availGraph));
+        $('#gov-full-avail-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.availableStr)));
       } else if (name === 'distributed') {
         this.componentParams.distrGraph = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM).div(1000).toFixed(0);
         this.componentParams.distributed = newValue;
         this.componentParams.distributedStr = value;
+        $('#gov-distr-value').text(Utils.numberWithSpaces(this.componentParams.distrGraph));
+        $('#gov-distr-full-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.distributedStr)));
       }
-      this.render();
+
+      this.updateGraph();
     }
   
     

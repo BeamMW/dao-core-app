@@ -220,7 +220,7 @@ class DepositPopupComponent extends HTMLElement {
                 
                 let selectorItem = $('.selector');
                 selectorItem.text(this.componentParams.switcherSelectedValue.value);
-                selectorItem.width(targetItem.width() + 22);
+                selectorItem.width(targetItem.width() + 28);
                 selectorItem.css('left', targetItem.position().left);
                 this.triggerYeildCalc();
             })

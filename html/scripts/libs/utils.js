@@ -1,5 +1,4 @@
-const MIN_AMOUNT = 0.00000001;
-const MAX_AMOUNT = 254000000;
+import * as consts from "./../consts/consts.js";
 
 export default class Utils {
     static reload () {
@@ -21,9 +20,15 @@ export default class Utils {
     }
 
     static loadStyles() {
-        let topColor =  [this.BEAM.style.appsGradientOffset, "px,"].join('')
-        let mainColor = [this.BEAM.style.appsGradientTop, "px,"].join('')
-        document.body.style.color = this.BEAM.style.content_main
+        let topColor =  [this.BEAM.style.appsGradientOffset, "px,"].join('');
+        let mainColor = [this.BEAM.style.appsGradientTop, "px,"].join('');
+        document.body.style.backgroundImage = [
+            "linear-gradient(to bottom,",
+            Utils.BEAM.style.background_main_top, topColor, 
+            Utils.BEAM.style.background_main, mainColor,
+            Utils.BEAM.style.background_main
+        ].join(' ');
+        document.body.style.color = this.BEAM.style.content_main;
         document.querySelectorAll('.popup').forEach(item => {
             item.style.backgroundImage = `linear-gradient(to bottom, 
                 ${this.hex2rgba(this.BEAM.style.background_main_top, 0.6)} ${topColor}
@@ -46,22 +51,6 @@ export default class Utils {
         } else {
             return value;
         }
-    }
-
-    static getById = (id)  => {
-        return document.getElementById(id);
-    }
-    
-    static setText(id, text) {
-        Utils.getById(id).innerText = text
-    }
-
-    static show(id) {
-        this.getById(id).classList.remove("hidden");
-    }
-    
-    static hide(id) {
-        this.getById(id).classList.add("hidden");
     }
 
     static numberWithCommas(x) {
@@ -116,7 +105,6 @@ export default class Utils {
     }
 
     static handleString(next) {
-        let result = true;
         const regex = new RegExp(/^-?\d+(\.\d*)?$/g);
         const floatValue = parseFloat(next);
         const afterDot = next.indexOf('.') > 0 ? next.substring(next.indexOf('.') + 1) : '0';
@@ -126,9 +114,10 @@ export default class Utils {
             (afterDot.length > 8) ||
             (floatValue === 0 && next.length > 1 && next[1] !== '.') ||
             (floatValue < 1 && next.length > 10) ||
-            (floatValue > 0 && (floatValue < MIN_AMOUNT || floatValue > MAX_AMOUNT))) {
-          result = false;
+            (floatValue > 0 && (floatValue < consts.GLOBAL_CONSTS.MIN_BEAM_AMOUNT 
+                    || floatValue > consts.GLOBAL_CONSTS.MAX_BEAM_AMOUNT))) {
+          return false;
         }
-        return result;
+        return true;
     }
 }
