@@ -237,6 +237,7 @@ class DaoCore {
                 govComponent.attr('distributed', availTotal - receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
+                //Utils.callApi("tx-list", "tx_list", {});
                 this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -251,37 +252,34 @@ class DaoCore {
                 depositComponent.attr('yeild', shaderOut.yield);
             } else if (apiCallId == "process_invoke_data") {
                 return this.refresh(true);
+            } else if (apiCallId == "tx-list") {
+                if (!Array.isArray(apiResult)) {
+                    throw "Failed to get transactions list";
+                }
+
+                // for (let element of apiResult) {
+                //     if (element["tx_type_string"] == "contract") {
+                //         const ivdata = element["invoke_data"];
+                //         let isProgressDetected = false;
+                //         for (let data of ivdata) {
+                //             if (data["contract_id"] == CONTRACT_ID) {
+                //                 const status = element["status"]
+                //                 if (status === IN_PROGRESS_ID) {
+                //                     isProgressDetected = true;
+                //                     break;
+                //                 }
+                //             }
+                //         };
+
+                //         if (isProgressDetected) {
+                //             this.pluginData.inProgress = true;
+                //             break;
+                //         } else {
+                //             this.pluginData.inProgress = false;
+                //         }
+                //     }
+                // };
             }
-
-            // if (apiCallId == "tx-list") {
-            //     if (!Array.isArray(apiResult)) {
-            //         throw "Failed to get transactions list";
-            //     }
-
-            //     for (let element of apiResult) {
-            //         if (element["tx_type_string"] == "contract") {
-            //             const ivdata = element["invoke_data"];
-            //             let isProgressDetected = false;
-            //             for (let data of ivdata) {
-            //                 if (data["contract_id"] == CONTRACT_ID) {
-            //                     const status = element["status"]
-            //                     if (status === IN_PROGRESS_ID) {
-            //                         isProgressDetected = true;
-            //                         break;
-            //                     }
-            //                 }
-            //             };
-
-            //             if (isProgressDetected) {
-            //                 this.pluginData.inProgress = true;
-            //                 break;
-            //             } else {
-            //                 this.pluginData.inProgress = false;
-            //             }
-            //         }
-            //     };
-            //     return this.showStaking();
-            // }
         } catch(err) {
             return this.setError(err.toString());
         }
