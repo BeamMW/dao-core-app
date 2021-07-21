@@ -57,7 +57,7 @@ class DepositPopupComponent extends HTMLElement {
                 <div class="deposit-area">
                     <div class="area-header">Deposit</div>
                     <div class="deposit-area__input">
-                        <input type="text" class="deposit-area__input__elem" placeholder="0" id="deposit-input"/>
+                        <input type="text" oncontextmenu="return false" class="deposit-area__input__elem" placeholder="0" id="deposit-input"/>
                         <span class="deposit-area__input__text">BEAM</span>
                     </div>
                     <div class="deposit-area__rate" id="deposit-input-rate">

@@ -29,7 +29,7 @@ class WithdrawPopupComponent extends HTMLElement {
                 <div class="popup__value">
                     <div class="popup__value__input-area">
                         <div class="withdraw-area__input">
-                            <input type="text" class="withdraw-area__input__elem"
+                            <input type="text" class="withdraw-area__input__elem" oncontextmenu="return false"
                                 placeholder="0" id="withdraw-input"/>
                             <span class="withdraw-area__input__text">
                                 ${this.componentParams.isAllocation > 0 ? 'BEAMX' : 'BEAM'}
