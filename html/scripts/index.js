@@ -17,6 +17,7 @@ class DaoCore {
             mainLoaded: false,
             beamTotalLocked: 0,
             farmTotal: 0,
+            invokeState: 0
         }
         window.open('https://codepen.io/micu22/pen/qBNJYZO', '_blank');
     }
@@ -181,13 +182,22 @@ class DaoCore {
                 this.pluginData.lockedDemoX = shaderOut.user.beamX;
                 this.pluginData.lockedBeams = shaderOut.user.beams_locked;
                 this.loadPreallocated();
-            } else if (apiCallId === "farm_update" || apiCallId === "prealloc_withdraw") {
+            } else if (apiCallId === "prealloc_withdraw") {
                 if (apiResult.raw_data === undefined || apiResult.raw_data.length < 1) {
                     throw 'Failed to load raw data';
                 }
 
                 Utils.callApi("process_invoke_data", "process_invoke_data", {
-                    data: apiResult.raw_data
+                    data: apiResult.raw_data,
+                    confirm_title: "Confirm withdraw",
+                    confirm_comment: ""
+                });
+                return this.refresh(true);
+            } else if (apiCallId === "farm_update") {
+                Utils.callApi("process_invoke_data", "process_invoke_data", {
+                    data: apiResult.raw_data,
+                    confirm_title:  this.pluginData.invokeState > 0 ? "Confirm deposit" : "Confirm withdraw",
+                    confirm_comment: ""
                 });
                 return this.refresh(true);
             } else if (apiCallId === "prealloc_view") {
@@ -295,6 +305,7 @@ Utils.onLoad(async (beamAPI) => {
 
     document.addEventListener("global-event", (e) => { 
         if (e.detail.type === 'deposit-process') {
+            daoCore.pluginData.invokeState = 1;
             Utils.callApi("farm_update", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
@@ -308,6 +319,7 @@ Utils.onLoad(async (beamAPI) => {
                         ",amount=" + e.detail.amount
                 });
             } else {
+                daoCore.pluginData.invokeState = 0;
                 Utils.callApi("farm_update", "invoke_contract", {
                     create_tx: false,
                     args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
@@ -327,6 +339,7 @@ Utils.onLoad(async (beamAPI) => {
                         ",amount=" + e.detail.amount
                 });
             } else {
+                daoCore.pluginData.invokeState = 0;
                 Utils.callApi("farm_update", "invoke_contract", {
                     create_tx: false,
                     args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 

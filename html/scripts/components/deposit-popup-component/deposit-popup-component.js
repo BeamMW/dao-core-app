@@ -34,8 +34,8 @@ class DepositPopupComponent extends HTMLElement {
         loaded: 0,
         rate: 0,
         yeild: 0,
-        yeildStr: '0',
-        weeklyRewardStr: '0',
+        yeildStr: '',
+        weeklyRewardStr: '',
         switcherSelectedValue: this.switcherValues['switch-one-week']
     }
 
@@ -69,8 +69,8 @@ class DepositPopupComponent extends HTMLElement {
                             <div class="deposit-area__fee__value__beam">
                                 ${ consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM } BEAM
                             </div>
-                            <div class="deposit-area__fee__value__rate">
-                                ${ this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM) }
+                            <div class="deposit-area__fee__value__rate" id="deposit-fee-rate">
+                                0 USD
                             </div>
                         </div>
                     </div>
@@ -124,15 +124,15 @@ class DepositPopupComponent extends HTMLElement {
                     <div class="calc-area__reward">
                         <div class="calc-area__reward__weekly">
                             <div class="calc-area-title">Weekly reward</div>
-                            <div class="calc-area-value">${this.componentParams.weeklyRewardStr} BEAMX</div>
+                            <div class="calc-area-value" id="deposit-weekly-reward">0 BEAMX</div>
                         </div>
                     </div>
                     <div class="calc-area__farming">
                         <div class="calc-area-title">Farming estimation</div>
                         <div class="calc-area__farming__value">
                             <img class="calc-area-icon" src="./icons/icon-beamx.svg"/>
-                            <span class="calc-area-estimation">
-                                ${ this.componentParams.yeildStr } BEAMX
+                            <span class="calc-area-estimation" id="deposit-estimation">
+                                0 BEAMX
                             </span>
                         </div>
                     </div>
@@ -165,7 +165,9 @@ class DepositPopupComponent extends HTMLElement {
             $('#deposit-cancel').click(() => {
                 $('deposit-popup-component').hide();
                 this.componentParams.yeild = 0;
-                this.componentParams.yeildStr = '0';
+                this.componentParams.yeildStr = '';
+                this.componentParams.weeklyRewardStr = '';
+                this.componentParams.switcherSelectedValue = this.switcherValues['switch-one-week']
             });
 
             $('#deposit-confirm').click(() => {
@@ -208,9 +210,11 @@ class DepositPopupComponent extends HTMLElement {
             })
 
             $('#deposit-input').bind('paste', (event) => {
-                const text = event.clipboardData.getData('text');
-                if (!Utils.handleString(text)) {
-                    event.preventDefault();
+                if (event.clipboardData !== undefined) {
+                    const text = event.clipboardData.getData('text');
+                    if (!Utils.handleString(text)) {
+                        event.preventDefault();
+                    }
                 }
             })
 
@@ -220,7 +224,7 @@ class DepositPopupComponent extends HTMLElement {
                 
                 let selectorItem = $('.selector');
                 selectorItem.text(this.componentParams.switcherSelectedValue.value);
-                selectorItem.width(targetItem.width() + 28);
+                selectorItem.width(targetItem.width() + 29);
                 selectorItem.css('left', targetItem.position().left);
                 this.triggerYeildCalc();
             })
@@ -239,16 +243,17 @@ class DepositPopupComponent extends HTMLElement {
             this.render();
         } else if (name === 'rate') {
             this.componentParams.rate = newValue;
+            $('#deposit-fee-rate').text(this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM));
         } else if (name === 'yeild') {
             this.componentParams.yeild = newValue;
             this.componentParams.yeildStr = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
             this.componentParams.weeklyRewardStr = 
                 this.componentParams.yeildStr.div(this.componentParams.switcherSelectedValue.wCount);
             
-            $('.calc-area-value').text((parseFloat(this.componentParams.weeklyRewardStr) > 0 
+            $('#deposit-weekly-reward').text((parseFloat(this.componentParams.weeklyRewardStr) > 0 
                 ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.weeklyRewardStr)) 
                 : '0') + ' BEAMX');
-            $('.calc-area-estimation').text(
+            $('#deposit-estimation').text(
                 (parseFloat(this.componentParams.yeildStr) > 0 
                 ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.yeildStr)) 
                 : '0') + ' BEAMX');

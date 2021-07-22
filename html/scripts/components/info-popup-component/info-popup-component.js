@@ -31,7 +31,7 @@ class InfoPopupComponent extends HTMLElement {
         const TEMPLATE_WEEKLY =
         `<div id="info-popup" class="popup-info weekly">
             <div class="info-popup-content">
-                <span class="popup-info__text">The longer you stake for, the higher the reward is.</span>
+                <span class="popup-info__text">The longer you stake for, the higher the reward is</span>
                 <img class="popup-info__icon" id="popup-info-weekly-cancel" src="./icons/icon-cancel-info.svg" />
             </div>
             <div class="info-popup__separator"></div>
