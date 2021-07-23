@@ -46,7 +46,7 @@ class DepositPopupComponent extends HTMLElement {
     getRateStr(value) {
         const rateVal = Utils.formateValue(new Big(value).times(this.componentParams.rate));
         return (this.componentParams.rate > 0 && value > 0
-          ? (rateVal > 0.1 ? (Utils.numberWithSpaces(rateVal) + ' USD') : '< 1 cent')
+          ? (rateVal > 0.1 ? (Utils.numberWithCommas(rateVal) + ' USD') : '< 1 cent')
           : '0 USD');
     }
 
@@ -57,7 +57,7 @@ class DepositPopupComponent extends HTMLElement {
                 <div class="deposit-area">
                     <div class="area-header">Deposit</div>
                     <div class="deposit-area__input">
-                        <input type="text" oncontextmenu="return false" class="deposit-area__input__elem" placeholder="0" id="deposit-input"/>
+                        <input type="text" class="deposit-area__input__elem" placeholder="0" id="deposit-input"/>
                         <span class="deposit-area__input__text">BEAM</span>
                     </div>
                     <div class="deposit-area__rate" id="deposit-input-rate">
@@ -70,7 +70,7 @@ class DepositPopupComponent extends HTMLElement {
                                 ${ consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM } BEAM
                             </div>
                             <div class="deposit-area__fee__value__rate" id="deposit-fee-rate">
-                                0 USD
+                                ${ this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM) } USD
                             </div>
                         </div>
                     </div>
@@ -251,11 +251,11 @@ class DepositPopupComponent extends HTMLElement {
                 this.componentParams.yeildStr.div(this.componentParams.switcherSelectedValue.wCount);
             
             $('#deposit-weekly-reward').text((parseFloat(this.componentParams.weeklyRewardStr) > 0 
-                ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.weeklyRewardStr)) 
+                ? Utils.numberWithCommas(Utils.formateValue(this.componentParams.weeklyRewardStr)) 
                 : '0') + ' BEAMX');
             $('#deposit-estimation').text(
                 (parseFloat(this.componentParams.yeildStr) > 0 
-                ? Utils.numberWithSpaces(Utils.formateValue(this.componentParams.yeildStr)) 
+                ? Utils.numberWithCommas(Utils.formateValue(this.componentParams.yeildStr)) 
                 : '0') + ' BEAMX');
         }
     }

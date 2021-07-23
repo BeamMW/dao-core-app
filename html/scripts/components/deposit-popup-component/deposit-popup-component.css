@@ -50,6 +50,7 @@
     padding: 0;
     border-radius: 10px;
     padding: 8px;
+    max-width: 292px;
 }
 
 .deposit-area__input__elem:focus {

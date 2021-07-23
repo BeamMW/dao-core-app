@@ -20,7 +20,7 @@ class StakingComponent extends HTMLElement {
 
   getRateStr(value) {
     return (this.componentParams.rate > 0 && value > 0 
-      ? Utils.numberWithSpaces(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
+      ? Utils.numberWithCommas(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
       : '0') + ' USD';
   }
 
@@ -33,7 +33,7 @@ class StakingComponent extends HTMLElement {
           <img class="farmed-value__beamx-icon" src="./icons/icon-beamx.svg"/>
           <span class="farmed-value__beamx-amount">
             <span id="beamx-value">
-              ${Utils.numberWithSpaces(this.componentParams.beamxStr)}
+              ${Utils.numberWithCommas(this.componentParams.beamxStr)}
             </span> BEAMX
           </span>
         </div>
@@ -81,7 +81,7 @@ class StakingComponent extends HTMLElement {
                 <div class="info-title">Total value locked</div>
                 <div class="info-tvl__value">
                   <span id="beam-total-value">
-                    ${Utils.numberWithSpaces(this.componentParams.beamTotalLockedStr)}
+                    ${Utils.numberWithCommas(this.componentParams.beamTotalLockedStr)}
                   </span> BEAM
                 </div>
                 <div class="info-tvl__rate" id="beam-total-value-rate">0 USD</div>
@@ -105,7 +105,7 @@ class StakingComponent extends HTMLElement {
                           <div class="total-container__value">
                               <div class="total-container__value__beam">
                                 <span id="beam-value">
-                                  ${(Utils.numberWithSpaces(this.componentParams.beamStr))}
+                                  ${(Utils.numberWithCommas(this.componentParams.beamStr))}
                                 </span> BEAM
                               </div>
                               <div class="total-container__value__usd" id="beam-value-rate">0 USD</div>
@@ -200,11 +200,11 @@ class StakingComponent extends HTMLElement {
     if (name === 'beam-value') {
       this.componentParams.beam = newValue;
       this.componentParams.beamStr = Utils.formateValue(value);
-      $('#beam-value').text(Utils.numberWithSpaces(this.componentParams.beamStr));
+      $('#beam-value').text(Utils.numberWithCommas(this.componentParams.beamStr));
     } else if (name === 'beamx-value') {
       this.componentParams.beamx = newValue;
       this.componentParams.beamxStr = Utils.formateValue(value);
-      $('#beamx-value').text(Utils.numberWithSpaces(this.componentParams.beamxStr));
+      $('#beamx-value').text(Utils.numberWithCommas(this.componentParams.beamxStr));
     } else if (name === 'loaded') {
       this.componentParams.loaded = newValue;
 
@@ -218,12 +218,12 @@ class StakingComponent extends HTMLElement {
     } else if (name === 'beam_total_locked') {
       this.componentParams.beamTotalLocked = newValue;
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);
-      $('#beam-total-value').text(Utils.numberWithSpaces(this.componentParams.beamTotalLockedStr));
+      $('#beam-total-value').text(Utils.numberWithCommas(this.componentParams.beamTotalLockedStr));
     } else if (name === 'yeild') {
       const yeild= Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
           
       this.componentParams.yeildStr = (parseFloat(yeild) > 0 
-          ? Utils.numberWithSpaces(Utils.formateValue(yeild)) 
+          ? Utils.numberWithCommas(Utils.formateValue(yeild)) 
           : '0') + ' BEAMX';
       $('#staking-weekly-yeild').text(this.componentParams.yeildStr);
     }

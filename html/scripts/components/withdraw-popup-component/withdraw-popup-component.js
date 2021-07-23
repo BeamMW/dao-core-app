@@ -17,7 +17,7 @@ class WithdrawPopupComponent extends HTMLElement {
     getRateStr(value) {
         const rateVal = Utils.formateValue(new Big(value).times(this.componentParams.rate));
         return (this.componentParams.rate > 0 && value > 0
-          ? (rateVal > 0.1 ? (Utils.numberWithSpaces(rateVal) + ' USD') : '< 1 cent')
+          ? (rateVal > 0.1 ? (Utils.numberWithCommas(rateVal) + ' USD') : '< 1 cent')
           : '0 USD');
     }
 
@@ -29,7 +29,7 @@ class WithdrawPopupComponent extends HTMLElement {
                 <div class="popup__value">
                     <div class="popup__value__input-area">
                         <div class="withdraw-area__input">
-                            <input type="text" class="withdraw-area__input__elem" oncontextmenu="return false"
+                            <input type="text" class="withdraw-area__input__elem"
                                 placeholder="0" id="withdraw-input"/>
                             <span class="withdraw-area__input__text">
                                 ${this.componentParams.isAllocation > 0 ? 'BEAMX' : 'BEAM'}
@@ -57,7 +57,7 @@ class WithdrawPopupComponent extends HTMLElement {
                     <div class="ivalid-state-message" id="max-value-invalid">
                         Insufficient funds to complete the transaction.<br>
                         Maximum amount is 
-                        ${Utils.numberWithSpaces(Utils.formateValue(this.componentParams.maxValue))} BEAM.
+                        ${Utils.numberWithCommas(Utils.formateValue(this.componentParams.maxValue))} BEAM.
                     </div>
                     
                 </div>

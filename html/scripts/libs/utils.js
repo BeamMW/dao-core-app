@@ -61,14 +61,6 @@ export default class Utils {
         }
     }
 
-    static numberWithSpaces(x) {
-        if (x > 0) {
-            return x.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        } else {
-            return x;
-        }
-    }
-
     static callApi(callid, method, params) {
         let request = {
             "jsonrpc": "2.0",

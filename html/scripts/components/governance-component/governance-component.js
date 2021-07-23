@@ -133,7 +133,7 @@ class GovernanceComponent extends HTMLElement {
         this.componentParams.totalSupply = newValue;
         this.componentParams.totalSupplyStr = value;
         $('#gov-total-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.totalSupplyStr)));
-        $('#gov-supply-value').text(Utils.numberWithSpaces(this.componentParams.totalGraph));
+        $('#gov-supply-value').text(Utils.numberWithCommas(this.componentParams.totalGraph));
       } else if (name === 'received') {
         this.componentParams.locked = newValue;
         this.componentParams.lockedStr = value;
@@ -142,13 +142,13 @@ class GovernanceComponent extends HTMLElement {
         this.componentParams.availGraph = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM).div(1000).toFixed(0);
         this.componentParams.available = newValue;
         this.componentParams.availableStr = value;
-        $('#gov-avail-value').text(Utils.numberWithSpaces(this.componentParams.availGraph));
+        $('#gov-avail-value').text(Utils.numberWithCommas(this.componentParams.availGraph));
         $('#gov-full-avail-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.availableStr)));
       } else if (name === 'distributed') {
         this.componentParams.distrGraph = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM).div(1000).toFixed(0);
         this.componentParams.distributed = newValue;
         this.componentParams.distributedStr = value;
-        $('#gov-distr-value').text(Utils.numberWithSpaces(this.componentParams.distrGraph));
+        $('#gov-distr-value').text(Utils.numberWithCommas(this.componentParams.distrGraph));
         $('#gov-distr-full-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.distributedStr)));
       }
 

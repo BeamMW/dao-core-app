@@ -39,9 +39,9 @@ class DaoCore {
     }
 
     setError = (errmsg) => {
-        let errorElementId = "error-common";
-        if ($('#main-page').hasClass('hidden')) {
-            errorElementId = "error-full";
+        let errorElementId = "#error-common";
+        if ($('#main-page').css('display') === 'none') {
+            errorElementId = "#error-full";
             $('#error-full-container').show();
         } else {
             $('#error-common').show();
@@ -172,7 +172,7 @@ class DaoCore {
             if (apiCallId === "farm_view") {
                 let shaderOut = this.parseShaderResult(apiResult);
                 if (shaderOut.user === undefined) {
-                    throw "Failed to farm view";
+                    throw "Failed to load farm view";    
                 }
 
                 const stakingComponent = $('staking-component');
@@ -208,6 +208,8 @@ class DaoCore {
                     component.attr('received', shaderOut.received);
                     component.attr('avail_total', shaderOut.avail_total);
                     component.attr('avail_remaining', shaderOut.avail_remaining);
+                } else {
+                    $('allocation-component').hide();
                 }
                 this.loadFarmStats();
             } else if (apiCallId === "my_xid") {
@@ -247,7 +249,6 @@ class DaoCore {
                 govComponent.attr('distributed', availTotal - receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
-                //Utils.callApi("tx-list", "tx_list", {});
                 this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
