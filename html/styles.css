@@ -3,6 +3,7 @@
 body {
     font-family: 'SFProDisplay', sans-serif;
     font-weight: normal;
+    overflow: hidden;
 }
 
 .container {
