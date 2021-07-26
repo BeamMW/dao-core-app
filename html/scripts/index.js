@@ -189,14 +189,12 @@ class DaoCore {
 
                 Utils.callApi("process_invoke_data", "process_invoke_data", {
                     data: apiResult.raw_data,
-                    confirm_title: "Confirm withdraw",
                     confirm_comment: ""
                 });
                 return this.refresh(true);
             } else if (apiCallId === "farm_update") {
                 Utils.callApi("process_invoke_data", "process_invoke_data", {
                     data: apiResult.raw_data,
-                    confirm_title:  this.pluginData.invokeState > 0 ? "Confirm deposit" : "Confirm withdraw",
                     confirm_comment: ""
                 });
                 return this.refresh(true);

@@ -86,7 +86,11 @@ class InfoPopupComponent extends HTMLElement {
 
         $('#popup-info-weekly-cancel').click((ev) => {
             $('#weekly-info-popup').hide();
-        })
+        });
+
+        $('#info-popup').click((ev) => {
+            ev.stopPropagation();
+        });
     };
   
     connectedCallback() {

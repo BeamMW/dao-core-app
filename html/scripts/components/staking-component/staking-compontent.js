@@ -18,12 +18,6 @@ class StakingComponent extends HTMLElement {
     super();
   }
 
-  getRateStr(value) {
-    return (this.componentParams.rate > 0 && value > 0 
-      ? Utils.numberWithCommas(Utils.formateValue(new Big(value).times(this.componentParams.rate)))
-      : '0') + ' USD';
-  }
-
   getTemplate() {
     const FARMED = 
       `<div class="staking__farmed">
@@ -189,7 +183,7 @@ class StakingComponent extends HTMLElement {
         type: 'calc-yeild',
         from: 'staking',
         amount: this.componentParams.beamTotalLocked,
-        hPeriod: 10080
+        hPeriod: consts.GLOBAL_CONSTS.WEEKLY_BLOCKS_AMOUNT
       }
     });
     document.dispatchEvent(event);
@@ -213,8 +207,8 @@ class StakingComponent extends HTMLElement {
       $('#weekly-info').show();
     } else if (name === 'rate') {
       this.componentParams.rate = newValue;
-      $('#beam-total-value-rate').text(this.getRateStr(this.componentParams.beamTotalLockedStr));
-      $('#beam-value-rate').text(this.getRateStr(this.componentParams.beamStr));
+      $('#beam-total-value-rate').text(Utils.getRateStr(this.componentParams.beamTotalLockedStr, this.componentParams.rate));
+      $('#beam-value-rate').text(Utils.getRateStr(this.componentParams.beamStr, this.componentParams.rate));
     } else if (name === 'beam_total_locked') {
       this.componentParams.beamTotalLocked = newValue;
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);

@@ -43,13 +43,6 @@ class DepositPopupComponent extends HTMLElement {
         super();
     }
 
-    getRateStr(value) {
-        const rateVal = Utils.formateValue(new Big(value).times(this.componentParams.rate));
-        return (this.componentParams.rate > 0 && value > 0
-          ? (rateVal > 0.1 ? (Utils.numberWithCommas(rateVal) + ' USD') : '< 1 cent')
-          : '0 USD');
-    }
-
     getTemplate() {
         const TEMPLATE =
         `<div class="popup">
@@ -70,7 +63,7 @@ class DepositPopupComponent extends HTMLElement {
                                 ${ consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM } BEAM
                             </div>
                             <div class="deposit-area__fee__value__rate" id="deposit-fee-rate">
-                                ${ this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM) } USD
+                                ${ Utils.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM, this.componentParams.rate) }
                             </div>
                         </div>
                     </div>
@@ -186,7 +179,7 @@ class DepositPopupComponent extends HTMLElement {
 
             $('#deposit-input').on('input', (e) => {
                 const value = $('#deposit-input').val();
-                $('#deposit-input-rate').text(this.getRateStr(value.length > 0 ? value : 0));
+                $('#deposit-input-rate').text(Utils.getRateStr(value.length > 0 ? value : 0, this.componentParams.rate));
 
                 this.triggerYeildCalc();
              });
@@ -243,7 +236,7 @@ class DepositPopupComponent extends HTMLElement {
             this.render();
         } else if (name === 'rate') {
             this.componentParams.rate = newValue;
-            $('#deposit-fee-rate').text(this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM));
+            $('#deposit-fee-rate').text(Utils.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM, this.componentParams.rate));
         } else if (name === 'yeild') {
             this.componentParams.yeild = newValue;
             this.componentParams.yeildStr = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);

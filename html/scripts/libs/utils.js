@@ -22,12 +22,13 @@ export default class Utils {
     static loadStyles() {
         let topColor =  [this.BEAM.style.appsGradientOffset, "px,"].join('');
         let mainColor = [this.BEAM.style.appsGradientTop, "px,"].join('');
-        document.body.style.backgroundImage = [
+
+        $('#bg').css('background-image', [
             "linear-gradient(to bottom,",
             Utils.BEAM.style.background_main_top, topColor, 
             Utils.BEAM.style.background_main, mainColor,
             Utils.BEAM.style.background_main
-        ].join(' ');
+        ].join(' '));
         document.body.style.color = this.BEAM.style.content_main;
         document.querySelectorAll('.popup').forEach(item => {
             item.style.backgroundImage = `linear-gradient(to bottom, 
@@ -59,6 +60,13 @@ export default class Utils {
         } else {
             return x;
         }
+    }
+
+    static getRateStr(value, rate) {
+        const rateVal = Utils.formateValue(new Big(value).times(rate));
+        return (rate > 0 && value > 0
+          ? (rateVal > 0.1 ? (Utils.numberWithCommas(rateVal) + ' USD') : '< 1 cent')
+          : '0 USD');
     }
 
     static callApi(callid, method, params) {
