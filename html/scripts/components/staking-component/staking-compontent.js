@@ -6,9 +6,9 @@ class StakingComponent extends HTMLElement {
     beam: 0,
     beamx: 0,
     beamxStr: '',
-    beamStr: '',
+    beamStr: '0',
     rate: 0,
-    beamTotalLockedStr: '',
+    beamTotalLockedStr: '0',
     beamTotalLocked: 0,
     loaded: false,
     yeildStr: ''
@@ -18,35 +18,12 @@ class StakingComponent extends HTMLElement {
     super();
   }
 
-  getTemplate() {
-    const FARMED = 
-      `<div class="staking__farmed">
-        <div class="container-title">Farmed</div>
-        <div class="staking__farmed__container">
-        <div class="farmed-value">
-          <img class="farmed-value__beamx-icon" src="./icons/icon-beamx.svg"/>
-          <span class="farmed-value__beamx-amount">
-            <span id="beamx-value">
-              ${Utils.numberWithCommas(this.componentParams.beamxStr)}
-            </span> BEAMX
-          </span>
-        </div>
-        <div class="farmed-claim" id="staking-claim-rewards">
-          <img class="farmed-claim__icon" src="./icons/icon-star.svg">
-          <span class="farmed-claim__text">claim rewards</span>
-        </div>
-        </div>
-      </div>`;
+  getTemplate() {    
+    const TEMPLATE_LOADING = 
+      `<div class="staking" id="staking-component"></div>`;
 
-    const FARMED_EMPTY =
-      `<div class="staking__farmed">
-        <div class="staking__farmed__container empty-farmed">  
-          <div class="farmed-empty-text">You have nothing farmed yet.</div>
-        </div>
-      </div>`;
-
-    const TEMPLATE_EMPTY = 
-      `<div class="staking-empty-container">
+    const TEMPLATE = 
+      `<div class="staking-empty-container" id="staking-empty-component">
           <div class="container__header">STAKING</div>
           <div class="staking-empty">
               <div class="staking-empty__text">Deposit your BEAM and get BEAMX</div>
@@ -61,13 +38,9 @@ class StakingComponent extends HTMLElement {
                   </button>
               </div>
           </div>
-      </div>`;
-    
-    const TEMPLATE_LOADING = 
-      `<div class="staking" id="staking-component"></div>`;
-
-    const TEMPLATE = 
-      `<div class="staking" id="staking-component">
+      </div>
+      
+      <div class="staking" id="staking-component-elem">
           <div class="staking__header">
             <div class="container__header">STAKING</div>
             <div class="staking__header__info">
@@ -118,17 +91,58 @@ class StakingComponent extends HTMLElement {
                   </div>
               </div>
               <div class="staking__separator"></div>
-              ${ this.componentParams.beamx > 0 ? FARMED : FARMED_EMPTY }
+              <div class="staking__farmed" id="staking-farmed-claim">
+                <div class="container-title">Farmed</div>
+                <div class="staking__farmed__container">
+                <div class="farmed-value">
+                  <img class="farmed-value__beamx-icon" src="./icons/icon-beamx.svg"/>
+                  <span class="farmed-value__beamx-amount">
+                    <span id="beamx-value">
+                      ${Utils.numberWithCommas(this.componentParams.beamxStr)}
+                    </span> BEAMX
+                  </span>
+                </div>
+                <div class="farmed-claim" id="staking-claim-rewards">
+                  <img class="farmed-claim__icon" src="./icons/icon-star.svg">
+                  <span class="farmed-claim__text">claim rewards</span>
+                </div>
+                </div>
+              </div>
+              <div class="staking__farmed" id="staking-farmed-empty">
+                <div class="staking__farmed__container empty-farmed">  
+                  <div class="farmed-empty-text">You have nothing farmed yet.</div>
+                </div>
+              </div>
           </div>
       </div>`;
 
       return this.componentParams.loaded > 0
-        ? (this.componentParams.beamx > 0 || this.componentParams.beam > 0 ? TEMPLATE : TEMPLATE_EMPTY)
+        ? TEMPLATE
         : TEMPLATE_LOADING;
   } 
 
   render() {
     this.innerHTML = this.getTemplate();
+    $('#staking-farmed-claim').hide();
+    $('#staking-empty-component').hide()
+    $('#staking-farmed-empty').hide();
+    $('#staking-component-elem').hide();
+
+    if (this.componentParams.beamx > 0) { 
+      $('#staking-farmed-claim').show();
+      $('#staking-farmed-empty').hide();
+    } else {
+      $('#staking-farmed-empty').show();
+      $('#staking-farmed-claim').hide();
+    }
+
+    if (this.componentParams.beam > 0) { 
+      $('#staking-component-elem').show();
+      $('#staking-empty-component').hide();
+    } else {
+      $('#staking-empty-component').show();
+      $('#staking-component-elem').hide();
+    }
 
     $('#withdraw').click((ev) => {
       ev.stopPropagation();
@@ -171,6 +185,10 @@ class StakingComponent extends HTMLElement {
       });
       document.dispatchEvent(event);
     })
+
+    if (this.componentParams.loaded) {
+      $('#weekly-info').show();
+    }
   };
 
   connectedCallback() {
@@ -195,16 +213,30 @@ class StakingComponent extends HTMLElement {
       this.componentParams.beam = newValue;
       this.componentParams.beamStr = Utils.formateValue(value);
       $('#beam-value').text(Utils.numberWithCommas(this.componentParams.beamStr));
+      
+      if (this.componentParams.beam > 0) { 
+        $('#staking-component-elem').show();
+        $('#staking-empty-component').hide();
+      } else {
+        $('#staking-empty-component').show();
+        $('#staking-component-elem').hide();
+      }
     } else if (name === 'beamx-value') {
       this.componentParams.beamx = newValue;
       this.componentParams.beamxStr = Utils.formateValue(value);
+      if (this.componentParams.beamx > 0) { 
+        $('#staking-farmed-claim').show();
+        $('#staking-farmed-empty').hide();
+      } else {
+        $('#staking-farmed-empty').show();
+        $('#staking-farmed-claim').hide();
+      }
       $('#beamx-value').text(Utils.numberWithCommas(this.componentParams.beamxStr));
     } else if (name === 'loaded') {
       this.componentParams.loaded = newValue;
 
       this.triggerCalcYeild();
       this.render();
-      $('#weekly-info').show();
     } else if (name === 'rate') {
       this.componentParams.rate = newValue;
       $('#beam-total-value-rate').text(Utils.getRateStr(this.componentParams.beamTotalLockedStr, this.componentParams.rate));
@@ -212,6 +244,7 @@ class StakingComponent extends HTMLElement {
     } else if (name === 'beam_total_locked') {
       this.componentParams.beamTotalLocked = newValue;
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);
+      this.triggerCalcYeild();
       $('#beam-total-value').text(Utils.numberWithCommas(this.componentParams.beamTotalLockedStr));
     } else if (name === 'yeild') {
       const yeild= Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);

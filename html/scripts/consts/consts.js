@@ -7,3 +7,14 @@ export const GLOBAL_CONSTS = {
     MAX_BEAM_AMOUNT: 254000000,
     WEEKLY_BLOCKS_AMOUNT: 10080
 }
+
+export const REQUEST_TYPES = {
+    UNIQUE: 'unique',
+    CUMULATIVE: 'cumulative',
+    DISPOSABLE: 'disposable'
+}
+
+export const REQUEST_PRIORITY = {
+    COMMON: 'common',
+    HIGH: 'high'
+}
