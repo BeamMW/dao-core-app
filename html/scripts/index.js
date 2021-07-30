@@ -7,8 +7,7 @@ const IN_PROGRESS_ID = 5;
 const TIMEOUT = 3000;
 
 class DaoCore {
-    constructor(utils) {
-        this.utilsObj = utils;
+    constructor() {
         this.timeout = undefined;
         this.pluginData = {
             inTransaction: false,
@@ -65,11 +64,11 @@ class DaoCore {
                 return this.setError(errMsg);
             }
     
-            this.utilsObj.addRequest("farm_view", "invoke_contract", {
+            Utils.callApi("farm_view", "invoke_contract", {
                 contract: bytes,
                 create_tx: false,
                 args: "role=manager,action=farm_view,cid=" + CONTRACT_ID
-            }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.COMMON);
+            });
 
             $('public-key-popup-component').hide();
             $('claim-rewards-popup-component').hide();
@@ -89,10 +88,10 @@ class DaoCore {
             clearTimeout(this.timeout);
         }
         this.timeout = setTimeout(() => {
-            this.utilsObj.addRequest("farm_view", "invoke_contract", {
+            Utils.callApi("farm_view", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=farm_view,cid=" + CONTRACT_ID
-            }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.COMMON);    
+            });
         }, now ? 0 : 3000)
     }
     
@@ -120,34 +119,28 @@ class DaoCore {
             $('#error-common').hide();
             $('staking-component').attr('loaded', this.pluginData.mainLoaded | 0);
         }
-    
-        if (!this.utilsObj.isInitialized) {
-            this.utilsObj.stopReqProcessing();
-            this.utilsObj.isInitialized = true;
-            this.utilsObj.startReqProcessing();
-        }
         this.refresh(false);
     }
 
     loadPreallocStats = () => {
-        this.utilsObj.addRequest("prealloc_totals", "invoke_contract", {
+        Utils.callApi("prealloc_totals", "invoke_contract", {
             create_tx: false,
             args: "role=manager,action=prealloc_totals,cid=" + CONTRACT_ID
-        }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.COMMON);
+        });
     }
 
     loadFarmStats = () => {
-        this.utilsObj.addRequest("farm_totals", "invoke_contract", {
+        Utils.callApi("farm_totals", "invoke_contract", {
             create_tx: false,
             args: "role=manager,action=farm_totals,cid=" + CONTRACT_ID
-        }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.COMMON);
+        });
     }
 
     loadPreallocated = () => {
-        this.utilsObj.addRequest("prealloc_view", "invoke_contract", {
+        Utils.callApi("prealloc_view", "invoke_contract", {
             create_tx: false,
             args: "role=manager,action=prealloc_view,cid=" + CONTRACT_ID
-        }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.COMMON);
+        });
     }
 
     onApiResult = (json) => {    
@@ -182,18 +175,16 @@ class DaoCore {
                 this.pluginData.lockedDemoX = shaderOut.user.beamX;
                 this.pluginData.lockedBeams = shaderOut.user.beams_locked;
 
-                this.utilsObj.finishRequest();
                 this.loadPreallocated();
             } else if (apiCallId === "prealloc_withdraw" || apiCallId === "farm_update") {
                 if (apiResult.raw_data === undefined || apiResult.raw_data.length === 0) {
                     throw 'Failed to load raw data';
                 }
 
-                this.utilsObj.finishRequest();
-                this.utilsObj.addRequest("process_invoke_data", "process_invoke_data", {
+                Utils.callApi("process_invoke_data", "process_invoke_data", {
                     data: apiResult.raw_data,
                     confirm_comment: ""
-                }, consts.REQUEST_TYPES.DISPOSABLE, consts.REQUEST_PRIORITY.HIGH);
+                });
             } else if (apiCallId === "prealloc_view") {
                 let shaderOut = this.parseShaderResult(apiResult);
                 if (shaderOut.total !== undefined) {
@@ -206,7 +197,6 @@ class DaoCore {
                     $('allocation-component').hide();
                 }
 
-                this.utilsObj.finishRequest();
                 this.loadFarmStats();
             } else if (apiCallId === "my_xid") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -215,7 +205,6 @@ class DaoCore {
                     throw "Failed to load public key";
                 }
 
-                this.utilsObj.finishRequest();
                 $('public-key-popup-component').attr('key', shaderOut.xid);
             } else if (apiCallId === "farm_totals") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -229,7 +218,6 @@ class DaoCore {
                 this.pluginData.farmReceived = shaderOut.received;
 
                 $('staking-component').attr('beam_total_locked', shaderOut.beam_locked);
-                this.utilsObj.finishRequest();
                 this.loadPreallocStats();
             } else if (apiCallId === "prealloc_totals") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -247,7 +235,6 @@ class DaoCore {
                 govComponent.attr('distributed', availTotal - receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
-                this.utilsObj.finishRequest();
                 this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
@@ -260,9 +247,7 @@ class DaoCore {
                     ? $('deposit-popup-component')
                     : $('staking-component');
                 depositComponent.attr('yeild', shaderOut.yield);
-                this.utilsObj.finishRequest();
             } else if (apiCallId == "process_invoke_data") {
-                this.utilsObj.finishRequest();
             }
         } catch(err) {
             return this.setError(err.toString());
@@ -271,9 +256,7 @@ class DaoCore {
 }
 
 Utils.onLoad(async (beamAPI) => {
-    const utils = new Utils();
-    const daoCore = new DaoCore(utils);
-    utils.startReqProcessing();
+    const daoCore = new DaoCore();
     $('#error-full-container').css('color', beamAPI.style.validator_error);
     $('#error-common').css('color', beamAPI.style.validator_error);
     beamAPI.api.callWalletApiResult.connect(daoCore.onApiResult);
@@ -281,43 +264,43 @@ Utils.onLoad(async (beamAPI) => {
 
     document.addEventListener("global-event", (e) => { 
         if (e.detail.type === 'deposit-process') {
-            utils.addRequest("farm_update", "invoke_contract", {
+            Utils.callApi("farm_update", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
                     ",bLockOrUnlock=1,amountBeam=" + e.detail.amount
-            }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.HIGH);
+            });
         } else if (e.detail.type === 'withdraw-process') {
             if (e.detail.is_allocation > 0) {
-                utils.addRequest("prealloc_withdraw", "invoke_contract", {
+                Utils.callApi("prealloc_withdraw", "invoke_contract", {
                     create_tx: false,
                     args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
                         ",amount=" + e.detail.amount
-                }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.HIGH);
+                });
             } else {
-                utils.addRequest("farm_update", "invoke_contract", {
+                Utils.callApi("farm_update", "invoke_contract", {
                     create_tx: false,
                     args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
                         ",bLockOrUnlock=0,amountBeam=" + e.detail.amount
-                }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.HIGH);
+                });
             }
         } else if (e.detail.type === 'show-public-key') {
-            utils.addRequest("my_xid", "invoke_contract", {
+            Utils.callApi("my_xid", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=my_xid"
-            }, consts.REQUEST_TYPES.UNIQUE, consts.REQUEST_PRIORITY.HIGH);
+            });
         } else if (e.detail.type === 'claim-rewards-process') {
             if (e.detail.is_allocation > 0) {
-                utils.addRequest("prealloc_withdraw", "invoke_contract", {
+                Utils.callApi("prealloc_withdraw", "invoke_contract", {
                     create_tx: false,
                     args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
                         ",amount=" + e.detail.amount
-                }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.HIGH);
+                });
             } else {
-                utils.addRequest("farm_update", "invoke_contract", {
+                Utils.callApi("farm_update", "invoke_contract", {
                     create_tx: false,
                     args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
                         ",bLockOrUnlock=0,amountBeamX=" + e.detail.amount
-                }, consts.REQUEST_TYPES.CUMULATIVE, consts.REQUEST_PRIORITY.HIGH);
+                });
             }
         } else if (e.detail.type === 'deposit-popup-open') {
             $('deposit-popup-component').attr('loaded', daoCore.pluginData.mainLoaded | 0);
@@ -329,13 +312,11 @@ Utils.onLoad(async (beamAPI) => {
         } else if (e.detail.type === 'calc-yeild') {
             daoCore.pluginData.yieldType = e.detail.from;
 
-            utils.addRequest("farm_get_yield", "invoke_contract", {
+            Utils.callApi("farm_get_yield", "invoke_contract", {
                 create_tx: false,
                 args: "role=manager,action=farm_get_yield,cid=" + CONTRACT_ID + ",amount=" + 
                     e.detail.amount + ",hPeriod=" + e.detail.hPeriod
-            }, 
-            e.detail.from === 'deposit' ? consts.REQUEST_TYPES.UNIQUE : consts.REQUEST_TYPES.CUMULATIVE, 
-            consts.REQUEST_PRIORITY.HIGH);
+            });
         }
     });
 });

@@ -2,7 +2,7 @@
     padding: 10px;
     display: flex;
     flex-direction: row;
-    width: 735px;
+    width: 745px;
 }
 
 .deposit-area {
@@ -183,7 +183,8 @@
     place-self: flex-start;
     margin-top: 10px;
     height: 30px;
-    line-height: normal;border-radius: 16px;
+    line-height: normal;
+    border-radius: 16px;
     background-color: rgba(255, 255, 255, 0.1);
     border: none;
     position: relative;
@@ -194,10 +195,7 @@
     position: relative;
     display: block;
     float: left;
-    -webkit-transition: 300ms ease-in;
-    -moz-transition: 300ms ease-in;
-    transition: 300ms ease-in;
-    padding: 15.6px;
+    padding: 0 14px;
     font-size: 14px;
     letter-spacing: 0.02px;
     color: rgba(255, 255, 255, .5);
@@ -209,13 +207,15 @@
 }
 
 .selector {
+    -webkit-transition: 300ms ease-in;
+    -moz-transition: 300ms ease-in;
+    transition: 300ms ease-in;
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
     box-sizing: border-box;
     height: 32px;
-    top: -1px;
     text-align: center;
     cursor: default;
     border-radius: 16px;
@@ -226,5 +226,5 @@
     box-shadow: 0 0 2px rgba(0, 246, 210, 0.5);
     opacity: 1;
     left: -1px;
-    width: 74px;
+    width: 71px;
 }

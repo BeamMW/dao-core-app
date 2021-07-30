@@ -5,61 +5,6 @@ export default class Utils {
     // API Exposed by the wallet itself
     //
     BEAM = null;
-    requestQueue = [];
-    requestInProgress = false;
-    shiftedReq = {};
-    queueTick = 0;
-    isInitialized = false;
-    currentInterval = null;
-
-    addRequest = (id, method, params, type, priority) => {
-        if (type === consts.REQUEST_TYPES.UNIQUE) {
-            let itemToRemove = this.requestQueue.find((request) => {
-                return request.id === id;
-            })
-            if (itemToRemove !== undefined) {
-                const itemIndex = this.requestQueue.indexOf(itemToRemove);
-                this.requestQueue.splice(itemIndex, 1)
-            }
-        }
-
-        if (priority === consts.REQUEST_PRIORITY.COMMON) {
-            this.requestQueue.push({id, method, params, type, priority});
-        } else if (priority === consts.REQUEST_PRIORITY.HIGH) {
-            this.requestQueue.unshift({id, method, params, type, priority});
-        }
-    }
-
-    startReqProcessing = () => {
-        this.currentInterval = setInterval(() => {
-            if (this.requestQueue.length > 0 && !this.requestInProgress) {
-                this.shiftedReq = this.requestQueue.shift();
-                this.requestInProgress = true;
-                this.queueTick = 0;
-
-                Utils.callApi(this.shiftedReq.id, this.shiftedReq.method, this.shiftedReq.params);
-            } else if (this.queueTick < 20 && this.requestInProgress) {
-                ++this.queueTick;
-            } else if (this.queueTick >= 20 && this.requestInProgress && this.shiftedReq.type !== consts.REQUEST_TYPES.DISPOSABLE) {
-                this.requestInProgress = false;
-                this.requestQueue.unshift(this.shiftedReq);
-            }
-        }, this.isInitialized ? 500 : 0)
-    }
-
-    stopReqProcessing = () => {
-        if (this.currentInterval) {
-            clearInterval(this.currentInterval);
-        }
-    }
-
-    finishRequest = () => {
-        if (this.requestInProgress) {
-            this.shiftedReq = {};
-            this.queueTick = 0;
-            this.requestInProgress = false;
-        }
-    }
 
     static onLoad(cback) {
         window.addEventListener('load', () => new QWebChannel(qt.webChannelTransport, (channel) => {
