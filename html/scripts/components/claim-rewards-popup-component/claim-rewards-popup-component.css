@@ -3,7 +3,7 @@
 }
 
 .popup__content.claim-rewards {
-    height: 139px;
+    height: 139px !important;
 }
 
 .claim-rewards-value {
