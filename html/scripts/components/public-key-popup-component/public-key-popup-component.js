@@ -24,7 +24,7 @@ class PublicKeyPopupComponent extends HTMLElement {
                             <div class="ui-button__icon">
                                 <img src="./icons/icon-cancel.svg"/>
                             </div>
-                            <span class="ui-button__text cancel-text">cancel</span>
+                            <span class="ui-button__text cancel-text">close</span>
                         </span>
                     </button>
                 </div>

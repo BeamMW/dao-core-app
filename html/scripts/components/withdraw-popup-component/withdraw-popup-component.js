@@ -14,13 +14,6 @@ class WithdrawPopupComponent extends HTMLElement {
       super();
     }
 
-    getRateStr(value) {
-        const rateVal = Utils.formateValue(new Big(value).times(this.componentParams.rate));
-        return (this.componentParams.rate > 0 && value > 0
-          ? (rateVal > 0.1 ? (Utils.numberWithSpaces(rateVal) + ' USD') : '< 1 cent')
-          : '0 USD');
-    }
-
     getTemplate() {
         const TEMPLATE =
         `<div class="popup">
@@ -50,14 +43,14 @@ class WithdrawPopupComponent extends HTMLElement {
                                 ${consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM} BEAM
                             </div>
                             <div class="withdraw-area__fee__value__rate">
-                                ${ this.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM) }
+                                ${ Utils.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM, this.componentParams.rate) }
                             </div>
                         </div>
                     </div>
                     <div class="ivalid-state-message" id="max-value-invalid">
                         Insufficient funds to complete the transaction.<br>
                         Maximum amount is 
-                        ${Utils.numberWithSpaces(Utils.formateValue(this.componentParams.maxValue))} BEAM.
+                        ${Utils.numberWithCommas(Utils.formateValue(this.componentParams.maxValue))} BEAM.
                     </div>
                     
                 </div>
@@ -113,10 +106,10 @@ class WithdrawPopupComponent extends HTMLElement {
 
             $('#withdraw-input').on('input', (event) => {
                 const value = $('#withdraw-input').val();
-                $('#withdraw-input-rate').text(this.getRateStr(value.length > 0 ? value : 0));
+                $('#withdraw-input-rate').text(Utils.getRateStr(value.length > 0 ? value : 0, this.componentParams.rate));
 
                 this.componentParams.isValid = parseFloat(value.length > 0 ? value : 0) 
-                    < parseFloat(this.componentParams.maxValue.toFixed());
+                    <= parseFloat(this.componentParams.maxValue.toFixed());
                 if (this.componentParams.isValid) {
                     this.setValidState();
                 } else {
@@ -154,7 +147,7 @@ class WithdrawPopupComponent extends HTMLElement {
 
             $('#add-max-control').click(() => {
                 $('#withdraw-input').val(this.componentParams.maxValue);
-                $('#withdraw-input-rate').text(this.getRateStr(this.componentParams.maxValue));
+                $('#withdraw-input-rate').text(Utils.getRateStr(this.componentParams.maxValue, this.componentParams.rate));
                 this.componentParams.isValid = true;
                 this.setValidState();
             })

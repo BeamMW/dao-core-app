@@ -5,3 +5,4 @@ export * from './public-key-popup-component/public-key-popup-component.js';
 export * from './claim-rewards-popup-component/claim-rewards-popup-component.js';
 export * from './deposit-popup-component/deposit-popup-component.js';
 export * from './withdraw-popup-component/withdraw-popup-component.js';
+export * from './info-popup-component/info-popup-component.js';
