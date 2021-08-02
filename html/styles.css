@@ -1,10 +1,5 @@
 @import './fonts/fonts.css';
 
-<<<<<<< HEAD
-body {
-    font-family: 'SFProDisplay', sans-serif;
-    font-weight: normal;
-=======
 @import './scripts/components/staking-component/staking-component.css';
 @import './scripts/components/governance-component/governance-component.css';
 @import './scripts/components/allocation-component/allocation-component.css';
@@ -195,13 +190,9 @@ html {
     justify-content: center;
     height: 100%;
     width: 100%;
->>>>>>> main
     overflow: hidden;
 }
 
-<<<<<<< HEAD
-.container {
-=======
 #error-full-container {
     display: none;
     margin-top: 120px;
@@ -230,7 +221,6 @@ html {
     height: 139px;
     border-radius: 10px;
     background-color: #00446c;
->>>>>>> main
     display: flex;
     flex-direction: column;
     width: 580px;
