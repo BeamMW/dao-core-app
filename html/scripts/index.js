@@ -1,7 +1,7 @@
 import Utils from "./libs/utils.js";
 import * as consts from "./consts/consts.js";
 
-const CONTRACT_ID = "8cef85a6ed4f2c3ecbbcd0b5b2cf0fd60c3fd863015f38bf725582f26183308c";
+const CONTRACT_ID = "3e06e4d233c7f46c2b6810661d6164bbf239f7ab6cb52aba375b987691e02eba";
 const REJECTED_CALL_ID = -32021;
 const IN_PROGRESS_ID = 5;
 const TIMEOUT = 3000;
