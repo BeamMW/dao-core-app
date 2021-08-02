@@ -166,7 +166,8 @@ class DepositPopupComponent extends HTMLElement {
                 this.componentParams.yeild = 0;
                 this.componentParams.yeildStr = '';
                 this.componentParams.weeklyRewardStr = '';
-                this.componentParams.switcherSelectedValue = this.switcherValues['switch-one-week']
+                this.componentParams.switcherSelectedValue = this.switcherValues['switch-one-week'];
+                this.componentParams.prevSwitcherValue = 'switch-one-week';
             });
 
             $('#deposit-confirm').click(() => {
