@@ -109,7 +109,7 @@ class WithdrawPopupComponent extends HTMLElement {
                 $('#withdraw-input-rate').text(Utils.getRateStr(value.length > 0 ? value : 0, this.componentParams.rate));
 
                 this.componentParams.isValid = parseFloat(value.length > 0 ? value : 0) 
-                    < parseFloat(this.componentParams.maxValue.toFixed());
+                    <= parseFloat(this.componentParams.maxValue.toFixed());
                 if (this.componentParams.isValid) {
                     this.setValidState();
                 } else {

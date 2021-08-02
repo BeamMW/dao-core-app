@@ -124,6 +124,7 @@
     font-size: 14px;
     font-style: italic;
     color: #ffffff;
+    letter-spacing: 0.15px;
 }
 
 .calc-area__reward {
@@ -194,7 +195,9 @@
     cursor: pointer;
     position: relative;
     display: block;
+    text-align: center;
     float: left;
+    min-width: 25px;
     padding: 0 14px;
     font-size: 14px;
     letter-spacing: 0.02px;
@@ -226,5 +229,5 @@
     box-shadow: 0 0 2px rgba(0, 246, 210, 0.5);
     opacity: 1;
     left: -1px;
-    width: 71px;
+    width: 79px;
 }

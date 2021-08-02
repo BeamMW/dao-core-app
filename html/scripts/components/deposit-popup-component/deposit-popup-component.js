@@ -42,7 +42,7 @@ class DepositPopupComponent extends HTMLElement {
         yeildStr: '',
         weeklyRewardStr: '',
         switcherSelectedValue: this.switcherValues['switch-one-week'],
-        prevSwitcherValue: null
+        prevSwitcherValue: 'switch-one-week'
     }
 
     constructor() {
@@ -220,10 +220,13 @@ class DepositPopupComponent extends HTMLElement {
             $('.switch__item').click((event) => {
                 let targetItem = $(event.target);
                 if (this.componentParams.prevSwitcherValue) {
-                    $('#'+this.componentParams.prevSwitcherValue).text(this.componentParams.switcherSelectedValue.value);
+                    let prevItem = $('#'+this.componentParams.prevSwitcherValue);
+                    prevItem.text(this.componentParams.switcherSelectedValue.value);
+                    prevItem.css('min-width', '25px');
                 }
                 this.componentParams.switcherSelectedValue = this.switcherValues[targetItem.attr('id')];
                 targetItem.text(this.componentParams.switcherSelectedValue.fullValue);
+                targetItem.css('min-width', '50px');
                 let selectorItem = $('.selector');
                 selectorItem.text(this.componentParams.switcherSelectedValue.fullValue);
                 selectorItem.width(targetItem.width() + 29);
@@ -245,6 +248,7 @@ class DepositPopupComponent extends HTMLElement {
         if (name === 'loaded') {
             this.componentParams.loaded = newValue;
             this.render();
+            $('#switch-one-week').css('min-width', '50px')
         } else if (name === 'rate') {
             this.componentParams.rate = newValue;
             $('#deposit-fee-rate').text(Utils.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM, this.componentParams.rate));
