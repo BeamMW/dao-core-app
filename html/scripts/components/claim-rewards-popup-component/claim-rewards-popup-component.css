@@ -2,6 +2,10 @@
     margin-top: 15px;
 }
 
+.popup__content.claim-rewards {
+    height: 139px;
+}
+
 .claim-rewards-value {
     font-size: 14px;
     line-height: 1.29;
