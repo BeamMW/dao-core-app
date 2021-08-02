@@ -112,11 +112,14 @@ class GovernanceComponent extends HTMLElement {
     }
 
     updateGraph() {
-      const progressWidth = this.componentParams.totalSupply > 0 && this.componentParams.distributed > 0 
+      const progressHeight = this.componentParams.totalSupply > 0 && this.componentParams.distributed > 0 
         ? Math.ceil($('.gov__graph').height() * 
-            (this.componentParams.distributed / this.componentParams.totalSupply)) + 'px'
+            (this.componentParams.distributed / this.componentParams.totalSupply))
         : 0;
-      $('#gov-progress-value').height(progressWidth);
+      if (progressHeight <= 18) {
+        $('#gov-distr-value').hide();
+      }
+      $('#gov-progress-value').height(progressHeight + 'px');
 
       const availablePosition = this.componentParams.totalSupply > 0 && this.componentParams.locked > 0
         ? Math.ceil($('.gov__graph').height() *
