@@ -2,7 +2,8 @@ import Utils from "./../../libs/utils.js";
 
 class InfoPopupComponent extends HTMLElement {
     componentParams = {
-      popupType: ''
+      popupType: '',
+      isVisible: false
     }
 
     constructor() {
@@ -68,27 +69,38 @@ class InfoPopupComponent extends HTMLElement {
   
     render() {
         this.innerHTML = this.getTemplate();
-
         $(this).show();
+        this.componentParams.isVisible = true;
+
+        $(window).click((ev) => {
+            if (this.componentParams.isVisible) {
+                $(this).hide();
+            }
+            ev.stopPropagation();
+        });
 
         $('#popup-info-lock-cancel').click(() => {
             $('#locked-info-popup').hide();
+            this.componentParams.isVisible = false;
         });
 
         $('#popup-info-avail-cancel').click(() => {
             $('#avail-info-popup').hide();
+            this.componentParams.isVisible = false;
         });
 
         $('#popup-info-key-cancel').click((ev) => {
             ev.stopPropagation();
             $('#key-info-popup').hide();
+            this.componentParams.isVisible = false;
         });
 
         $('#popup-info-weekly-cancel').click((ev) => {
             $('#weekly-info-popup').hide();
+            this.componentParams.isVisible = false;
         });
 
-        $('#info-popup').click((ev) => {
+        $(this).click((ev) => {
             ev.stopPropagation();
         });
     };

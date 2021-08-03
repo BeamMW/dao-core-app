@@ -173,7 +173,9 @@ class StakingComponent extends HTMLElement {
     })
 
     $('#weekly-info').click((ev) => {
+      $('info-popup-component').hide();
       $('#weekly-info-popup').attr('type', 'weekly');
+      ev.stopPropagation();
     });
 
     $('#withdraw').click((ev) => {
@@ -200,7 +202,7 @@ class StakingComponent extends HTMLElement {
       detail: {
         type: 'calc-yeild',
         from: 'staking',
-        amount: this.componentParams.beamTotalLocked,
+        amount: this.componentParams.beam,
         hPeriod: consts.GLOBAL_CONSTS.WEEKLY_BLOCKS_AMOUNT
       }
     });

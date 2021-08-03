@@ -93,15 +93,20 @@ class GovernanceComponent extends HTMLElement {
 
       this.updateGraph();
 
-      $('#locked-info').click(() => {
-          $('#locked-info-popup').attr('type', 'locked');
+      $('#locked-info').click((ev) => {
+        $('info-popup-component').hide();
+        $('#locked-info-popup').attr('type', 'locked');
+        ev.stopPropagation();
       });
 
-      $('#avail-info').click(() => {
+      $('#avail-info').click((ev) => {
+        $('info-popup-component').hide();
         $('#avail-info-popup').attr('type', 'avail');
+        ev.stopPropagation();
       });
 
       $('#key-info').click((ev) => {
+        $('info-popup-component').hide();
         ev.stopPropagation();
         $('#key-info-popup').attr('type', 'key');
       });
@@ -117,15 +122,15 @@ class GovernanceComponent extends HTMLElement {
             (this.componentParams.distributed / this.componentParams.totalSupply))
         : 0;
       if (progressHeight <= 18) {
-        $('#gov-distr-value').hide();
+        $('.gov-graph-distr').hide();
       }
       $('#gov-progress-value').height(progressHeight + 'px');
 
       const availablePosition = this.componentParams.totalSupply > 0 && this.componentParams.locked > 0
         ? Math.ceil($('.gov__graph').height() *
-            (this.componentParams.locked / this.componentParams.totalSupply)) + 'px'
+            (this.componentParams.available / this.componentParams.totalSupply))
         : 0;
-      $('#gov-progress-available').css('margin-bottom', availablePosition);
+      $('#gov-progress-available').css('margin-bottom', (availablePosition) + 'px');
     }
     
     attributeChangedCallback(name, oldValue, newValue) {
@@ -137,7 +142,7 @@ class GovernanceComponent extends HTMLElement {
         this.componentParams.totalSupplyStr = value;
         $('#gov-total-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.totalSupplyStr)));
         $('#gov-supply-value').text(Utils.numberWithCommas(this.componentParams.totalGraph));
-      } else if (name === 'received') {
+      } else if (name === 'locked') {
         this.componentParams.locked = newValue;
         this.componentParams.lockedStr = value;
         $('#gov-locked-value').text(Utils.numberWithCommas(Utils.formateValue(this.componentParams.lockedStr)));
@@ -160,7 +165,7 @@ class GovernanceComponent extends HTMLElement {
   
     
     static get observedAttributes() {
-      return ['total', 'received', 'avail', 'distributed'];
+      return ['total', 'locked', 'avail', 'distributed'];
     }
   }
   
