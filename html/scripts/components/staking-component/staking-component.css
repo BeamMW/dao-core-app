@@ -19,6 +19,13 @@
     padding: 20px;
 }
 
+.staking-content-empty {
+    padding: 50px 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .staking__header {
     padding: 20px;
     border-top-left-radius: 10px;
@@ -44,7 +51,6 @@
 }
 
 .staking-empty__text {
-    margin-top: 30px;
     opacity: 0.5;
     font-family: SFProDisplay;
     font-size: 16px;

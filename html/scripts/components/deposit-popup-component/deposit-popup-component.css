@@ -153,7 +153,7 @@
 }
 
 .calc-area__farming {
-    margin-top: 36px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
 }
@@ -182,7 +182,7 @@
     display: flex;
     align-items: center;
     place-self: flex-start;
-    margin-top: 10px;
+    margin-top: 20px;
     height: 30px;
     line-height: normal;
     border-radius: 16px;

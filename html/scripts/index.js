@@ -70,11 +70,7 @@ class DaoCore {
                 args: "role=manager,action=farm_view,cid=" + CONTRACT_ID
             });
 
-            $('public-key-popup-component').hide();
-            $('claim-rewards-popup-component').hide();
-            $('deposit-popup-component').hide();
-            $('withdraw-popup-component').hide();
-            $('info-popup-component').hide();
+            this.hidePopups();
 
             this.getRate();
             setInterval(() => {
@@ -192,7 +188,8 @@ class DaoCore {
                     component.attr('total', shaderOut.total);
                     component.attr('received', shaderOut.received);
                     component.attr('avail_total', shaderOut.avail_total);
-                    component.attr('avail_remaining', shaderOut.avail_remaining);
+                    component.attr('locked', shaderOut.total - shaderOut.avail_total);
+                    component.attr('remaining', shaderOut.avail_remaining);
                 } else {
                     $('allocation-component').hide();
                 }
@@ -229,10 +226,11 @@ class DaoCore {
                 const govComponent = $('governance-component')
                 const availTotal = shaderOut.avail + this.pluginData.farmAvail;
                 const receivedTotal = shaderOut.received + this.pluginData.farmReceived;
-                govComponent.attr('total', shaderOut.total + this.pluginData.farmTotal);
-                govComponent.attr('avail', availTotal);
-                govComponent.attr('received', receivedTotal);
-                govComponent.attr('distributed', availTotal - receivedTotal);
+                const total = shaderOut.total + this.pluginData.farmTotal;
+                govComponent.attr('total', total);
+                govComponent.attr('avail', availTotal - receivedTotal);
+                govComponent.attr('locked', total - availTotal);
+                govComponent.attr('distributed', receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
                 this.showStaking();
@@ -252,7 +250,15 @@ class DaoCore {
         } catch(err) {
             return this.setError(err.toString());
         }
-    }    
+    }
+
+    hidePopups() {
+        $('public-key-popup-component').hide();
+        $('claim-rewards-popup-component').hide();
+        $('deposit-popup-component').hide();
+        $('withdraw-popup-component').hide();
+        $('info-popup-component').hide();
+    }
 }
 
 Utils.onLoad(async (beamAPI) => {

@@ -12,7 +12,8 @@ class AllocationComponent extends HTMLElement {
       lockedStr: '0',
       allocatedStr: '0',
       distributedStr: '0',
-      availableStr: '0'
+      availableStr: '0',
+      remaining: 0
     }
 
     constructor() {
@@ -76,25 +77,28 @@ class AllocationComponent extends HTMLElement {
       return this.componentParams.total > 0 ? TEMPLATE : '';
     }
   
+    updateStats() {
+        const progressWidth = this.componentParams.total > 0 && this.componentParams.distributed > 0 
+        ? Math.ceil($('#allocation-progress').width() * 
+            (this.componentParams.distributed / this.componentParams.total)) 
+        : 0;
+        $('#allocation-progress-value').width(progressWidth + 'px');
+
+        const availablePosition = this.componentParams.total > 0 && this.componentParams.available > 0
+            ? Math.ceil($('#allocation-progress').width() *
+                (this.componentParams.available / this.componentParams.total)) 
+            : 0;
+        $('#allocation-progress-available').css('margin-left',(availablePosition) + 'px');
+    }
+
     render() {
         this.innerHTML = this.getTemplate();
-        const progressWidth = this.componentParams.total > 0 && this.componentParams.distributed > 0 
-            ? Math.ceil($('#allocation-progress').width() * 
-                (this.componentParams.distributed / this.componentParams.total)) + 'px'
-            : 0;
-        $('#allocation-progress-value').width(progressWidth);
-
-        const availablePosition = this.componentParams.total > 0 && this.componentParams.locked > 0
-            ? Math.ceil($('#allocation-progress').width() *
-                (this.componentParams.locked / this.componentParams.total)) + 'px'
-            : 0;
-        $('#allocation-progress-available').css('margin-left',availablePosition);
-
+        this.updateStats();
         $('#allocation-claim').click(() => {
             const component = $('claim-rewards-popup-component');
             component.attr('is_allocation', 1);
-            component.attr('value_str', this.componentParams.lockedStr);
-            component.attr('value', this.componentParams.locked);
+            component.attr('value_str', this.componentParams.availableStr);
+            component.attr('value', this.componentParams.available);
         });
     };
   
@@ -108,24 +112,26 @@ class AllocationComponent extends HTMLElement {
             this.componentParams.total = newValue;
             this.componentParams.totalStr = Utils.formateValue(value);
         } else if (name === 'avail_total') {
-            this.componentParams.available = newValue;
-            this.componentParams.availableStr = Utils.formateValue(value);
+            
         } else if (name === 'received') {
             this.componentParams.distributed = newValue;
             this.componentParams.distributedStr = Utils.formateValue(value);
-        } else if (name === 'avail_remaining') {
+        } else if (name === 'locked') {
             this.componentParams.locked = newValue;
             this.componentParams.lockedStr = Utils.formateValue(value);
         } else if (name === 'allocated') {
             this.componentParams.allocated = newValue;
             this.componentParams.allocatedStr = Utils.formateValue(value);
+        } else if (name === 'remaining') {
+            this.componentParams.available = newValue;
+            this.componentParams.availableStr = Utils.formateValue(value);
         }
         this.render();
     }
   
     
     static get observedAttributes() {
-      return ['total', 'received', 'avail_total', 'avail_remaining', 'allocated'];
+      return ['total', 'received', 'avail_total', 'locked', 'remaining', 'allocated'];
     }
   }
 
