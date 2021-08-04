@@ -23,24 +23,7 @@ class StakingComponent extends HTMLElement {
       `<div class="staking" id="staking-component"></div>`;
 
     const TEMPLATE = 
-      `<div class="staking-empty-container" id="staking-empty-component">
-          <div class="container__header">STAKING</div>
-          <div class="staking-empty">
-              <div class="staking-empty__text">Deposit your BEAM and get BEAMX</div>
-              <div>
-                  <button class="staking-empty__deposit-button ui-button" id="empty-deposit">
-                      <span class="ui-button__inner-wrapper">
-                          <div class="ui-button__icon">
-                              <img src="./icons/icon-send-blue.svg"/>
-                          </div>
-                          <span class="ui-button__text">deposit</span>
-                      </span>
-                  </button>
-              </div>
-          </div>
-      </div>
-      
-      <div class="staking" id="staking-component-elem">
+      `<div class="staking">
           <div class="staking__header">
             <div class="container__header">STAKING</div>
             <div class="staking__header__info">
@@ -53,7 +36,7 @@ class StakingComponent extends HTMLElement {
                 </div>
                 <div class="info-tvl__rate" id="beam-total-value-rate">0 USD</div>
               </div>
-              <div class="info-arp-w">
+              <div class="info-arp-w" id="my-weekly">
                 <div class="info-arp-w__container">
                   <span class="info-title">My weekly reward</span>
                   <img class="info-arp-w__container__icon" style="display: none;" id="weekly-info" src="./icons/icon-info.svg" />
@@ -63,7 +46,7 @@ class StakingComponent extends HTMLElement {
               </div>
             </div>
           </div>
-          <div class="staking-content">
+          <div class="staking-content" id="staking-component-elem">
               <div class="staking__deposit">
                   <div class="staking__deposit__total">
                       <div class="container-title">Balance</div>
@@ -114,35 +97,57 @@ class StakingComponent extends HTMLElement {
                 </div>
               </div>
           </div>
+          <div class="staking-content-empty" id="staking-component-empty">
+              <div class="staking-empty__text">Deposit your BEAM and get BEAMX</div>
+              <div>
+                  <button class="staking-empty__deposit-button ui-button" id="empty-deposit">
+                      <span class="ui-button__inner-wrapper">
+                          <div class="ui-button__icon">
+                              <img src="./icons/icon-send-blue.svg"/>
+                          </div>
+                          <span class="ui-button__text">deposit</span>
+                      </span>
+                  </button>
+              </div>
+          </div>
       </div>`;
 
       return this.componentParams.loaded > 0
         ? TEMPLATE
         : TEMPLATE_LOADING;
-  } 
+  }
 
-  render() {
-    this.innerHTML = this.getTemplate();
-    $('#staking-farmed-claim').hide();
-    $('#staking-empty-component').hide()
-    $('#staking-farmed-empty').hide();
-    $('#staking-component-elem').hide();
-
+  beamxAreaCheck() {
     if (this.componentParams.beamx > 0) { 
       $('#staking-farmed-claim').show();
       $('#staking-farmed-empty').hide();
     } else {
-      $('#staking-farmed-empty').show();
       $('#staking-farmed-claim').hide();
+      $('#staking-farmed-empty').show();
     }
+  }
 
-    if (this.componentParams.beam > 0) { 
+  beamComponentCheck() {
+    if (this.componentParams.beam > 0 || this.componentParams.beamx > 0) { 
       $('#staking-component-elem').show();
-      $('#staking-empty-component').hide();
+      $('#staking-component-empty').hide();
+      $('#my-weekly').show();
     } else {
-      $('#staking-empty-component').show();
       $('#staking-component-elem').hide();
+      $('#staking-component-empty').show();
+      $('#my-weekly').hide();
     }
+  }
+
+  render() {
+    this.innerHTML = this.getTemplate();
+    $('#staking-farmed-claim').hide();
+    $('#staking-component-empty').hide()
+    $('#staking-farmed-empty').hide();
+    $('#staking-component-elem').hide();
+
+    this.beamxAreaCheck();
+    this.beamComponentCheck();
 
     $('#withdraw').click((ev) => {
       ev.stopPropagation();
@@ -216,23 +221,11 @@ class StakingComponent extends HTMLElement {
       this.componentParams.beamStr = Utils.formateValue(value);
       $('#beam-value').text(Utils.numberWithCommas(this.componentParams.beamStr));
       
-      if (this.componentParams.beam > 0) { 
-        $('#staking-component-elem').show();
-        $('#staking-empty-component').hide();
-      } else {
-        $('#staking-empty-component').show();
-        $('#staking-component-elem').hide();
-      }
+      this.beamComponentCheck();
     } else if (name === 'beamx-value') {
       this.componentParams.beamx = newValue;
       this.componentParams.beamxStr = Utils.formateValue(value);
-      if (this.componentParams.beamx > 0) { 
-        $('#staking-farmed-claim').show();
-        $('#staking-farmed-empty').hide();
-      } else {
-        $('#staking-farmed-empty').show();
-        $('#staking-farmed-claim').hide();
-      }
+      this.beamxAreaCheck();
       $('#beamx-value').text(Utils.numberWithCommas(this.componentParams.beamxStr));
     } else if (name === 'loaded') {
       this.componentParams.loaded = newValue;
