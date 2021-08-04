@@ -55,7 +55,7 @@ class StakingComponent extends HTMLElement {
               </div>
               <div class="info-arp-w">
                 <div class="info-arp-w__container">
-                  <span class="info-title">Weekly reward</span>
+                  <span class="info-title">My weekly reward</span>
                   <img class="info-arp-w__container__icon" style="display: none;" id="weekly-info" src="./icons/icon-info.svg" />
                   <info-popup-component id="weekly-info-popup"></info-popup-component>
                 </div>

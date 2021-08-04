@@ -94,7 +94,8 @@ class DepositPopupComponent extends HTMLElement {
                 </div>    
                 <div class="calc-area">
                     <div class="area-header">Staking calculator</div>
-                    <div class="calc-area__info">The longer you stake for, the higher the reward is.</div>
+                    <div class="calc-area__info">The longer you stake for, the higher the reward is.
+                    <br>You can withdraw your funds at any time.</div>
                     <div class="switch">
                         <div class="switch__item" id="switch-one-week" 
                                 hval="${this.switcherValues['switch-one-week'].height}">
@@ -122,7 +123,7 @@ class DepositPopupComponent extends HTMLElement {
                     </div>
                     <div class="calc-area__reward">
                         <div class="calc-area__reward__weekly">
-                            <div class="calc-area-title">Weekly reward</div>
+                            <div class="calc-area-title">My weekly reward</div>
                             <div class="calc-area-value" id="deposit-weekly-reward">0 BEAMX</div>
                         </div>
                     </div>
