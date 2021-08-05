@@ -10,6 +10,7 @@
     backdrop-filter: blur(24px);
     background-color: rgba(189, 189, 189, 0.19);
     cursor: default;
+    z-index: 1000;
 }
 
 .info-popup-content {

@@ -74,7 +74,7 @@
 }
 
 .allocation__calculated__content__available,
-.allocation__calculated__content__locked {
+.allocation__calculated__content__distributed {
     margin-left: 40px;
 }
 
@@ -117,5 +117,5 @@
 #allocation-progress-available {
     height: 100%;
     z-index: 20;
-    border-left: dashed 2px rgba(255, 255, 255, .5);
+    border-left: dashed 1px rgba(255, 255, 255, .5);
 }

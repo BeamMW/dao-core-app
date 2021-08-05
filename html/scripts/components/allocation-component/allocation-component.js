@@ -47,10 +47,10 @@ class AllocationComponent extends HTMLElement {
             </div>
             <div class="allocation__calculated">
                 <div class="allocation__calculated__content">
-                    <div class="allocation__calculated__content__distributed">
-                        <div class="allocation-title">Distributed</div>
-                        <div class="distributed-value">
-                            ${Utils.numberWithCommas(this.componentParams.distributedStr)} BEAMX
+                    <div class="allocation__calculated__content__locked">
+                        <div class="allocation-title">Locked</div>
+                        <div class="locked-value">
+                            ${Utils.numberWithCommas(this.componentParams.lockedStr)} BEAMX
                         </div>
                     </div>
                     <div class="allocation__calculated__content__available">
@@ -59,10 +59,10 @@ class AllocationComponent extends HTMLElement {
                             ${Utils.numberWithCommas(this.componentParams.availableStr)} BEAMX
                         </div>
                     </div>
-                    <div class="allocation__calculated__content__locked">
-                        <div class="allocation-title">Locked</div>
-                        <div class="locked-value">
-                            ${Utils.numberWithCommas(this.componentParams.lockedStr)} BEAMX
+                    <div class="allocation__calculated__content__distributed">
+                        <div class="allocation-title">Distributed</div>
+                        <div class="distributed-value">
+                            ${Utils.numberWithCommas(this.componentParams.distributedStr)} BEAMX
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@ class AllocationComponent extends HTMLElement {
     updateStats() {
         const progressWidth = this.componentParams.total > 0 && this.componentParams.distributed > 0 
         ? Math.ceil($('#allocation-progress').width() * 
-            (this.componentParams.distributed / this.componentParams.total)) 
+            (this.componentParams.locked / this.componentParams.total)) 
         : 0;
         $('#allocation-progress-value').width(progressWidth + 'px');
 
