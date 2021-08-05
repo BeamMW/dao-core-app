@@ -78,7 +78,7 @@ class AllocationComponent extends HTMLElement {
     }
   
     updateStats() {
-        const progressWidth = this.componentParams.total > 0 && this.componentParams.distributed > 0 
+        const progressWidth = this.componentParams.total > 0 && this.componentParams.locked > 0 
         ? Math.ceil($('#allocation-progress').width() * 
             (this.componentParams.locked / this.componentParams.total)) 
         : 0;
