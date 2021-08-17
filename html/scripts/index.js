@@ -266,7 +266,7 @@ if (window.beam !== undefined) {
         const daoCore = new DaoCore();
         window.beam.initializeShader(CONTRACT_ID, 'faucet');
         window.beam.apiResult$.subscribe(daoCore.onApiResult);
-        document.getElementById('bg').style.backgroundColor = 'rgba(0,0,0,.8)';
+        document.getElementById('bg').style.backgroundColor = '#042548';
         
         appStart(daoCore);
     });
