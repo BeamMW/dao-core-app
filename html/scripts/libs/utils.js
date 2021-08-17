@@ -7,12 +7,12 @@ export default class Utils {
     BEAM = null;
 
     static onLoad(cback) {
-        window.addEventListener('load', () => new QWebChannel(qt.webChannelTransport, (channel) => {
+        new QWebChannel(qt.webChannelTransport, (channel) => {
             Utils.BEAM = channel.objects.BEAM
             this.loadStyles();
             // Notify application
             cback(Utils.BEAM)
-        }))
+        })
     }
 
     static loadStyles() {

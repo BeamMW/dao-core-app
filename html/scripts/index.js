@@ -261,26 +261,26 @@ class DaoCore {
     }
 }
 
-if (window.beam !== undefined) {
-    window.addEventListener('load', () => {
+window.addEventListener('load', () => {
+    if (window.beam !== undefined) {   
+    
         const daoCore = new DaoCore();
         window.beam.initializeShader(CONTRACT_ID, 'faucet');
         window.beam.apiResult$.subscribe(daoCore.onApiResult);
         document.getElementById('bg').style.backgroundColor = '#042548';
         
         appStart(daoCore);
-    });
-} else {
-    Utils.onLoad(async (beamAPI) => {
-        const daoCore = new DaoCore();
-        $('#error-full-container').css('color', beamAPI.style.validator_error);
-        $('#error-common').css('color', beamAPI.style.validator_error);
-        beamAPI.api.callWalletApiResult.connect(daoCore.onApiResult);
-        daoCore.start();
-    
-        appStart(daoCore);
-    });
-}
+    } else {
+        Utils.onLoad(async (beamAPI) => {
+            const daoCore = new DaoCore();
+            $('#error-full-container').css('color', beamAPI.style.validator_error);
+            $('#error-common').css('color', beamAPI.style.validator_error);
+            beamAPI.api.callWalletApiResult.connect(daoCore.onApiResult);
+        
+            appStart(daoCore);
+        });
+    }
+});
 
 
 function appStart(daoCore) {
