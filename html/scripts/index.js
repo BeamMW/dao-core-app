@@ -267,7 +267,12 @@ window.addEventListener('load', () => {
         const daoCore = new DaoCore();
         window.beam.initializeShader(CONTRACT_ID, 'faucet');
         window.beam.apiResult$.subscribe(daoCore.onApiResult);
-        document.getElementById('bg').style.backgroundColor = '#042548';
+        document.body.style.color = 'rgb(255, 255, 255)';
+        document.body.style.backgroundImage = 'linear-gradient(rgba(57, 57, 57, 0.6) -174px, rgba(23, 23, 23, 0.6) 56px, rgba(23, 23, 23, 0.6))';  
+        document.body.style.backgroundColor = 'rgb(50, 50, 50)';  
+        document.querySelector('.container').style.margin = '0 auto';
+        document.querySelector('.container').style.paddingTop = '25px';
+        document.querySelector('.container').style.width = '90%';
         
         appStart(daoCore);
     } else {
