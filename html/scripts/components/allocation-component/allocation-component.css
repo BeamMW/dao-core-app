@@ -1,6 +1,7 @@
 .container__content {
     display: flex;
     flex-direction: row;
+    
 }
 
 .allocation {
