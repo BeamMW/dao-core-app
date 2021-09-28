@@ -19,7 +19,7 @@
     background-image: rgba(255, 255, 255, 0);
 }
 
-#main-page {
+#bg {
     display: none;
 }
 
@@ -254,3 +254,8 @@ html {
 }
 
 /* popup ends */
+
+
+.web .container__main {
+    padding: 5% 5% 0 5%;
+}
