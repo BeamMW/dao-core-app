@@ -1,7 +1,7 @@
 import Utils from "./libs/utils.js";
 import * as consts from "./consts/consts.js";
 
-const CONTRACT_ID = "8cef85a6ed4f2c3ecbbcd0b5b2cf0fd60c3fd863015f38bf725582f26183308c";
+const CONTRACT_ID = "bddff3ec86a9edf73cdd2e20a5999d4a28ead48b133ab7c0a616345750691046";
 const REJECTED_CALL_ID = -32021;
 const IN_PROGRESS_ID = 5;
 const TIMEOUT = 3000;
@@ -17,7 +17,9 @@ class DaoCore {
             inProgress: false,
             mainLoaded: false,
             beamTotalLocked: 0,
-            farmTotal: 0
+            farmTotal: 0,
+            vestingStart: null,
+            vestingEnd: null
         }
     }
 
@@ -139,9 +141,16 @@ class DaoCore {
         });
     }
 
+    loadBlockInfo = (height) => {
+        Utils.callApi("block_details", "block_details", {
+            height
+        });
+    }
+
     onApiResult = (json) => {    
         try {
             const apiAnswer = JSON.parse(json);
+            console.log('api result:', apiAnswer);
             const apiCallId = apiAnswer.id;
             let apiResult;
 
@@ -190,6 +199,11 @@ class DaoCore {
                     component.attr('avail_total', shaderOut.avail_total);
                     component.attr('locked', shaderOut.total - shaderOut.avail_total);
                     component.attr('remaining', shaderOut.avail_remaining);
+                    component.attr('vesting_start', shaderOut.vesting_start);
+                    component.attr('vesting_end', shaderOut.vesting_end);
+                    this.pluginData.vestingStart = shaderOut.vesting_start;
+                    this.pluginData.vestingEnd = shaderOut.vesting_end;
+                    this.loadBlockInfo(shaderOut.vesting_start);
                 } else {
                     $('allocation-component').hide();
                 }
@@ -245,6 +259,13 @@ class DaoCore {
                     ? $('deposit-popup-component')
                     : $('staking-component');
                 depositComponent.attr('yeild', shaderOut.yield);
+            } else if (apiCallId === "block_details") {
+                const component = $('allocation-component');
+                //this.pluginData.vestingStart
+                //this.pluginData.vestingEnd
+
+                //component.attr('vesting_start_date', shaderOut.total);
+                //component.attr('vesting_end_date', shaderOut.received);
             } else if (apiCallId == "process_invoke_data") {
             }
         } catch(err) {
@@ -259,68 +280,6 @@ class DaoCore {
         $('withdraw-popup-component').hide();
         $('info-popup-component').hide();
     }
-}
-
-function appStart(daoCore) {
-    daoCore.start();
-
-    document.addEventListener("global-event", (e) => { 
-        if (e.detail.type === 'deposit-process') {
-            Utils.callApi("farm_update", "invoke_contract", {
-                create_tx: false,
-                args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
-                    ",bLockOrUnlock=1,amountBeam=" + e.detail.amount
-            });
-        } else if (e.detail.type === 'withdraw-process') {
-            if (e.detail.is_allocation > 0) {
-                Utils.callApi("prealloc_withdraw", "invoke_contract", {
-                    create_tx: false,
-                    args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
-                        ",amount=" + e.detail.amount
-                });
-            } else {
-                Utils.callApi("farm_update", "invoke_contract", {
-                    create_tx: false,
-                    args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
-                        ",bLockOrUnlock=0,amountBeam=" + e.detail.amount
-                });
-            }
-        } else if (e.detail.type === 'show-public-key') {
-            Utils.callApi("my_xid", "invoke_contract", {
-                create_tx: false,
-                args: "role=manager,action=my_xid"
-            });
-        } else if (e.detail.type === 'claim-rewards-process') {
-            if (e.detail.is_allocation > 0) {
-                Utils.callApi("prealloc_withdraw", "invoke_contract", {
-                    create_tx: false,
-                    args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
-                        ",amount=" + e.detail.amount
-                });
-            } else {
-                Utils.callApi("farm_update", "invoke_contract", {
-                    create_tx: false,
-                    args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
-                        ",bLockOrUnlock=0,amountBeamX=" + e.detail.amount
-                });
-            }
-        } else if (e.detail.type === 'deposit-popup-open') {
-            $('deposit-popup-component').attr('loaded', daoCore.pluginData.mainLoaded | 0);
-        } else if (e.detail.type === 'withdraw-popup-open') {
-            const component = $('withdraw-popup-component');
-            component.attr('is_allocation', e.detail.is_allocation | 0);
-            component.attr('max_val', daoCore.pluginData.lockedBeams);
-            component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
-        } else if (e.detail.type === 'calc-yeild') {
-            daoCore.pluginData.yieldType = e.detail.from;
-
-            Utils.callApi("farm_get_yield", "invoke_contract", {
-                create_tx: false,
-                args: "role=manager,action=farm_get_yield,cid=" + CONTRACT_ID + ",amount=" + 
-                    e.detail.amount + ",hPeriod=" + e.detail.hPeriod
-            });
-        }
-    });
 }
 
 const daoCore = new DaoCore();
@@ -339,6 +298,64 @@ Utils.initialize({
             document.getElementById('main-page').style.height = '100%';
         }
 
-        appStart(daoCore)
+        daoCore.start();
+
+        document.addEventListener("global-event", (e) => { 
+            if (e.detail.type === 'deposit-process') {
+                Utils.callApi("farm_update", "invoke_contract", {
+                    create_tx: false,
+                    args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
+                        ",bLockOrUnlock=1,amountBeam=" + e.detail.amount
+                });
+            } else if (e.detail.type === 'withdraw-process') {
+                if (e.detail.is_allocation > 0) {
+                    Utils.callApi("prealloc_withdraw", "invoke_contract", {
+                        create_tx: false,
+                        args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
+                            ",amount=" + e.detail.amount
+                    });
+                } else {
+                    Utils.callApi("farm_update", "invoke_contract", {
+                        create_tx: false,
+                        args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
+                            ",bLockOrUnlock=0,amountBeam=" + e.detail.amount
+                    });
+                }
+            } else if (e.detail.type === 'show-public-key') {
+                Utils.callApi("my_xid", "invoke_contract", {
+                    create_tx: false,
+                    args: "role=manager,action=my_xid"
+                });
+            } else if (e.detail.type === 'claim-rewards-process') {
+                if (e.detail.is_allocation > 0) {
+                    Utils.callApi("prealloc_withdraw", "invoke_contract", {
+                        create_tx: false,
+                        args: "role=manager,action=prealloc_withdraw,cid=" + CONTRACT_ID + 
+                            ",amount=" + e.detail.amount
+                    });
+                } else {
+                    Utils.callApi("farm_update", "invoke_contract", {
+                        create_tx: false,
+                        args: "role=manager,action=farm_update,cid=" + CONTRACT_ID + 
+                            ",bLockOrUnlock=0,amountBeamX=" + e.detail.amount
+                    });
+                }
+            } else if (e.detail.type === 'deposit-popup-open') {
+                $('deposit-popup-component').attr('loaded', daoCore.pluginData.mainLoaded | 0);
+            } else if (e.detail.type === 'withdraw-popup-open') {
+                const component = $('withdraw-popup-component');
+                component.attr('is_allocation', e.detail.is_allocation | 0);
+                component.attr('max_val', daoCore.pluginData.lockedBeams);
+                component.attr('loaded', daoCore.pluginData.mainLoaded | 0);
+            } else if (e.detail.type === 'calc-yeild') {
+                daoCore.pluginData.yieldType = e.detail.from;
+
+                Utils.callApi("farm_get_yield", "invoke_contract", {
+                    create_tx: false,
+                    args: "role=manager,action=farm_get_yield,cid=" + CONTRACT_ID + ",amount=" + 
+                        e.detail.amount + ",hPeriod=" + e.detail.hPeriod
+                });
+            }
+        });
     }
 )

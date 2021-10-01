@@ -45,11 +45,9 @@
 
 .vested-value {
     margin-top: 4px;
-    font-size: 14px;
+    font-size: 20px;
     color: #ffffff;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 120px;
+    font-weight: bold;
     white-space: nowrap;
 }
 
@@ -66,17 +64,7 @@
     flex-direction: row;
 }
 
-.allocation__calculated__content__available,
-.allocation__calculated__content__locked,
-.allocation__calculated__content__distributed {
-    display: flex;
-    flex-direction: column;
-}
 
-.allocation__calculated__content__available,
-.allocation__calculated__content__distributed {
-    margin-left: 40px;
-}
 
 .distributed-value,
 .available-value,
@@ -112,10 +100,189 @@
 #allocation-claim {
     align-self: flex-end;
     margin-right: 0;
+    margin-top: 75px;
 }
 
 #allocation-progress-available {
     height: 100%;
     z-index: 20;
     border-left: dashed 1px rgba(255, 255, 255, .5);
+}
+
+.container__content__vesting {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.container__content__info {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+}
+
+.container__content__vesting__vested {
+    margin-top: 20px;
+}
+
+.vesting-title {
+    opacity: 0.5;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 3.11px;
+    color: #fff;
+}
+
+.vesting-info-title {
+    opacity: 0.5;
+    font-size: 12px;
+    color: #fff;
+}
+
+.vesting {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.vesting__start {
+    display: flex;
+    flex-direction: column;
+}
+
+.vesting__end {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    margin-left: 60px;
+}
+
+.vesting__start__info,
+.vesting__end__info {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.vesting__start__info__height,
+.vesting__start__info__date,
+.vesting__end__info__height,
+.vesting__end__info__date {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #fff;
+    margin-top: 4px;
+}
+
+.vesting__end__info__date,
+.vesting__start__info__date {
+    margin-left: 30px;
+}
+
+.container__content__info__stats {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.container__content__info__button {
+    margin-left: 30px;
+}
+
+.container__content__info__graph {
+    display: flex;
+    margin-left: auto;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.allocation__calculated__content__available,
+.allocation__calculated__content__locked,
+.allocation__calculated__content__distributed {
+    display: flex;
+    flex-direction: column;
+}
+
+.allocation__calculated__content__available,
+.allocation__calculated__content__locked {
+    margin-top: 15px;
+}
+
+
+.alloc__graph {
+    width: 56px;
+    height: 123px;
+    border-radius: 4px;   
+    background-color: rgba(0, 246, 210, .5);
+    display: flex;
+    flex-direction: column;
+}
+
+.alloc__graph__available {
+    display: flex;
+    justify-self: flex-start;
+    width: 100%;
+    z-index: 20;
+    border-bottom: dashed 1px rgba(255, 255, 255, .5);
+}
+
+.alloc__graph__value {
+    margin-top: auto;
+    display: flex;
+    justify-self: flex-end;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    width: 100%;
+    background-color: #00f6d2;
+    color: #042548;
+    z-index: 10;
+    flex-direction: column;
+    display: flex;
+}
+
+.alloc-graph-supply-top,
+.alloc-graph-distr,
+.alloc-graph-avail,
+.alloc-graph-supply {
+    margin-bottom: 2px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.alloc-graph-supply {
+    position: absolute;
+    width: 56px;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.alloc-graph-text {
+    color: #ffffff;
+}
+
+.alloc-graph-distr-bottom {
+    margin-top: 2px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.alloc-graph-distr {
+    margin-top: auto;
+}
+
+.alloc-graph-aval {
+    position: absolute;
+    width: 56px;
+    text-align: center;
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.alloc-graph-aval-inside {
+    text-align: center;
+    font-size: 10px;
+    margin-top: 2px;
+    margin-bottom: auto;
 }
