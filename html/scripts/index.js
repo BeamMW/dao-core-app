@@ -201,9 +201,10 @@ class DaoCore {
                     component.attr('remaining', shaderOut.avail_remaining);
                     component.attr('vesting_start', shaderOut.vesting_start);
                     component.attr('vesting_end', shaderOut.vesting_end);
+                    component.attr('cur_height', shaderOut.h);
                     this.pluginData.vestingStart = shaderOut.vesting_start;
                     this.pluginData.vestingEnd = shaderOut.vesting_end;
-                    this.loadBlockInfo(shaderOut.vesting_start);
+                    this.loadBlockInfo(shaderOut.h);
                 } else {
                     $('allocation-component').hide();
                 }
@@ -261,11 +262,7 @@ class DaoCore {
                 depositComponent.attr('yeild', shaderOut.yield);
             } else if (apiCallId === "block_details") {
                 const component = $('allocation-component');
-                //this.pluginData.vestingStart
-                //this.pluginData.vestingEnd
-
-                //component.attr('vesting_start_date', shaderOut.total);
-                //component.attr('vesting_end_date', shaderOut.received);
+                component.attr('timestamp', apiResult.timestamp);
             } else if (apiCallId == "process_invoke_data") {
             }
         } catch(err) {

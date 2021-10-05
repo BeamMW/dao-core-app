@@ -155,7 +155,7 @@
     display: flex;
     flex-direction: column;
     margin-right: auto;
-    margin-left: 60px;
+    margin-left: 40px;
 }
 
 .vesting__start__info,
@@ -178,7 +178,7 @@
 
 .vesting__end__info__date,
 .vesting__start__info__date {
-    margin-left: 30px;
+    margin-left: 20px;
 }
 
 .container__content__info__stats {

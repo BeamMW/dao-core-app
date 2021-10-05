@@ -18,22 +18,16 @@ class AllocationComponent extends HTMLElement {
       vestingEnd: 0,
       availGraph: 0,
       lockedGraph: 0,
-      distrGraph: 0
+      distrGraph: 0,
+      vestingStartDate: '',
+      vestingEndDate: '',
+      currentHeight: 0
     }
 
     constructor() {
       super();
     }
 
-    // <div class="vesting__end__info__date">
-    //     <div class="vesting-info-title">Date</div>
-    //     <div>666</div>
-    // </div>
-
-    // <div class="vesting__start__info__date">
-    //     <div class="vesting-info-title">Date</div>
-    //     <div>555</div>
-    // </div>
     getTemplate() {
       const TEMPLATE =
       `<div class="allocation">
@@ -54,6 +48,10 @@ class AllocationComponent extends HTMLElement {
                                 <div class="vesting-info-title">Blockchain height</div>
                                 <div>${Utils.numberWithCommas(this.componentParams.vestingStart)}</div>
                             </div>
+                            <div class="vesting__end__info__date">
+                                <div class="vesting-info-title">Date</div>
+                                <div>${this.componentParams.vestingStartDate}</div>
+                            </div>
                         </div>
                     </div>
                     <div class="vesting__end">
@@ -62,6 +60,10 @@ class AllocationComponent extends HTMLElement {
                             <div class="vesting__end__info__height">
                                 <div class="vesting-info-title">Blockchain height</div>
                                 <div>${Utils.numberWithCommas(this.componentParams.vestingEnd)}</div>
+                            </div>
+                            <div class="vesting__start__info__date">
+                                <div class="vesting-info-title">Date</div>
+                                <div>${this.componentParams.vestingEndDate}</div>
                             </div>
                         </div>
                     </div>
@@ -247,6 +249,25 @@ class AllocationComponent extends HTMLElement {
             this.componentParams.vestingStart = newValue;
         } else if (name === 'vesting_end') {
             this.componentParams.vestingEnd = newValue;
+        } else if (name === 'cur_height') {
+            this.componentParams.currentHeight = newValue;
+        } else if (name === 'timestamp') {
+            const startDiff = this.componentParams.vestingStart - this.componentParams.currentHeight;
+            const endDiff = this.componentParams.vestingEnd - this.componentParams.currentHeight;
+            const months = [
+                "January", "February",
+                "March", "April", "May",
+                "June", "July", "August",
+                "September", "October",
+                "November", "December"
+            ];
+            const startDiffDate = new Date(newValue * 1000 + startDiff * 60000);
+            const endDiffDate = new Date(newValue * 1000 + endDiff * 60000);
+
+            this.componentParams.vestingStartDate = startDiffDate.getDate()  + " " 
+                + months[startDiffDate.getMonth()] + " " + startDiffDate.getFullYear();
+            this.componentParams.vestingEndDate = endDiffDate.getDate()  + " " 
+                + months[endDiffDate.getMonth()] + " " + endDiffDate.getFullYear();
         }
         this.render();
         this.updateGraph();
@@ -254,7 +275,18 @@ class AllocationComponent extends HTMLElement {
   
     
     static get observedAttributes() {
-      return ['total', 'received', 'avail_total', 'locked', 'remaining', 'allocated', 'vesting_start', 'vesting_end'];
+      return [
+          'total',
+          'received',
+          'avail_total',
+          'locked',
+          'remaining',
+          'allocated',
+          'vesting_start',
+          'vesting_end',
+          'timestamp',
+          'cur_height'
+        ];
     }
   }
 
