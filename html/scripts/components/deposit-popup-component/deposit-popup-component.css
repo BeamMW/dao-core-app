@@ -87,6 +87,7 @@
     opacity: 0.5;
     font-size: 12px;
     color: #ffffff;
+    margin-top: 1px;
 }
 
 .deposit-area__fee__value {
@@ -98,7 +99,7 @@
 .deposit-area__fee__value__beam {
     font-size: 14px;
     font-weight: 500;
-    color: #da68f5;
+    color: #fff;
 }
 
 .deposit-area__fee__value__rate {
