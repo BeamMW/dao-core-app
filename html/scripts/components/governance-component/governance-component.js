@@ -80,9 +80,7 @@ class GovernanceComponent extends HTMLElement {
           </div>
           <div class="governance__separator"></div>
           <div class="governance__pkey" id="governance-show-key">
-            <span class="governance__pkey__text">Show my public key</span>  
-            <img class="governance__pkey__icon" id="key-info" src="./icons/icon-info.svg" />
-            <info-popup-component id="key-info-popup"></info-popup-component>
+            <span class="governance__pkey__text">Show my public key</span>
           </div>
       </div>`;
 
@@ -113,12 +111,6 @@ class GovernanceComponent extends HTMLElement {
         $('info-popup-component').hide();
         $('#avail-info-popup').attr('type', 'avail');
         ev.stopPropagation();
-      });
-
-      $('#key-info').click((ev) => {
-        $('info-popup-component').hide();
-        ev.stopPropagation();
-        $('#key-info-popup').attr('type', 'key');
       });
     };
   
