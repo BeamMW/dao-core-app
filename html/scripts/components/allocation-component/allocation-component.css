@@ -218,6 +218,7 @@
     background-color: rgba(0, 246, 210, .5);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .alloc__graph__available {
