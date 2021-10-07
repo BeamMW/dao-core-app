@@ -138,11 +138,18 @@ export default class Utils {
         if (!Utils.isDesktop()) {
             document.head.innerHTML += '<meta name="viewport" content="width=device-width, initial-scale=1" />';
             document.body.style.backgroundImage = [
-                                                   "linear-gradient(to bottom,",
-                                                   style.background_main_top, topColor,
-                                                   style.background_main, mainColor,
-                                                   style.background_main
-                                                   ].join(' ');
+                "linear-gradient(to bottom,",
+                style.background_main_top, topColor,
+                style.background_main, mainColor,
+                style.background_main
+            ].join(' ');
+        } else {
+            $('#bg').css('background-image', [
+                "linear-gradient(to bottom,",
+                style.background_main_top, topColor,
+                style.background_main, mainColor,
+                style.background_main
+            ].join(' '));
         }
 
         if (Utils.isMobile()) {
