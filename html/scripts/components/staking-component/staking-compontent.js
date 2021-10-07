@@ -220,7 +220,7 @@ class StakingComponent extends HTMLElement {
       this.componentParams.beam = newValue;
       this.componentParams.beamStr = Utils.formateValue(value);
       $('#beam-value').text(Utils.numberWithCommas(this.componentParams.beamStr));
-      
+      $('#beam-value-rate').text(Utils.getRateStr(this.componentParams.beamStr, this.componentParams.rate));
       this.beamComponentCheck();
     } else if (name === 'beamx-value') {
       this.componentParams.beamx = newValue;
@@ -241,6 +241,7 @@ class StakingComponent extends HTMLElement {
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);
       // this.triggerCalcYeild();
       $('#beam-total-value').text(Utils.numberWithCommas(this.componentParams.beamTotalLockedStr));
+      $('#beam-total-value-rate').text(Utils.getRateStr(this.componentParams.beamTotalLockedStr, this.componentParams.rate));
     } else if (name === 'yeild') {
       const yeild= Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
           

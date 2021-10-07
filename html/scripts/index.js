@@ -11,7 +11,6 @@ class DaoCore {
         this.timeout = undefined;
         this.pluginData = {
             inTransaction: false,
-            lockedDemoX: 0,
             lockedBeams: 0,
             stake: 0,
             inProgress: false,
@@ -111,6 +110,12 @@ class DaoCore {
             this.pluginData.mainLoaded = true;
 
             $('#bg').show();
+            $('#main-page').show();
+            // if (Utils.isMobile()) {
+            //     $('#main-page-mobile').show();
+            // } else if (Utils.isWeb() || Utils.isDesktop()) {
+            //     $('#main-page').show();
+            // }
             $('#staking-page').hide();
             $('#staking-page-back').hide();
             $('#error-full-container').hide();
@@ -177,7 +182,6 @@ class DaoCore {
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
                 stakingComponent.attr('beamx-value', shaderOut.user.beamX);
                 
-                this.pluginData.lockedDemoX = shaderOut.user.beamX;
                 this.pluginData.lockedBeams = shaderOut.user.beams_locked;
 
                 this.loadPreallocated();
@@ -289,10 +293,6 @@ Utils.initialize({
             // TODO:handle error
             alert('INIT ERROR: ' + err)
             return
-        }
-        
-        if (Utils.isWeb()) {
-            document.getElementById('main-page').style.height = '100%';
         }
 
         daoCore.start();

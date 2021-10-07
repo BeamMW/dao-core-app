@@ -264,13 +264,21 @@ export default class Utils {
 
     static showWebLoading() {
         let styles = Utils.getStyles()
-        Utils.applyStyles(styles); 
+        Utils.applyStyles(styles);
+        const topColor =  [styles.appsGradientOffset, "px,"].join('');
+        const mainColor = [styles.appsGradientTop, "px,"].join('');
 
         let bg = document.createElement("div");
         bg.style.width = "100%";
         bg.style.height = "100%";
         bg.id = "dapp-loader";
         bg.style.position = "absolute";
+        bg.style.backgroundImage = [
+            "linear-gradient(to bottom,",
+            styles.background_main_top, topColor,
+            styles.background_main, mainColor,
+            styles.background_main
+        ].join(' ');
         let loadContainer = document.createElement("div");
         loadContainer.className = "dapp-loading";
 

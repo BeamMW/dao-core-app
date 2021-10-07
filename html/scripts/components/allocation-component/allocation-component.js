@@ -268,8 +268,8 @@ class AllocationComponent extends HTMLElement {
                 + months[startDiffDate.getMonth()] + " " + startDiffDate.getFullYear();
             this.componentParams.vestingEndDate = endDiffDate.getDate()  + " " 
                 + months[endDiffDate.getMonth()] + " " + endDiffDate.getFullYear();
-        this.render();
-        this.updateGraph();
+            this.render();
+            this.updateGraph();
         }
     }
   
