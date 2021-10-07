@@ -144,7 +144,7 @@ class AllocationComponent extends HTMLElement {
 
     updateGraph() {
         const elemHeight = $('.alloc__graph').height();
-        const progressHeight = this.componentParams.distributed > 0 
+        const progressHeight = this.componentParams.locked > 0 
             ? Math.ceil(elemHeight * 
                 (this.componentParams.locked / this.componentParams.total))
             : 0;

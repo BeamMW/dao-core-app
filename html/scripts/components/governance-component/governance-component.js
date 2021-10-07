@@ -133,7 +133,7 @@ class GovernanceComponent extends HTMLElement {
 
     updateGraph() {
       const elemHeight = $('.gov__graph').height();
-      const progressHeight = this.componentParams.distributed > 0 
+      const progressHeight = this.componentParams.locked > 0 
         ? Math.ceil(elemHeight * 
             (this.componentParams.locked / this.componentParams.totalSupply))
         : 0;
