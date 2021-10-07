@@ -238,7 +238,7 @@ class DepositPopupComponent extends HTMLElement {
                 this.triggerYeildCalc();
             })
 
-            Utils.loadStyles();
+            //Utils.loadStyles();
         }
     };
   
