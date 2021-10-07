@@ -246,9 +246,12 @@ class DaoCore {
                 const availTotal = shaderOut.avail + this.pluginData.farmAvail;
                 const receivedTotal = shaderOut.received + this.pluginData.farmReceived;
                 const total = shaderOut.total + this.pluginData.farmTotal;
+
+                const availRes = availTotal - receivedTotal;
+                const locked = total - availTotal;
                 govComponent.attr('total', total);
-                govComponent.attr('avail', availTotal - receivedTotal);
-                govComponent.attr('locked', total - availTotal);
+                govComponent.attr('avail', availRes > 0 ? availRes : 0);
+                govComponent.attr('locked', locked > 0 ? locked : 0);
                 govComponent.attr('distributed', receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
