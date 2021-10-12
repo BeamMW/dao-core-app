@@ -13,7 +13,7 @@ class ClaimRewardsPopupComponent extends HTMLElement {
 
     getTemplate() {
         const TEMPLATE =
-        `<div class="popup">
+        `<div class="${Utils.isMobile() ? 'popup mobile' : 'popup'}">
             <div class="popup__content claim-rewards">
                 <div class="popup__content__title">Claim rewards</div>
                 <div class="popup__value claim-rewards">
@@ -69,7 +69,7 @@ class ClaimRewardsPopupComponent extends HTMLElement {
 
             $('.popup__content.popup-key').css('height', 'unset');
 
-            Utils.loadStyles();
+            //Utils.loadStyles();
         }
     };
   

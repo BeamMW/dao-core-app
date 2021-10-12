@@ -1,7 +1,7 @@
 import Utils from "./libs/utils.js";
 import * as consts from "./consts/consts.js";
 
-const CONTRACT_ID = "bddff3ec86a9edf73cdd2e20a5999d4a28ead48b133ab7c0a616345750691046";
+const CONTRACT_ID = "2f4a3a736b10e8a217ff23a8f7fa20959431ab3d1fe3226d044101ee5007e6da";
 const REJECTED_CALL_ID = -32021;
 const IN_PROGRESS_ID = 5;
 const TIMEOUT = 3000;
@@ -110,12 +110,17 @@ class DaoCore {
             this.pluginData.mainLoaded = true;
 
             $('#bg').show();
-            $('#main-page').show();
-            // if (Utils.isMobile()) {
-            //     $('#main-page-mobile').show();
-            // } else if (Utils.isWeb() || Utils.isDesktop()) {
-            //     $('#main-page').show();
-            // }
+            // $('#main-page').remove();
+            // $('#main-page-mobile').show();
+            
+            if (Utils.isMobile()) {
+                $('#main-page').remove();
+                $('#main-page-mobile').show();
+            } else if (!Utils.isMobile() && (Utils.isWeb() || Utils.isDesktop())) {
+                $('#main-page-mobile').remove();
+                $('#main-page').show();
+            }
+            
             $('#staking-page').hide();
             $('#staking-page-back').hide();
             $('#error-full-container').hide();
@@ -177,6 +182,8 @@ class DaoCore {
                 if (shaderOut.user === undefined) {
                     throw "Failed to load farm view";    
                 }
+
+                this.showStaking();
 
                 const stakingComponent = $('staking-component');
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
@@ -255,7 +262,6 @@ class DaoCore {
                 govComponent.attr('distributed', receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
-                this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
                 
@@ -293,8 +299,7 @@ Utils.initialize({
     },
     (err) => {
         if (err) {
-            // TODO:handle error
-            alert('INIT ERROR: ' + err)
+            daoCore.setError(err);
             return
         }
 

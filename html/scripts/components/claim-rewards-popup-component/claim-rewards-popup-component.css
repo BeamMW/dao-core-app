@@ -1,3 +1,7 @@
+.popup.mobile .popup__content.claim-rewards{
+    width: unset;
+}
+
 .popup__value.claim-rewards {
     margin-top: 15px;
 }

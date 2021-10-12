@@ -12,23 +12,37 @@
             </div>
             <div id="error-common"></div>
         
-            <div class="container" id="main-page">
-                <div class="container__main" id="staking-main">
-                    <governance-component></governance-component>
-                    <div class="container__sub">
-                        <staking-component id="staking-component"></staking-component>
-                        <div class="container__sub__voting">
-                            <div class="container__header">VOTING</div>
-                            <div class="voting__content">
-                                coming soon
+            <div id="main-page">
+                <div class="container">
+                    <div class="container__main" id="staking-main">
+                        <governance-component></governance-component>
+                        <div class="container__sub">
+                            <staking-component id="staking-component"></staking-component>
+                            <div class="container__sub__voting">
+                                <div class="container__header">VOTING</div>
+                                <div class="voting__content">
+                                    coming soon
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <allocation-component></allocation-component>
                 </div>
-                <allocation-component></allocation-component>
             </div>
 
-            <div class="container-mobile" id="main-page-mobile"> mobile </div>
+            <div id="main-page-mobile">
+                <div class="container-mobile">
+                    <governance-component></governance-component>
+                    <allocation-component></allocation-component>
+                    <staking-component id="staking-component"></staking-component>
+                    <div class="container__sub__voting">
+                        <div class="container__header">VOTING</div>
+                        <div class="voting__content">
+                            coming soon
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <public-key-popup-component></public-key-popup-component>
             <claim-rewards-popup-component></claim-rewards-popup-component>

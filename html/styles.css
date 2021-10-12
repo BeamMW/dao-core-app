@@ -18,6 +18,14 @@
     background-image: rgba(255, 255, 255, 0);
 }
 
+#main-page-mobile {
+    display: none;
+}
+
+#main-page {
+    display: none;
+}
+
 #bg {
     display: none;
 }
@@ -41,6 +49,10 @@ governance-component {
     width: 324px;
 }
 
+.container-mobile governance-component {
+    width: 100%;
+}
+
 .container__sub {
     display: flex;
     flex-direction: column;
@@ -61,6 +73,11 @@ staking-component {
     margin-top: 10px;
     background-color: rgba(255, 255, 255, .05);
     border-radius: 10px;
+}
+
+.container-mobile .container__sub__voting {
+    margin-top: 20px;
+    border-radius: unset;
 }
 
 .voting__content {
@@ -105,6 +122,10 @@ html {
     opacity: 0.5;
     font-size: 12px;
     color: #ffffff;
+}
+
+.container-mobile .container-title {
+    font-size: 14px;
 }
 
 ::-webkit-scrollbar {
@@ -193,6 +214,14 @@ html {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    word-break: break-word;
+}
+
+#error-full,
+#error-common {
+    text-align: center;
+    font-size: 16px;
+    color: red;
 }
 
 #error-full-container {
@@ -214,6 +243,7 @@ html {
     justify-content: center;
     align-items: center;
     z-index: 100;
+    backdrop-filter: blur(3px);
 }
 
 .popup .popup__content{
@@ -225,19 +255,21 @@ html {
     background-color: #00446c;
     display: flex;
     flex-direction: column;
-    width: 580px;
-    height: 295px;
-    margin: 60px auto;
-    border-radius: 10px;
-    background-image: linear-gradient(115deg, rgba(11, 204, 247, .1) 1%, rgba(255, 255, 255, .1) 97%);
     align-items: center;
 }
 
-.container__text {
-    font-size: 24px;
-    font-style: italic;
-    color: #ffffff;
-    margin-top: 50px
+.popup__content__title {
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.popup__content__controls {
+    margin-top: auto;
 }
 
 /* popup ends */
@@ -245,13 +277,9 @@ html {
 
 .web .container {
     padding: 5% 5% 0 5%;
-} 
-
-#main-page-mobile {
-    display: none;
 }
 
-#main-page {
-    display: none;
+.container-mobile {
+    display: flex;
+    flex-direction: column;
 }
-

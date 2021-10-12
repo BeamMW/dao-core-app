@@ -152,7 +152,7 @@ class WithdrawPopupComponent extends HTMLElement {
                 this.setValidState();
             })
 
-            Utils.loadStyles();
+            //Utils.loadStyles();
         }
     };
 
