@@ -73,6 +73,18 @@ class DaoCore {
 
             this.hidePopups();
 
+            const styles = Utils.getStyles();
+            const topColor =  [styles.appsGradientOffset, "px,"].join('');
+            const mainColor = [styles.appsGradientTop, "px,"].join('');
+            $('body').css('background-image', [
+                "linear-gradient(to bottom,",
+                styles.background_main_top, topColor,
+                styles.background_main, mainColor,
+                styles.background_main
+            ].join(' '));
+            $('body').css('background-repeat', 'no-repeat');
+            $('body').css('background-attachment', 'fixed');
+
             this.getRate();
             setInterval(() => {
                 this.getRate();
@@ -105,10 +117,23 @@ class DaoCore {
         return shaderOut;
     }
 
+    showStakingTimer = (hDiff) => {
+        const d = Math.floor(hDiff / (60*24));
+        const h = Math.floor(hDiff % (60*24) / 60);
+        const m = Math.floor(hDiff % 60);
+
+        $('#timer-days-value').text(d);
+        $('#timer-hours-value').text(h);
+        $('#timer-minutes-value').text(m);
+
+        $('#bg').show();
+        $('#staking-timer').show();
+    }
+
     showStaking = () => {
         if (!this.pluginData.mainLoaded) {
             this.pluginData.mainLoaded = true;
-
+            $('#staking-timer').remove();
             $('#bg').show();
             // $('#main-page').remove();
             // $('#main-page-mobile').show();
@@ -183,8 +208,12 @@ class DaoCore {
                     throw "Failed to load farm view";    
                 }
 
-                this.showStaking();
-
+                if (shaderOut.farming.h >= shaderOut.farming.h0) {
+                    this.showStaking();
+                } else {
+                    this.showStakingTimer(shaderOut.farming.h0 - shaderOut.farming.h);
+                }
+            
                 const stakingComponent = $('staking-component');
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
                 stakingComponent.attr('beamx-value', shaderOut.user.beamX);

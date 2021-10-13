@@ -50,6 +50,30 @@
             <withdraw-popup-component></withdraw-popup-component>
             <info-popup-component></info-popup-component>
         </div>
+
+        <div class="timer" id="staking-timer">
+            <div class="timer-content">
+                <div class="timer__title">BEAMX farming starts soon</div>
+                <div class="timer__value">
+                    <div class="timer__value__days">
+                        <div class="timer-value" id="timer-days-value">0</div>
+                        <div class="timer-text">days</div>
+                    </div>
+                    <div class="timer__value__colon">:</div>
+                    <div class="timer__value__hours">
+                        <div class="timer-value" id="timer-hours-value">0</div>
+                        <div class="timer-text">hours</div>
+                    </div>
+                    <div class="timer__value__colon">:</div>
+                    <div class="timer__value__minutes">
+                        <div class="timer-value" id="timer-minutes-value">0</div>
+                        <div class="timer-text">minutes</div>
+                    </div>
+                </div>
+                
+                <img class="timer__icon" src="./icons/staking-placeholder.svg">
+            </div>
+        </div>
     </body>
     <script src='./scripts/libs/big.js'></script>
     <script src='./scripts/libs/jquery-3.6.0.min.js'></script>

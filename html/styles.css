@@ -30,8 +30,13 @@
     display: none;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     margin: 0;
+    min-height: 100%;
 }
 
 .container {
@@ -282,4 +287,70 @@ html {
 .container-mobile {
     display: flex;
     flex-direction: column;
+}
+
+#staking-timer {
+    display: none;
+}
+
+.timer {
+    width: 580px;
+    margin: 50px auto;
+    border-radius: 10px;
+    background-color: rgba(11, 204, 247, .1);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 50px 0 36px 0;
+}
+
+.timer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer__title {
+    font-size: 24px;
+    font-style: italic;
+}
+
+.timer__value {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: row;
+}
+
+.timer__icon {
+    margin-top: 40px;
+    width: 245px;
+    height: 140px;
+}
+
+.timer__value__days,
+.timer__value__hours,
+.timer__value__minutes {
+    display: flex;
+    flex-direction: column;
+    color: #00f6d2;
+}
+
+.timer__value__colon {
+    font-size: 32px;
+    font-style: italic;
+    text-align: center;
+    color: #00f6d2;
+    margin: 0 16px;
+}
+
+.timer-value {
+    font-size: 32px;
+    font-style: italic;
+    text-align: center;
+}
+
+.timer-text {
+    margin-top: 2px;
+    font-size: 16px;
+    font-style: italic;
+    text-align: center;
 }
