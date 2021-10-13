@@ -76,15 +76,16 @@ class DaoCore {
             const styles = Utils.getStyles();
             const topColor =  [styles.appsGradientOffset, "px,"].join('');
             const mainColor = [styles.appsGradientTop, "px,"].join('');
-            $('body').css('background-image', [
-                "linear-gradient(to bottom,",
-                styles.background_main_top, topColor,
-                styles.background_main, mainColor,
-                styles.background_main
-            ].join(' '));
-            $('body').css('background-repeat', 'no-repeat');
-            $('body').css('background-attachment', 'fixed');
-
+            if (!Utils.isDesktop()) {
+                $('body').css('background-image', [
+                    "linear-gradient(to bottom,",
+                    styles.background_main_top, topColor,
+                    styles.background_main, mainColor,
+                    styles.background_main
+                ].join(' '));
+                $('body').css('background-repeat', 'no-repeat');
+                $('body').css('background-attachment', 'fixed');
+            }
             this.getRate();
             setInterval(() => {
                 this.getRate();
