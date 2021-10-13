@@ -11,7 +11,7 @@ class PublicKeyPopupComponent extends HTMLElement {
 
     getTemplate() {
         const TEMPLATE =
-        `<div class="popup">
+        `<div class="${Utils.isMobile() ? 'popup mobile' : 'popup'}">
             <div class="popup__content popup-key">
                 <div class="popup__content__title">Public key</div>
                 <div class="popup__value popup-key">
@@ -60,7 +60,7 @@ class PublicKeyPopupComponent extends HTMLElement {
                 }
             });
 
-            Utils.loadStyles();
+            //Utils.loadStyles();
         }
     };
   

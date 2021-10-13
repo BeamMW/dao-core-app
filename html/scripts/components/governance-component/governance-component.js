@@ -23,7 +23,10 @@ class GovernanceComponent extends HTMLElement {
     getTemplate() {
       const TEMPLATE =
       `<div class="governance">
-          <div class="container__header">BEAMX GOVERNANCE</div>
+          <div class="container__header">
+            BEAMX GOVERNANCE
+            
+          </div>
           <div class="governance__title">Total supply</div>
           <div class="governance__value total">
             <span id="gov-total-value">0</span> BEAMX
@@ -79,8 +82,8 @@ class GovernanceComponent extends HTMLElement {
             </div>
           </div>
           <div class="governance__separator"></div>
-          <div class="governance__pkey" id="governance-show-key">
-            <span class="governance__pkey__text">Show my public key</span>
+          <div class="governance__pkey">
+            <span class="governance__pkey__text" id="governance-show-key">Show my public key</span>
           </div>
       </div>`;
 
@@ -89,29 +92,7 @@ class GovernanceComponent extends HTMLElement {
   
     render() {
       this.innerHTML = this.getTemplate();
-
-      $('#governance-show-key').click(() => {
-        let event = new CustomEvent("global-event", {
-          detail: {
-            type: 'show-public-key'
-          }
-        });
-        document.dispatchEvent(event);
-      });
-
       this.updateGraph();
-
-      $('#locked-info').click((ev) => {
-        $('info-popup-component').hide();
-        $('#locked-info-popup').attr('type', 'locked');
-        ev.stopPropagation();
-      });
-
-      $('#avail-info').click((ev) => {
-        $('info-popup-component').hide();
-        $('#avail-info-popup').attr('type', 'avail');
-        ev.stopPropagation();
-      });
     };
   
     connectedCallback() {
@@ -181,6 +162,27 @@ class GovernanceComponent extends HTMLElement {
       }
 
       $('#gov-progress-available').css('margin-top', distrPosition + 'px');
+
+      $('#governance-show-key').click(() => {
+        let event = new CustomEvent("global-event", {
+          detail: {
+            type: 'show-public-key'
+          }
+        });
+        document.dispatchEvent(event);
+      });
+
+      $('#locked-info').click((ev) => {
+        $('info-popup-component').hide();
+        $('#locked-info-popup').attr('type', 'locked');
+        ev.stopPropagation();
+      });
+
+      $('#avail-info').click((ev) => {
+        $('info-popup-component').hide();
+        $('#avail-info-popup').attr('type', 'avail');
+        ev.stopPropagation();
+      });
     }
     
     attributeChangedCallback(name, oldValue, newValue) {

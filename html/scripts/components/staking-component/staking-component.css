@@ -6,13 +6,9 @@
     background-color: rgba(255, 255, 255, .05);
 }
 
-.staking-empty-container {
-    display: flex;
-    flex-direction: column;
-    height: 292px;
-    padding: 16px 20px 20px 20px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, .05);
+.container-mobile .staking {
+    border-radius: unset;
+    margin-top: 20px;
 }
 
 .staking-content {
@@ -35,11 +31,19 @@
     background-color: rgba(255, 255, 255, 0.05);
 }
 
+.container-mobile .staking__header {
+    border-radius: unset;
+}
+
 .staking__header__info {
     margin-top: auto;
     display: flex;
     margin-top: 20px;
     flex-direction: row;
+}
+
+.container-mobile .staking__header__info {
+    flex-direction: column;
 }
 
 .staking-empty {
@@ -81,10 +85,18 @@
     color: #ffffff;
 }
 
+.container-mobile .info-tvl__rate {
+    font-size: 14px;
+}
+
 .info-title {
     opacity: 0.5;
     font-size: 12px;
     color: #ffffff;
+}
+
+.container-mobile .info-title {
+    font-size: 14px;
 }
 
 .info-arp-y {
@@ -100,12 +112,20 @@
     flex-direction: column;
 }
 
+.container-mobile .info-arp-w {
+    margin: 20px 0 0;
+}
+
 .info-arp-w__value,
 .info-arp-y__value {
     margin-top: 12px;
     font-size: 14px;
     font-weight: bold;
     color: #ffffff;
+}
+
+.container-mobile .info-arp-w__value {
+    font-size: 16px;
 }
 
 .info-arp-w__container {
@@ -138,6 +158,11 @@
     align-items: center;
 }
 
+.container-mobile .staking__deposit__controls {
+    flex-direction: column;
+    align-items: unset;
+}
+
 .total-container {
     display: flex;
     flex-direction: row;
@@ -165,11 +190,19 @@
     white-space: nowrap;
 }
 
+.container-mobile .total-container__value__beam {
+    font-size: 16px;
+}
+
 .total-container__value__usd {
     opacity: 0.5;
     margin-top: 3px;
     font-size: 12px;
     color: #ffffff;
+}
+
+.container-mobile .total-container__value__usd {
+    font-size: 14px;
 }
 
 .deposit-control {
@@ -210,6 +243,12 @@
     user-select: none;
     z-index: 10;
     cursor: pointer;
+}
+
+.container-mobile .withdraw-control {
+    margin-left: 0;
+    margin-right: 27px;
+    margin-top: 20px;
 }
 
 .withdraw__text {
@@ -270,6 +309,10 @@
     white-space: nowrap;
 }
 
+.container-mobile .farmed-value__beamx-amount {
+    font-size: 16px;
+}
+
 .farmed-claim {
     display: flex;
     flex-direction: row;
@@ -278,6 +321,10 @@
     margin-right: 195px;
     user-select: none;
     cursor: pointer;
+}
+
+.container-mobile .farmed-claim {
+    margin-right: 0;
 }
 
 .farmed-claim__icon {

@@ -12,29 +12,67 @@
             </div>
             <div id="error-common"></div>
         
-            <div class="container" id="main-page">
-                <div class="container__main" id="staking-main">
-                    <governance-component></governance-component>
-                    <div class="container__sub">
-                        <staking-component id="staking-component"></staking-component>
-                        <div class="container__sub__voting">
-                            <div class="container__header">VOTING</div>
-                            <div class="voting__content">
-                                coming soon
+            <div id="main-page">
+                <div class="container">
+                    <div class="container__main" id="staking-main">
+                        <governance-component></governance-component>
+                        <div class="container__sub">
+                            <staking-component id="staking-component"></staking-component>
+                            <div class="container__sub__voting">
+                                <div class="container__header">VOTING</div>
+                                <div class="voting__content">
+                                    coming soon
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <allocation-component></allocation-component>
                 </div>
-                <allocation-component></allocation-component>
             </div>
 
-            <div class="container-mobile" id="main-page-mobile"> mobile </div>
+            <div id="main-page-mobile">
+                <div class="container-mobile">
+                    <governance-component></governance-component>
+                    <allocation-component></allocation-component>
+                    <staking-component id="staking-component"></staking-component>
+                    <div class="container__sub__voting">
+                        <div class="container__header">VOTING</div>
+                        <div class="voting__content">
+                            coming soon
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <public-key-popup-component></public-key-popup-component>
             <claim-rewards-popup-component></claim-rewards-popup-component>
             <deposit-popup-component></deposit-popup-component>
             <withdraw-popup-component></withdraw-popup-component>
             <info-popup-component></info-popup-component>
+        </div>
+
+        <div class="timer" id="staking-timer">
+            <div class="timer-content">
+                <div class="timer__title">BEAMX farming starts soon</div>
+                <div class="timer__value">
+                    <div class="timer__value__days">
+                        <div class="timer-value" id="timer-days-value">0</div>
+                        <div class="timer-text">days</div>
+                    </div>
+                    <div class="timer__value__colon">:</div>
+                    <div class="timer__value__hours">
+                        <div class="timer-value" id="timer-hours-value">0</div>
+                        <div class="timer-text">hours</div>
+                    </div>
+                    <div class="timer__value__colon">:</div>
+                    <div class="timer__value__minutes">
+                        <div class="timer-value" id="timer-minutes-value">0</div>
+                        <div class="timer-text">minutes</div>
+                    </div>
+                </div>
+                
+                <img class="timer__icon" src="./icons/staking-placeholder.svg">
+            </div>
         </div>
     </body>
     <script src='./scripts/libs/big.js'></script>

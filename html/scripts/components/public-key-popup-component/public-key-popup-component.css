@@ -9,10 +9,19 @@
     align-items: center;
 }
 
-.popup__value.popup-key{
+.popup.mobile .popup__content.popup-key {
+    margin: 40px 26px 0 26px;
+    width: unset;
+}
+
+.popup__value.popup-key {
     margin-top: 30px;
     display: flex;
     flex-direction: row;
+}
+
+.popup.mobile .popup__value.popup-key {
+    width: 100%;
 }
 
 .popup-key-value {
@@ -23,6 +32,11 @@
     color: #ffffff;
     overflow: hidden;
     word-wrap: break-word;
+}
+
+.popup.mobile .popup-key-value {
+    width: unset;
+    max-width: 260px;
 }
 
 .popup-key-icon {

@@ -73,6 +73,18 @@ class DaoCore {
 
             this.hidePopups();
 
+            const styles = Utils.getStyles();
+            const topColor =  [styles.appsGradientOffset, "px,"].join('');
+            const mainColor = [styles.appsGradientTop, "px,"].join('');
+            $('body').css('background-image', [
+                "linear-gradient(to bottom,",
+                styles.background_main_top, topColor,
+                styles.background_main, mainColor,
+                styles.background_main
+            ].join(' '));
+            $('body').css('background-repeat', 'no-repeat');
+            $('body').css('background-attachment', 'fixed');
+
             this.getRate();
             setInterval(() => {
                 this.getRate();
@@ -105,17 +117,35 @@ class DaoCore {
         return shaderOut;
     }
 
+    showStakingTimer = (hDiff) => {
+        const d = Math.floor(hDiff / (60*24));
+        const h = Math.floor(hDiff % (60*24) / 60);
+        const m = Math.floor(hDiff % 60);
+
+        $('#timer-days-value').text(d);
+        $('#timer-hours-value').text(h);
+        $('#timer-minutes-value').text(m);
+
+        $('#bg').show();
+        $('#staking-timer').show();
+    }
+
     showStaking = () => {
         if (!this.pluginData.mainLoaded) {
             this.pluginData.mainLoaded = true;
-
+            $('#staking-timer').remove();
             $('#bg').show();
-            $('#main-page').show();
-            // if (Utils.isMobile()) {
-            //     $('#main-page-mobile').show();
-            // } else if (Utils.isWeb() || Utils.isDesktop()) {
-            //     $('#main-page').show();
-            // }
+            // $('#main-page').remove();
+            // $('#main-page-mobile').show();
+            
+            if (Utils.isMobile()) {
+                $('#main-page').remove();
+                $('#main-page-mobile').show();
+            } else if (!Utils.isMobile() && (Utils.isWeb() || Utils.isDesktop())) {
+                $('#main-page-mobile').remove();
+                $('#main-page').show();
+            }
+            
             $('#staking-page').hide();
             $('#staking-page-back').hide();
             $('#error-full-container').hide();
@@ -178,6 +208,12 @@ class DaoCore {
                     throw "Failed to load farm view";    
                 }
 
+                if (shaderOut.farming.h >= shaderOut.farming.h0) {
+                    this.showStaking();
+                } else {
+                    this.showStakingTimer(shaderOut.farming.h0 - shaderOut.farming.h);
+                }
+            
                 const stakingComponent = $('staking-component');
                 stakingComponent.attr('beam-value', shaderOut.user.beams_locked);
                 stakingComponent.attr('beamx-value', shaderOut.user.beamX);
@@ -255,7 +291,6 @@ class DaoCore {
                 govComponent.attr('distributed', receivedTotal);
 
                 $('allocation-component').attr('allocated', shaderOut.total);
-                this.showStaking();
             } else if (apiCallId === "farm_get_yield") {
                 let shaderOut = this.parseShaderResult(apiResult);
                 
@@ -293,8 +328,7 @@ Utils.initialize({
     },
     (err) => {
         if (err) {
-            // TODO:handle error
-            alert('INIT ERROR: ' + err)
+            daoCore.setError(err);
             return
         }
 

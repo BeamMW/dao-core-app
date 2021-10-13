@@ -1,8 +1,3 @@
-.container__content {
-    display: flex;
-    flex-direction: row;
-}
-
 .allocation {
     margin-top: 10px;
     display: flex;
@@ -12,10 +7,19 @@
     border-radius: 10px
 }
 
+.container-mobile .allocation {
+    margin-top: 20px;
+    border-radius: unset;
+}
+
 .allocation-title {
     opacity: 0.5;
     font-size: 12px;
     color: #ffffff;
+}
+
+.container-mobile .allocation-title {
+    font-size: 14px;
 }
 
 .allocation__stats {
@@ -103,10 +107,24 @@
     margin-top: 75px;
 }
 
+.container-mobile #allocation-claim {
+    margin-top: 82px;
+}
+
 #allocation-progress-available {
     height: 100%;
     z-index: 20;
     border-left: dashed 1px rgba(255, 255, 255, .5);
+}
+
+.container__content {
+    display: flex;
+    flex-direction: row;
+}
+
+.container-mobile .container__content {
+    display: flex;
+    flex-direction: column;
 }
 
 .container__content__vesting {
@@ -116,10 +134,20 @@
     border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.container-mobile .container__content__vesting {
+    width: 100%;
+    border: none;
+}
+
 .container__content__info {
     display: flex;
     flex-direction: row;
     width: 50%;
+}
+
+.container-mobile .container__content__info {
+    width: 100%;
+    margin-top: 20px;
 }
 
 .container__content__vesting__vested {
@@ -140,10 +168,21 @@
     color: #fff;
 }
 
+.container-mobile .vesting-info-title {
+    font-size: 14px;
+}
+
 .vesting {
     display: flex;
     flex-direction: row;
     margin-top: 20px;
+}
+
+.container-mobile .vesting {
+    flex-direction: row;
+    border-top: 1px rgba(255, 255, 255, 0.1) solid;
+    border-bottom: 1px rgba(255, 255, 255, 0.1) solid;
+    padding: 20px 0;
 }
 
 .vesting__start {
@@ -158,11 +197,20 @@
     margin-left: 40px;
 }
 
+.container-mobile .vesting__end {
+    margin-left: 62px;
+}
+
 .vesting__start__info,
 .vesting__end__info {
     margin-top: 15px;
     display: flex;
     flex-direction: row;
+}
+
+.container-mobile .vesting__start__info,
+.container-mobile .vesting__end__info {
+    flex-direction: column;
 }
 
 .vesting__start__info__height,
@@ -181,10 +229,20 @@
     margin-left: 20px;
 }
 
+.container-mobile .vesting__start__info__date,
+.container-mobile .vesting__end__info__date {
+    margin-top: 20px;
+    margin-left: 0;
+}
+
 .container__content__info__stats {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
+}
+
+.container-mobile .container__content__info__stats {
+    margin-left: 0;
 }
 
 .container__content__info__button {
@@ -196,6 +254,10 @@
     margin-left: auto;
     flex-direction: column;
     justify-content: center;
+}
+
+.container-mobile .container__content__info__graph {
+    justify-content: end;
 }
 
 .allocation__calculated__content__available,
