@@ -57,6 +57,37 @@ class DaoCore {
         }, TIMEOUT)
     }
 
+    applyStyles = () => {
+        const styles = Utils.getStyles();
+        const topColor =  [styles.appsGradientOffset, "px,"].join('');
+        const mainColor = [styles.appsGradientTop, "px,"].join('');
+        if (!Utils.isDesktop()) {
+            $('body').css('background-image', [
+                "linear-gradient(to bottom,",
+                styles.background_main_top, topColor,
+                styles.background_main, mainColor,
+                styles.background_main
+            ].join(' '));
+            $('body').css('background-repeat', 'no-repeat');
+            $('body').css('background-attachment', 'fixed');
+        }
+
+        document.body.style.color = styles.content_main;
+        document.querySelectorAll('.popup').forEach(item => {
+            item.style.backgroundImage = `linear-gradient(to bottom,
+            ${Utils.hex2rgba(styles.background_main_top, 0.6)} ${topColor}
+            ${Utils.hex2rgba(styles.background_main, 0.6)} ${mainColor}
+            ${Utils.hex2rgba(styles.background_main, 0.6)}`;
+        });
+        
+        document.querySelectorAll('.popup__content').forEach(item => {
+            item.style.backgroundColor = Utils.hex2rgba(styles.background_popup, 1);
+        });
+
+        document.getElementById('error-full').style.color = styles.validator_error;
+        document.getElementById('error-common').style.color = styles.validator_error;
+    }
+
     start = () => {
         Utils.download("./daoCore.wasm", (err, bytes) => {
             if (err) {
@@ -73,19 +104,7 @@ class DaoCore {
 
             this.hidePopups();
 
-            const styles = Utils.getStyles();
-            const topColor =  [styles.appsGradientOffset, "px,"].join('');
-            const mainColor = [styles.appsGradientTop, "px,"].join('');
-            if (!Utils.isDesktop()) {
-                $('body').css('background-image', [
-                    "linear-gradient(to bottom,",
-                    styles.background_main_top, topColor,
-                    styles.background_main, mainColor,
-                    styles.background_main
-                ].join(' '));
-                $('body').css('background-repeat', 'no-repeat');
-                $('body').css('background-attachment', 'fixed');
-            }
+            this.applyStyles();
             this.getRate();
             setInterval(() => {
                 this.getRate();

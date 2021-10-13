@@ -131,10 +131,6 @@ export default class Utils {
     }
 
     static applyStyles(style) {
-        // TODO: как-то это все неправильно тут
-        let topColor =  [style.appsGradientOffset, "px,"].join('');
-        let mainColor = [style.appsGradientTop, "px,"].join('');
-
         if (!Utils.isDesktop()) {
             document.head.innerHTML += '<meta name="viewport" content="width=device-width, initial-scale=1" />';
         }
@@ -146,25 +142,6 @@ export default class Utils {
         if (Utils.isWeb()) {
             document.body.classList.add('web');
         }
-        
-        document.body.style.color = style.content_main;
-        document.querySelectorAll('.popup').forEach(item => {
-            item.style.backgroundImage = `linear-gradient(to bottom,
-            ${Utils.hex2rgba(style.background_main_top, 0.6)} ${topColor}
-            ${Utils.hex2rgba(style.background_main, 0.6)} ${mainColor}
-            ${Utils.hex2rgba(style.background_main, 0.6)}`;
-        });
-        
-        document.querySelectorAll('.popup__content').forEach(item => {
-            item.style.backgroundColor = Utils.hex2rgba(style.background_popup, 1);
-        });
-
-
-        let ef = document.getElementById('error-full');
-        if (ef) ef.style.color = style.validator_error;
-        
-        let ec = document.getElementById('error-common');
-        if (ec) ec.style.color = style.validator_error;
     }
     
     //
@@ -249,13 +226,6 @@ export default class Utils {
         return result;
     }
 
-    // static handleString(next) {
-    //     const REG_AMOUNT = /^(?:[1-9]\d*|0)?(?:\.(\d+)?)?$/;
-    //     if (REG_AMOUNT.test(next)) {
-    //         return false;
-    //     }
-    // }
-
     static showWebLoading() {
         let styles = Utils.getStyles()
         Utils.applyStyles(styles);
@@ -265,6 +235,7 @@ export default class Utils {
         let bg = document.createElement("div");
         bg.style.width = "100%";
         bg.style.height = "100%";
+        bg.style.color = "#fff";
         bg.id = "dapp-loader";
         bg.style.position = "absolute";
         bg.style.backgroundImage = [
@@ -290,15 +261,49 @@ export default class Utils {
 
         let reconnectButton = document.createElement("button");
         reconnectButton.innerText = "Try to connect again";
+        reconnectButton.style.height = "44px";
+        reconnectButton.style.padding = "13px 30px";
+        reconnectButton.style.borderRadius = "50px";
+        reconnectButton.style.border = "none";
+        reconnectButton.style.color = "#fff";
+        reconnectButton.style.cursor = "pointer";
+        reconnectButton.style.fontWeight = "bold";
+        reconnectButton.style.fontSize = "14px";
+        reconnectButton.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+
+        reconnectButton.addEventListener("mouseover", () => {
+            reconnectButton.style.boxShadow = "0 0 8px white";
+        }, false);
+        reconnectButton.addEventListener("mouseout", () => {
+            reconnectButton.style.boxShadow = "none";
+        }, false);
+
+
         reconnectButton.addEventListener('click', () => {
             Utils.reload();
         });
         let installButton = document.createElement("button");
         installButton.innerText = "Install BEAM Web Wallet";
+        installButton.style.height = "44px";
+        installButton.style.padding = "13px 30px";
+        installButton.style.borderRadius = "50px";
+        installButton.style.border = "none";
+        installButton.style.color = "#042548";
+        installButton.style.cursor = "pointer";
+        installButton.style.fontWeight = "bold";
+        installButton.style.fontSize = "14px";
+        installButton.style.backgroundColor = "#00f6d2";
 
+        installButton.addEventListener("mouseover", () => {
+            installButton.style.boxShadow = "0 0 8px white";
+        }, false);
+        installButton.addEventListener("mouseout", () => {
+            installButton.style.boxShadow = "none";
+        }, false);
         installButton.style.marginLeft = '30px';
         
         let controlsArea = document.createElement("div");
+        controlsArea.style.marginTop = "50px";
         
         loadContainer.appendChild(titleElem);
         loadContainer.appendChild(subtitle);
