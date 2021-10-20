@@ -148,6 +148,7 @@ class DaoCore {
 
         $('#bg').show();
         $('#staking-timer').show();
+        this.refresh(false);
     }
 
     showStaking = () => {
