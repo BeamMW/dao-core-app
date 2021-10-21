@@ -61,17 +61,16 @@ class DaoCore {
         const styles = Utils.getStyles();
         const topColor =  [styles.appsGradientOffset, "px,"].join('');
         const mainColor = [styles.appsGradientTop, "px,"].join('');
-        if (!Utils.isDesktop()) {
-            $('body').css('background-image', [
-                "linear-gradient(to bottom,",
-                styles.background_main_top, topColor,
-                styles.background_main, mainColor,
-                styles.background_main
-            ].join(' '));
-            $('body').css('background-repeat', 'no-repeat');
-            $('body').css('background-attachment', 'fixed');
-        }
-
+        
+        $('body').css('background-image', [
+            "linear-gradient(to bottom,",
+            styles.background_main_top, topColor,
+            styles.background_main, mainColor,
+            styles.background_main
+        ].join(' '));
+        $('body').css('background-repeat', 'no-repeat');
+        $('body').css('background-attachment', 'fixed');
+        
         document.body.style.color = styles.content_main;
         document.querySelectorAll('.popup').forEach(item => {
             item.style.backgroundImage = `linear-gradient(to bottom,
