@@ -239,7 +239,7 @@ class StakingComponent extends HTMLElement {
     } else if (name === 'beam_total_locked') {
       this.componentParams.beamTotalLocked = newValue;
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);
-      // this.triggerCalcYeild();
+      this.triggerCalcYeild();
       $('#beam-total-value').text(Utils.numberWithCommas(this.componentParams.beamTotalLockedStr));
       $('#beam-total-value-rate').text(Utils.getRateStr(this.componentParams.beamTotalLockedStr, this.componentParams.rate));
     } else if (name === 'yeild') {

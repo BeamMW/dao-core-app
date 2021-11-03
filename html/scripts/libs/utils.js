@@ -257,7 +257,7 @@ export default class Utils {
         let titleElem = document.createElement("h3");
         titleElem.innerText = "Connecting to BEAM Web Wallet."; 
         let subtitle = document.createElement("p");
-        subtitle.innerText = "To use BEAM Faucet you should have BEAM Web Wallet installed and allow connection.";
+        subtitle.innerText = "To use BEAM DAO Core you should have BEAM Web Wallet installed and allow connection.";
 
         let reconnectButton = document.createElement("button");
         reconnectButton.innerText = "Try to connect again";
@@ -293,6 +293,10 @@ export default class Utils {
         installButton.style.fontWeight = "bold";
         installButton.style.fontSize = "14px";
         installButton.style.backgroundColor = "#00f6d2";
+        installButton.addEventListener('click', () => {
+            window.open('https://chrome.google.com/webstore/detail/beam-web-wallet/ilhaljfiglknggcoegeknjghdgampffk', 
+                '_blank');
+        });
 
         installButton.addEventListener("mouseover", () => {
             installButton.style.boxShadow = "0 0 8px white";
