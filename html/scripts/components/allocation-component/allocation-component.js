@@ -36,7 +36,7 @@ class AllocationComponent extends HTMLElement {
                 <div class="container__content__vesting">
                     <div class="container__content__vesting__vested">
                         <div class="allocation-title">Total vested</div>
-                        <div class="vested-value">
+                        <div class="vested-value" id="alloc-total-value">
                             ${Utils.numberWithCommas(this.componentParams.totalStr)} BEAMX
                         </div>
                     </div>
@@ -46,11 +46,11 @@ class AllocationComponent extends HTMLElement {
                             <div class="vesting__start__info">
                                 <div class="vesting__start__info__height">
                                     <div class="vesting-info-title">Blockchain height</div>
-                                    <div>${Utils.numberWithCommas(this.componentParams.vestingStart)}</div>
+                                    <div id="vesting-start-value">${Utils.numberWithCommas(this.componentParams.vestingStart)}</div>
                                 </div>
                                 <div class="vesting__end__info__date">
                                     <div class="vesting-info-title">Date</div>
-                                    <div>${this.componentParams.vestingStartDate}</div>
+                                    <div id="v-start-value">${this.componentParams.vestingStartDate}</div>
                                 </div>
                             </div>
                         </div>
@@ -59,11 +59,11 @@ class AllocationComponent extends HTMLElement {
                             <div class="vesting__end__info">
                                 <div class="vesting__end__info__height">
                                     <div class="vesting-info-title">Blockchain height</div>
-                                    <div>${Utils.numberWithCommas(this.componentParams.vestingEnd)}</div>
+                                    <div id="vesting-end-value">${Utils.numberWithCommas(this.componentParams.vestingEnd)}</div>
                                 </div>
                                 <div class="vesting__start__info__date">
                                     <div class="vesting-info-title">Date</div>
-                                    <div>${this.componentParams.vestingEndDate}</div>
+                                    <div id="v-end-value">${this.componentParams.vestingEndDate}</div>
                                 </div>
                             </div>
                         </div>
@@ -73,19 +73,19 @@ class AllocationComponent extends HTMLElement {
                     <div class="container__content__info__stats">
                         <div class="allocation__calculated__content__distributed">
                             <div class="allocation-title">Distributed</div>
-                            <div class="distributed-value">
+                            <div class="distributed-value" id="alloc-distributed-value">
                                 ${Utils.numberWithCommas(this.componentParams.distributedStr)} BEAMX
                             </div>
                         </div>
                         <div class="allocation__calculated__content__available">
                             <div class="allocation-title">Available</div>
-                            <div class="available-value">
+                            <div class="available-value" id="alloc-available-value">
                                 ${Utils.numberWithCommas(this.componentParams.availableStr)} BEAMX
                             </div>
                         </div>
                         <div class="allocation__calculated__content__locked">
                             <div class="allocation-title">Locked</div>
-                            <div class="locked-value">
+                            <div class="locked-value" id="alloc-locked-value">
                                 ${Utils.numberWithCommas(this.componentParams.lockedStr)} BEAMX
                             </div>
                         </div>
@@ -138,7 +138,7 @@ class AllocationComponent extends HTMLElement {
             </div>
         </div>`;
 
-        return this.componentParams.total > 0 ? TEMPLATE : '';
+        return TEMPLATE;
     }
 
     getMobileTpl() {
@@ -149,7 +149,7 @@ class AllocationComponent extends HTMLElement {
                 <div class="container__content__vesting">
                     <div class="container__content__vesting__vested">
                         <div class="allocation-title">Total vested</div>
-                        <div class="vested-value">
+                        <div class="vested-value" id="alloc-total-value">
                             ${Utils.numberWithCommas(this.componentParams.totalStr)} BEAMX
                         </div>
                     </div>
@@ -159,11 +159,11 @@ class AllocationComponent extends HTMLElement {
                             <div class="vesting__start__info">
                                 <div class="vesting__start__info__height">
                                     <div class="vesting-info-title">Blockchain height</div>
-                                    <div>${Utils.numberWithCommas(this.componentParams.vestingStart)}</div>
+                                    <div id="vesting-start-value">${Utils.numberWithCommas(this.componentParams.vestingStart)}</div>
                                 </div>
                                 <div class="vesting__end__info__date">
                                     <div class="vesting-info-title">Date</div>
-                                    <div>${this.componentParams.vestingStartDate}</div>
+                                    <div id="v-start-value">${this.componentParams.vestingStartDate}</div>
                                 </div>
                             </div>
                         </div>
@@ -172,11 +172,11 @@ class AllocationComponent extends HTMLElement {
                             <div class="vesting__end__info">
                                 <div class="vesting__end__info__height">
                                     <div class="vesting-info-title">Blockchain height</div>
-                                    <div>${Utils.numberWithCommas(this.componentParams.vestingEnd)}</div>
+                                    <div id="vesting-end-value">${Utils.numberWithCommas(this.componentParams.vestingEnd)}</div>
                                 </div>
                                 <div class="vesting__start__info__date">
                                     <div class="vesting-info-title">Date</div>
-                                    <div>${this.componentParams.vestingEndDate}</div>
+                                    <div id="v-end-value">${this.componentParams.vestingEndDate}</div>
                                 </div>
                             </div>
                         </div>
@@ -186,19 +186,19 @@ class AllocationComponent extends HTMLElement {
                     <div class="container__content__info__stats">
                         <div class="allocation__calculated__content__distributed">
                             <div class="allocation-title">Distributed</div>
-                            <div class="distributed-value">
+                            <div class="distributed-value" id="alloc-distributed-value">
                                 ${Utils.numberWithCommas(this.componentParams.distributedStr)} BEAMX
                             </div>
                         </div>
                         <div class="allocation__calculated__content__available">
                             <div class="allocation-title">Available</div>
-                            <div class="available-value">
+                            <div class="available-value" id="alloc-available-value">
                                 ${Utils.numberWithCommas(this.componentParams.availableStr)} BEAMX
                             </div>
                         </div>
                         <div class="allocation__calculated__content__locked">
                             <div class="allocation-title">Locked</div>
-                            <div class="locked-value">
+                            <div class="locked-value" id="alloc-locked-value">
                                 ${Utils.numberWithCommas(this.componentParams.lockedStr)} BEAMX
                             </div>
                         </div>
@@ -251,7 +251,7 @@ class AllocationComponent extends HTMLElement {
             </div>
         </div>`;
 
-        return this.componentParams.total > 0 ? TEMPLATE : '';
+        return TEMPLATE;
     }
 
     nFormatter(num, digits) {
@@ -352,18 +352,30 @@ class AllocationComponent extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {    
         let value = Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
         if (name === 'total') {
+            if (this.componentParams.total === 0) {
+                this.render();
+            }
+
             this.componentParams.total = newValue;
             this.componentParams.totalStr = Utils.formateValue(value);
-        } else if (name === 'avail_total') {
-            
+
+            $('#alloc-total-value').text(Utils.numberWithCommas(this.componentParams.totalStr) + ' BEAMX');
         } else if (name === 'received') {
             this.componentParams.distributed = newValue;
             this.componentParams.distributedStr = Utils.formateValue(value);
             this.componentParams.distrGraph = parseFloat(Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM));
+
+            $('#alloc-supply-value-top').text(this.nFormatter(this.componentParams.distrGraph));
+            $('#alloc-supply-value').text(this.nFormatter(this.componentParams.distrGraph));
+            $('#alloc-distributed-value').text(Utils.numberWithCommas(this.componentParams.distributedStr) + ' BEAMX');
         } else if (name === 'locked') {
             this.componentParams.locked = newValue;
             this.componentParams.lockedStr = Utils.formateValue(value);
             this.componentParams.lockedGraph = parseFloat(Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM));
+
+            $('#alloc-locked-value').text(Utils.numberWithCommas(this.componentParams.lockedStr) + ' BEAMX');
+            $('#alloc-distr-value').text(this.nFormatter(this.componentParams.lockedGraph, 2));
+            $('#alloc-distr-value-bottom').text(this.nFormatter(this.componentParams.lockedGraph, 2));
         } else if (name === 'allocated') {
             this.componentParams.allocated = newValue;
             this.componentParams.allocatedStr = Utils.formateValue(value);
@@ -371,10 +383,16 @@ class AllocationComponent extends HTMLElement {
             this.componentParams.available = newValue;
             this.componentParams.availableStr = Utils.formateValue(value);
             this.componentParams.availGraph = parseFloat(Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM));
+
+            $('#alloc-available-value').text(Utils.numberWithCommas(this.componentParams.availableStr) + ' BEAMX');
+            $('#alloc-avail-value').text(this.nFormatter(this.componentParams.availGraph, 2));
+            $('#alloc-avail-value-inside').text(this.nFormatter(this.componentParams.availGraph, 2));
         } else if (name === 'vesting_start') {
             this.componentParams.vestingStart = newValue;
+            $('#vesting-start-value').text(Utils.numberWithCommas(newValue));
         } else if (name === 'vesting_end') {
             this.componentParams.vestingEnd = newValue;
+            $('#vesting-end-value').text(Utils.numberWithCommas(newValue));
         } else if (name === 'cur_height') {
             this.componentParams.currentHeight = newValue;
         } else if (name === 'timestamp') {
@@ -394,7 +412,8 @@ class AllocationComponent extends HTMLElement {
                 + months[startDiffDate.getMonth()] + " " + startDiffDate.getFullYear();
             this.componentParams.vestingEndDate = endDiffDate.getDate()  + " " 
                 + months[endDiffDate.getMonth()] + " " + endDiffDate.getFullYear();
-            this.render();
+            $('#v-start-value').text(this.componentParams.vestingStartDate);
+            $('#v-end-value').text(this.componentParams.vestingEndDate);
             this.updateGraph();
         }
     }

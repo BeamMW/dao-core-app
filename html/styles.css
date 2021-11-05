@@ -25,6 +25,9 @@
 
 #bg {
     display: none;
+    max-width: 1300px;
+    margin: 0 auto;
+    z-index: 1;
 }
 
 html {
@@ -252,6 +255,7 @@ html {
     padding: 30px;
     width: 460px;
     height: 139px;
+    z-index: 100;
     border-radius: 10px;
     background-color: #00446c;
     display: flex;

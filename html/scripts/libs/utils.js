@@ -1,6 +1,10 @@
 const MIN_AMOUNT = 0.00000001;
 const MAX_AMOUNT = 254000000;
-let BEAM = null;
+
+let BEAM     = null
+let CallID   = 0
+let Calls    = {}
+let APIResCB = undefined
 
 export default class Utils {
     static isMobile () {
@@ -58,7 +62,10 @@ export default class Utils {
         })
     }
 
-    static async callApi(callid, method, params) {
+    static async callApi(method, params, cback) {
+        let callid = ['call', CallID++].join('-')
+        Calls[callid] = cback
+
         let request = {
             "jsonrpc": "2.0",
             "id":      callid,
@@ -66,8 +73,8 @@ export default class Utils {
             "params":  params
         }
 
-        console.log(JSON.stringify(request))
-        
+        console.log(Utils.formatJSON(request))
+
         if (Utils.isWeb()) {
             BEAM.callWalletApi(callid, method, params);
         } 
@@ -81,12 +88,84 @@ export default class Utils {
         }
     }
 
+    static invokeContract(args, cback, bytes) {
+        let params = {
+            "create_tx": false
+        }
+
+        if (args) {
+            params = Object.assign({
+                "args": args
+            }, params)
+        }
+
+        if (bytes) {
+            params = Object.assign({
+                "contract": bytes
+            }, params)
+        }
+
+        return Utils.callApi('invoke_contract', params, cback)
+    }
+
+    static handleApiResult (json) {
+        let answer = undefined
+        try
+        {
+            answer = JSON.parse(json);
+            console.log('Api result: ', answer);
+            
+            if (answer.result && answer.result.output) {
+                console.log('Output: ', JSON.parse(answer.result.output));
+            }
+            
+            const id = answer.id
+            const cback = Calls[id] || APIResCB
+            delete Calls[id]
+            
+            if (answer.error) {
+                return cback(answer)
+            }
+
+            if (!answer.result) {
+                return cback({
+                    error: "no valid api call result", 
+                    answer
+                })
+            }
+
+            if (typeof answer.result.output == 'string') {
+                // this is shader result
+                let shaderAnswer = JSON.parse(answer.result.output)
+                if (shaderAnswer.error) {
+                    return cback({
+                        error: shaderAnswer.error,
+                        answer
+                    })
+                }
+                return cback(null, shaderAnswer, answer)
+            }
+            else
+            {
+                return cback(null, answer.result, answer)
+            }
+        }
+        catch (err)
+        {
+            APIResCB({
+                error: err.toString(),
+                answer: answer || json
+            })
+        }
+    }
+
     static async initialize(params, initcback) {
-        let apirescb = params["apiResultHandler"]
+        APIResCB = params["apiResultHandler"]
+        
         try
         {
             if (Utils.isDesktop()) {
-                BEAM = await Utils.createDesktopAPI(apirescb)
+                BEAM = await Utils.createDesktopAPI((...args) => Utils.handleApiResult(...args))
             } 
             
             if (Utils.isWeb()) {
@@ -94,12 +173,12 @@ export default class Utils {
                 let apiver    = params["api_version"] || "current"
                 let apivermin = params["min_api_version"] || ""
                 let appname   = params["appname"]
-                BEAM = await Utils.createWebAPI(apiver, apivermin, appname, apirescb)
+                BEAM = await Utils.createWebAPI(apiver, apivermin, appname, (...args) => Utils.handleApiResult(...args))
                 Utils.hideWebLoading()
             }
 
             if (Utils.isMobile()) {
-                BEAM = await Utils.createMobileAPI(apirescb)
+                BEAM = await Utils.createMobileAPI((...args) => Utils.handleApiResult(...args))
             }
 
             let styles = Utils.getStyles()
@@ -347,5 +426,35 @@ export default class Utils {
         return (rate > 0 && value > 0
           ? (rateVal > 0.1 ? (Utils.numberWithCommas(rateVal) + ' USD') : '< 1 cent')
           : '0 USD');
+    }
+
+    static ensureField(obj, name, type) {
+        if (obj[name] == undefined) {
+            throw `No '${name}' field on object`
+        }
+
+        if (type == 'array') {
+            if (!Array.isArray(obj[name])) {
+                throw `${name} is expected to be an array`
+            }
+            return
+        }
+
+        if (type) {
+            let tof = typeof obj[name]
+            if (tof !== type) {
+                throw `Bad type '${tof}' for '${name}'. '${type}' expected.`
+            }
+            return
+        }
+    }
+
+    static isUserCancelled (err) {
+        return err.error && err.error.code == -32021
+    }
+
+    static formatJSON(obj) {
+        let res = JSON.stringify(obj, null, 2)
+        return res == "{}" ? obj.toString() : res
     }
 }
