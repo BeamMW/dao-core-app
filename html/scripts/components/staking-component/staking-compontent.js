@@ -169,11 +169,20 @@ class StakingComponent extends HTMLElement {
     });
 
     $('#empty-deposit, #deposit').click((ev) => {
-      let event = new CustomEvent("global-event", {
-        detail: {
-          type: 'deposit-popup-open',
-        }
-      });
+      let event;
+      if (Utils.isMobile()) {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'deposit-mobile-open',
+          }
+        });  
+      } else {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'deposit-popup-open',
+          }
+        });
+      }
       document.dispatchEvent(event);
     })
 
@@ -184,12 +193,22 @@ class StakingComponent extends HTMLElement {
     });
 
     $('#withdraw').click((ev) => {
-      let event = new CustomEvent("global-event", {
-        detail: {
-          type: 'withdraw-popup-open',
-          is_allocation: false
-        }
-      });
+      let event;
+      if (Utils.isMobile()) {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'withdraw-mobile-open',
+            is_allocation: false
+          }
+        });
+      } else {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'withdraw-popup-open',
+            is_allocation: false
+          }
+        });
+      }
       document.dispatchEvent(event);
     })
 

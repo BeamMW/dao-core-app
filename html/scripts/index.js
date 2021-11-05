@@ -8,6 +8,40 @@ const TIMEOUT = 3000;
 
 class DaoCore {
     constructor() {
+        this.switcherValues = {
+            'm-switch-one-week': {
+                value: '1 w',
+                fullValue: '1 week',
+                height: 10080,
+                wCount: 1,
+            },
+            'm-switch-two-weeks': {
+                value: '2 w',
+                fullValue: '2 week',
+                height: 20160,
+                wCount: 2,
+            },
+            'm-switch-one-month': {
+                value: '1 M',
+                fullValue: '1 Month',
+                height: 43200,
+                wCount: 4.4,
+            },
+            'm-switch-two-months': {
+                value: '2 M',
+                fullValue: '2 Month',
+                height: 86400,
+                wCount: 8.8,
+            },
+            'm-switch-three-months': {
+                value: '3 M',
+                fullValue: '3 Month',
+                height: 129600,
+                wCount: 13.2,
+            }
+        }
+
+
         this.timeout = undefined;
         this.pluginData = {
             inTransaction: false,
@@ -22,6 +56,12 @@ class DaoCore {
             farmTotal: null,
             farmAvail: null,
             farmReceived: null,
+            rate: 0,
+            inputTimer: null,
+            max_val: 0,
+            switcherSelectedValue: this.switcherValues['m-switch-one-week'],
+            prevSwitcherValue: 'm-switch-one-week',
+            isWVAlid: true
         }
     }
 
@@ -36,12 +76,13 @@ class DaoCore {
                     $('staking-component').attr('rate', response.beam.usd);
                     $('withdraw-popup-component').attr('rate', response.beam.usd);
                     $('deposit-popup-component').attr('rate', response.beam.usd);
+                    this.pluginData.rate = response.beam.usd;
                 }
             }
         };
     }
 
-    setError = (errmsg) => {
+    setError = (error, context) => {
         let errorElementId = "#error-common";
         if ($('#main-page').css('display') === 'none') {
             errorElementId = "#error-full";
@@ -50,12 +91,12 @@ class DaoCore {
             $('#error-common').show();
         }
 
-        $(errorElementId).text(errmsg);
+        $(errorElementId).text(JSON.stringify(error) + ' --- ' + context);
         if (this.timeout) {
             clearTimeout(this.timeout);   
         }
         this.timeout = setTimeout(() => {
-            $(errorElementId).text(errmsg);
+            $(errorElementId).text(JSON.stringify(error) + ' --- ' + context);
             this.start();
         }, TIMEOUT)
     }
@@ -188,10 +229,31 @@ class DaoCore {
     }
 
     onFarmGetYieldLoaded = (err, res) => {
-        const depositComponent = this.pluginData.yieldType === 'deposit' 
-            ? $('deposit-popup-component')
-            : $('staking-component');
-        depositComponent.attr('yeild', res.yield);
+        if (!Utils.isMobile()) {
+            const depositComponent = this.pluginData.yieldType === 'deposit' 
+                ? $('deposit-popup-component')
+                : $('staking-component');
+            depositComponent.attr('yeild', res.yield);
+        } else {
+            if (this.pluginData.yieldType === 'deposit') {
+                this.mobileYieldUpdate(res.yield);
+            } else {
+                $('staking-component').attr('yeild', res.yield);
+            }
+        }
+    }
+
+    mobileYieldUpdate = (data) => {
+        const yieldVal = Big(data).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+        const weeklyRewardStr = yieldVal.div(daoCore.pluginData.switcherSelectedValue.wCount);
+        
+        $('#m-deposit-weekly-reward').text((parseFloat(weeklyRewardStr) > 0 
+            ? Utils.numberWithCommas(Utils.formateValue(weeklyRewardStr)) 
+            : '0') + ' BEAMX');
+        $('#m-deposit-estimation').text(
+            (parseFloat(yieldVal) > 0 
+            ? Utils.numberWithCommas(Utils.formateValue(yieldVal)) 
+            : '0') + ' BEAMX');
     }
     
     refresh = (now) => {
@@ -223,6 +285,7 @@ class DaoCore {
             this.pluginData.mainLoaded = true;
             $('#staking-timer').remove();
             $('#bg').show();
+            
             // $('#main-page').remove();
             // $('#main-page-mobile').show();
             
@@ -261,7 +324,7 @@ class DaoCore {
 
         Utils.callApi(
             'process_invoke_data', {data: full.result.raw_data}, 
-            (...args) => this.onSendToChain(...args)
+            (...args) => {}
         )
     }
 
@@ -269,28 +332,32 @@ class DaoCore {
         $('public-key-popup-component').attr('key', res.xid);
     }
 
-    onApiResult = (json) => {    
-        try {
-            const apiAnswer = JSON.parse(json);
-            console.log('api result:', apiAnswer);
-            const apiCallId = apiAnswer.id;
-            let apiResult;
+    onApiResult(err, res, full) {
+        if (err) {
+            return this.setError(err,  "API handling error")
+        }
 
-            if (apiAnswer.error !== undefined) {
-                if (apiAnswer.error.code === REJECTED_CALL_ID) {
-                    apiResult = apiAnswer.error;
-                } else {
-                    throw JSON.stringify(apiAnswer.error)
-                }
-            } else {
-                apiResult = apiAnswer.result;
-                if (!apiResult) {
-                    throw "Failed to call wallet API";
+        if (full.id == 'ev_txs_changed') {   
+            let inTx = false            
+            let txs = full.result.txs
+            
+            for (let tx of txs) {
+                if (tx.status == 0 || tx.status == 1 || tx.status == 5) {
+                    inTx = true
+                    break
                 }
             }
-        } catch(err) {
-            return this.setError(err.toString());
+
+            return
         }
+
+        if (full.id == 'ev_system_state') {
+            // we update our data on each block
+            //this.refreshAllData()
+            return
+        }
+
+        //this.setError(full, "Unexpected API result")
     }
 
     hidePopups() {
@@ -299,6 +366,18 @@ class DaoCore {
         $('deposit-popup-component').hide();
         $('withdraw-popup-component').hide();
         $('info-popup-component').hide();
+    }
+
+    triggerYeildCalc() {
+        let event = new CustomEvent("global-event", {
+            detail: {
+            type: 'calc-yeild',
+            from: 'deposit',
+            amount: (Big(+$('#m-deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
+            hPeriod: this.pluginData.switcherSelectedValue.height
+            }
+        });
+        document.dispatchEvent(event);
     }
 }
 
@@ -316,7 +395,7 @@ Utils.initialize({
 
         daoCore.start();
 
-        document.addEventListener("global-event", (e) => { 
+        document.addEventListener('global-event', (e) => { 
             if (e.detail.type === 'deposit-process') {
                 Utils.invokeContract("role=manager,action=farm_update,cid=" + CONTRACT_ID + 
                     ",bLockOrUnlock=1,amountBeam=" + e.detail.amount, 
@@ -357,6 +436,200 @@ Utils.initialize({
                 Utils.invokeContract("role=manager,action=farm_get_yield,cid=" + CONTRACT_ID + ",amount=" + 
                     e.detail.amount + ",hPeriod=" + e.detail.hPeriod, 
                     (...args) => daoCore.onFarmGetYieldLoaded(...args));
+            } else if (e.detail.type === 'deposit-mobile-open') {
+                $('#main-page-mobile').hide();
+                $('#deposit-mobile-page').show();
+                window.scrollTo( 0, 0 );
+
+                $('#m-deposit-fee-rate').text(Utils.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM, daoCore.pluginData.rate));
+
+                $('#m-switch-one-week').attr('hval', daoCore.switcherValues['m-switch-one-week'].height);
+                $('#m-switch-one-week').text(daoCore.switcherValues['m-switch-one-week'].value);
+                $('#m-switch-two-weeks').attr('hval', daoCore.switcherValues['m-switch-two-weeks'].height);
+                $('#m-switch-two-weeks').text(daoCore.switcherValues['m-switch-two-weeks'].value);
+                $('#m-switch-one-month').attr('hval', daoCore.switcherValues['m-switch-one-month'].height);
+                $('#m-switch-one-month').text(daoCore.switcherValues['m-switch-one-month'].value);
+                $('#m-switch-two-months').attr('hval', daoCore.switcherValues['m-switch-two-months'].height);
+                $('#m-switch-two-months').text(daoCore.switcherValues['m-switch-two-months'].value);
+                $('#m-switch-three-months').attr('hval', daoCore.switcherValues['m-switch-three-months'].height);
+                $('#m-switch-three-months').text(daoCore.switcherValues['m-switch-three-months'].value);
+                $('#m-selector-value').text(daoCore.switcherValues['m-switch-one-week'].value);
+
+                $('.m-switch__item').click((event) => {
+                    let targetItem = $(event.target);
+                    if (daoCore.pluginData.prevSwitcherValue) {
+                        let prevItem = $('#'+daoCore.pluginData.prevSwitcherValue);
+                        prevItem.text(daoCore.pluginData.switcherSelectedValue.value);
+                        prevItem.css('min-width', '25px');
+                    }
+                    daoCore.pluginData.switcherSelectedValue = daoCore.switcherValues[targetItem.attr('id')];
+                    targetItem.text(daoCore.pluginData.switcherSelectedValue.fullValue);
+                    targetItem.css('min-width', '50px');
+                    let selectorItem = $('.m-selector');
+                    selectorItem.text(daoCore.pluginData.switcherSelectedValue.fullValue);
+                    selectorItem.width(targetItem.width() + 29);
+                    selectorItem.css('left', targetItem.position().left - 1);
+                    
+                    daoCore.pluginData.prevSwitcherValue = targetItem.attr('id');
+                    daoCore.triggerYeildCalc();
+                })
+
+                $('#m-deposit-input').on('input', (e) => {
+                    const value = $('#m-deposit-input').val();
+                    $('#m-deposit-input-rate').text(Utils.getRateStr(value.length > 0 ? value : 0, daoCore.pluginData.rate));
+                    if(daoCore.pluginData.inputTimer) {
+                        clearTimeout(daoCore.pluginData.inputTimer);
+                    }
+    
+                    if (value > 15) {
+                        daoCore.triggerYeildCalc();
+                    } else {
+                        $('#m-deposit-weekly-reward').text('0 BEAMX');
+                        $('#m-deposit-estimation').text('0 BEAMX');
+                    }
+                });
+    
+                $('#m-deposit-input').keydown((event) => {
+                    const specialKeys = [
+                        'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
+                        'Control', 'Delete', 'F5'
+                      ];
+    
+                    if (specialKeys.indexOf(event.key) !== -1) {
+                        return;
+                    }
+    
+                    const current = $('#m-deposit-input').val();
+                    const next = current.concat(event.key);
+                
+                    if (!Utils.handleString(next)) {
+                        event.preventDefault();
+                    }
+                });
+    
+                $('#m-deposit-input').bind('paste', (event) => {
+                    if (event.clipboardData !== undefined) {
+                        const text = event.clipboardData.getData('text');
+                        if (!Utils.handleString(text)) {
+                            event.preventDefault();
+                        }
+                    }
+                });
+
+                const onCancel = () => {
+                    $('#main-page-mobile').show();
+                    $('#deposit-mobile-page').hide();
+                    $('#m-deposit-input').val('');
+
+                    $('#m-deposit-weekly-reward').text('0 BEAMX');
+                    $('#m-deposit-estimation').text('0 BEAMX');
+
+                    daoCore.pluginData.switcherSelectedValue = daoCore.switcherValues['m-switch-one-week'];
+                    daoCore.pluginData.prevSwitcherValue = 'm-switch-one-week';
+                }
+
+                $('#m-deposit-cancel').click(onCancel);
+    
+                $('#m-deposit-confirm').click(() => {
+                    let event = new CustomEvent("global-event", {
+                        detail: {
+                          type: 'deposit-process',
+                          amount: (Big(+$('#m-deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed()
+                        }
+                      });
+                    document.dispatchEvent(event);
+                    onCancel();
+                });
+            } else if (e.detail.type === 'withdraw-mobile-open') {
+                $('#main-page-mobile').hide();
+                $('#withdraw-mobile-page').show();
+                window.scrollTo( 0, 0 );
+                
+                const maxValue = Big(daoCore.pluginData.lockedBeams).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
+                $('#m-withdraw-fee-rate').text(Utils.getRateStr(consts.GLOBAL_CONSTS.TRANSACTION_FEE_BEAM, daoCore.pluginData.rate));
+                $('#m-max-avail').text(maxValue.toFixed() + ' BEAM');
+                $('#m-max-avail-rate').text(Utils.getRateStr(maxValue.toFixed().length > 0 ? maxValue.toFixed() : 0, daoCore.pluginData.rate));
+                const setValidState = () => {
+                    $('#m-max-value-invalid').hide();
+                    $('#m-w-area-avail').show();
+                    $('#m-w-area-fee').show();
+                    $('.m-withdraw-area__input .withdraw-area__input__text').removeClass('invalid');
+                    $('.m-withdraw-area__controls__withdraw').removeClass('invalid');
+                }
+
+                $('#m-max-value-invalid').hide();
+
+                $('#m-withdraw-cancel').click(() => {
+                    $('#main-page-mobile').show();
+                    $('#withdraw-mobile-page').hide();
+                    $('#m-withdraw-input').val('');
+                });
+
+                $('#m-withdraw-confirm').click(() => {
+                    if (daoCore.pluginData.isWVAlid) {
+                        let event = new CustomEvent("global-event", {
+                            detail: {
+                            type: 'withdraw-process',
+                            is_allocation: false,
+                            amount: (Big(+$('#m-withdraw-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed()
+                            }
+                        });
+                        document.dispatchEvent(event);
+                        $('#main-page-mobile').show();
+                        $('#withdraw-mobile-page').hide();
+                        $('#m-withdraw-input').val('');
+                    }
+                })
+
+                $('#m-withdraw-input').on('input', (event) => {
+                    const value = $('#m-withdraw-input').val();
+                    $('#m-withdraw-input-rate').text(Utils.getRateStr(value.length > 0 ? value : 0, daoCore.pluginData.rate));
+
+                    daoCore.pluginData.isWVAlid = parseFloat(value.length > 0 ? value : 0) 
+                        <= maxValue.toFixed();
+                    if (daoCore.pluginData.isWVAlid) {
+                        setValidState();
+                    } else {
+                        $('#m-max-value-invalid').show();
+                        $('#m-max-limit-value').text(maxValue.toFixed());
+                        $('#m-w-area-avail').hide();
+                        $('#m-w-area-fee').hide();
+                        $('.m-withdraw-area__input .withdraw-area__input__text').addClass('invalid');
+                        $('.m-withdraw-area__controls__withdraw').addClass('invalid');
+                    }
+                });
+
+                $('#m-withdraw-input').keydown((event) => {
+                    const specialKeys = [
+                        'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
+                        'Control', 'Delete', 'F5'
+                    ];
+
+                    if (specialKeys.indexOf(event.key) !== -1) {
+                        return;
+                    }
+
+                    const current = $('#m-withdraw-input').val();
+                    const next = current.concat(event.key);
+                
+                    if (!Utils.handleString(next)) {
+                        event.preventDefault();
+                    }
+                })
+
+                $('#m-withdraw-input').bind('paste', (event) => {
+                    const text = event.clipboardData.getData('text');
+                    if (!Utils.handleString(text)) {
+                        event.preventDefault();
+                    }
+                })
+
+                $('#m-add-max-control').click(() => {
+                    $('#m-withdraw-input').val(maxValue.toFixed());
+                    $('#m-withdraw-input-rate').text(Utils.getRateStr(maxValue, daoCore.pluginData.rate));
+                    daoCore.pluginData.isWVAlid = true;
+                    setValidState();
+                })
             }
         });
     }

@@ -151,7 +151,7 @@ class DepositPopupComponent extends HTMLElement {
             detail: {
             type: 'calc-yeild',
             from: 'deposit',
-            amount: (Big($('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
+            amount: (Big(+$('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
             hPeriod: this.componentParams.switcherSelectedValue.height
             }
         });
@@ -180,7 +180,7 @@ class DepositPopupComponent extends HTMLElement {
                   });
                 document.dispatchEvent(event);
                 $('deposit-popup-component').hide();
-            })
+            });
 
             $('.popup__content.deposit-tmpl').css('height', 'unset');
             $('deposit-popup-component').show();

@@ -23,6 +23,12 @@
 
 .popup__content__controls.claim-controls {
     margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.mobile .container__main__controls__confirm {
+    margin-left: 10px;
 }
 
 .container__main__controls__confirm {
