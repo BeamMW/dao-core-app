@@ -169,11 +169,20 @@ class StakingComponent extends HTMLElement {
     });
 
     $('#empty-deposit, #deposit').click((ev) => {
-      let event = new CustomEvent("global-event", {
-        detail: {
-          type: 'deposit-popup-open',
-        }
-      });
+      let event;
+      if (Utils.isMobile()) {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'deposit-mobile-open',
+          }
+        });  
+      } else {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'deposit-popup-open',
+          }
+        });
+      }
       document.dispatchEvent(event);
     })
 
@@ -184,12 +193,22 @@ class StakingComponent extends HTMLElement {
     });
 
     $('#withdraw').click((ev) => {
-      let event = new CustomEvent("global-event", {
-        detail: {
-          type: 'withdraw-popup-open',
-          is_allocation: false
-        }
-      });
+      let event;
+      if (Utils.isMobile()) {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'withdraw-mobile-open',
+            is_allocation: false
+          }
+        });
+      } else {
+        event = new CustomEvent("global-event", {
+          detail: {
+            type: 'withdraw-popup-open',
+            is_allocation: false
+          }
+        });
+      }
       document.dispatchEvent(event);
     })
 
@@ -239,7 +258,7 @@ class StakingComponent extends HTMLElement {
     } else if (name === 'beam_total_locked') {
       this.componentParams.beamTotalLocked = newValue;
       this.componentParams.beamTotalLockedStr = Utils.formateValue(value);
-      // this.triggerCalcYeild();
+      this.triggerCalcYeild();
       $('#beam-total-value').text(Utils.numberWithCommas(this.componentParams.beamTotalLockedStr));
       $('#beam-total-value-rate').text(Utils.getRateStr(this.componentParams.beamTotalLockedStr, this.componentParams.rate));
     } else if (name === 'yeild') {

@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>BeamX DAO</title>
         <link href="./styles.css" rel="stylesheet">
+        <link rel="icon" type="image/svg" href="./appicon.svg"/>
     </head>
     <body>
         <div class="background" id="bg">
@@ -41,6 +42,151 @@
                             coming soon
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div id="deposit-mobile-page" class="mobile-deposit">
+                <div class="m-deposit-area">
+                    <div class="m-area-header">Deposit</div>
+                    <div class="deposit-area__input">
+                        <input type="text" class="m-deposit-area__input__elem" placeholder="0" id="m-deposit-input"/>
+                        <span class="deposit-area__input__text">BEAM</span>
+                    </div>
+                    <div class="deposit-area__rate" id="m-deposit-input-rate">
+                        0 USD
+                    </div>
+                    <div class="deposit-area__fee">
+                        <div class="deposit-area__fee__title">Fee</div>
+                        <div class="deposit-area__fee__value">
+                            <div class="deposit-area__fee__value__beam">
+                                0.011 BEAM
+                            </div>
+                            <div class="deposit-area__fee__value__rate" id="m-deposit-fee-rate">
+                                0 USD
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+                <div class="m-calc-area">
+                    <div class="m-area-header">
+                        <span>Staking calculator</span>
+                        <img id="calc-area-icon" class="m-area-header__icon" src="./icons/mobile-arrow-down.svg"/>
+                    </div>
+                    <div class="m-area-content" id="calc-area">
+                        <div class="calc-area__info">The longer you stake for, the higher the reward is.
+                        <br>You can withdraw your funds at any time.</div>
+                        <div class="switch">
+                            <div class="m-switch__item" id="m-switch-one-week"></div>
+                            <div class="m-switch__item" id="m-switch-two-weeks"></div>
+                            <div class="m-switch__item" id="m-switch-one-month"></div>
+                            <div class="m-switch__item" id="m-switch-two-months"></div>
+                            <div class="m-switch__item" id="m-switch-three-months"></div>
+                            <div class="m-selector" id="m-selector-value"></div>
+                        </div>
+                        <div class="calc-area__reward">
+                            <div class="calc-area__reward__weekly">
+                                <div class="calc-area-title">My weekly reward</div>
+                                <div class="calc-area-value" id="m-deposit-weekly-reward">0 BEAMX</div>
+                            </div>
+                        </div>
+                        <div class="calc-area__farming">
+                            <div class="calc-area-title">Farming estimation</div>
+                            <div class="calc-area__farming__value">
+                                <img class="calc-area-icon" src="./icons/icon-beamx.svg"/>
+                                <span class="calc-area-estimation" id="m-deposit-estimation">
+                                    0 BEAMX
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-deposit-area__controls">
+                    <button class="container__main__controls__cancel ui-button" id="m-deposit-cancel">
+                        <span class="ui-button__inner-wrapper">
+                            <div class="ui-button__icon">
+                                <img src="./icons/icon-cancel.svg"/>
+                            </div>
+                            <span class="ui-button__text cancel-text">cancel</span>
+                        </span>
+                    </button>
+                    <button class="deposit-area__controls__deposit ui-button" id="m-deposit-confirm">
+                        <span class="ui-button__inner-wrapper">
+                            <div class="ui-button__icon">
+                                <img src="./icons/icon-deposit-blue.svg"/>
+                            </div>
+                            <span class="ui-button__text confirm-text">deposit</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="withdraw-mobile-page" class="mobile-withdraw">
+                <div class="mobile-withdraw-container">
+                    <div class="popup__content__title">Withdraw</div>
+                    <div class="popup__value">
+                        <div class="popup__value__input-area">
+                            <div class="m-withdraw-area__input">
+                                <input type="text" class="m-withdraw-area__input__elem"
+                                    placeholder="0" id="m-withdraw-input"/>
+                                <span class="withdraw-area__input__text">
+                                    BEAM
+                                </span>
+                            </div>
+                        </div>
+                        <div class="withdraw-area__rate" id="m-withdraw-input-rate">
+                            0 USD
+                        </div>
+                        
+                        <div class="withdraw-area__avail" id="m-w-area-avail">
+                            <div class="m-withdraw-area__fee__title">Available</div>
+                            <div class="withdraw-area__fee__value">
+                                <div class="m-withdraw-subtitle" id="m-max-avail">
+                                    0 BEAM
+                                </div>
+                                <div class="m-withdraw-subtitle rate" id="m-max-avail-rate">
+                                    0 USD
+                                </div>
+                            </div>
+                            <div class="withdraw-area__add-max" id="m-add-max-control">
+                                <img class="withdraw-area__add-max__icon" src="./icons/icon-withdraw-mobile.svg"/>
+                                <div class="withdraw-area__add-max__text">max</div>
+                            </div>
+                        </div>
+                        <div class="ivalid-state-message" id="m-max-value-invalid">
+                            Insufficient funds to complete the transaction.<br>
+                            Maximum amount is 
+                            <span id="m-max-limit-value">0</span> BEAM.
+                        </div>
+                        <div class="m-withdraw-area__fee" id="m-w-area-fee">
+                            <div class="m-withdraw-area__fee__title">Fee</div>
+                            <div class="withdraw-area__fee__value">
+                                <div class="m-withdraw-subtitle">
+                                    0.011 BEAM
+                                </div>
+                                <div class="m-withdraw-subtitle rate" id="m-withdraw-fee-rate">
+                                    0 USD
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="withdraw-area__controls">
+                    <button class="container__main__controls__cancel ui-button" id="m-withdraw-cancel">
+                        <span class="ui-button__inner-wrapper">
+                            <div class="ui-button__icon">
+                                <img src="./icons/icon-cancel.svg"/>
+                            </div>
+                            <span class="ui-button__text cancel-text">cancel</span>
+                        </span>
+                    </button>
+                    <button class="m-withdraw-area__controls__withdraw ui-button" id="m-withdraw-confirm">
+                        <span class="ui-button__inner-wrapper">
+                            <div class="ui-button__icon">
+                                <img src="./icons/icon-withdraw.svg"/>
+                            </div>
+                            <span class="ui-button__text confirm-text">withdraw</span>
+                        </span>
+                    </button>
                 </div>
             </div>
 

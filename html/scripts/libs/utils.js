@@ -1,6 +1,10 @@
 const MIN_AMOUNT = 0.00000001;
 const MAX_AMOUNT = 254000000;
-let BEAM = null;
+
+let BEAM     = null
+let CallID   = 0
+let Calls    = {}
+let APIResCB = undefined
 
 export default class Utils {
     static isMobile () {
@@ -58,7 +62,10 @@ export default class Utils {
         })
     }
 
-    static async callApi(callid, method, params) {
+    static async callApi(method, params, cback) {
+        let callid = ['call', CallID++].join('-')
+        Calls[callid] = cback
+
         let request = {
             "jsonrpc": "2.0",
             "id":      callid,
@@ -66,8 +73,8 @@ export default class Utils {
             "params":  params
         }
 
-        console.log(JSON.stringify(request))
-        
+        console.log(Utils.formatJSON(request))
+
         if (Utils.isWeb()) {
             BEAM.callWalletApi(callid, method, params);
         } 
@@ -81,12 +88,84 @@ export default class Utils {
         }
     }
 
+    static invokeContract(args, cback, bytes) {
+        let params = {
+            "create_tx": false
+        }
+
+        if (args) {
+            params = Object.assign({
+                "args": args
+            }, params)
+        }
+
+        if (bytes) {
+            params = Object.assign({
+                "contract": bytes
+            }, params)
+        }
+
+        return Utils.callApi('invoke_contract', params, cback)
+    }
+
+    static handleApiResult (json) {
+        let answer = undefined
+        try
+        {
+            answer = JSON.parse(json);
+            console.log('Api result: ', answer);
+            
+            if (answer.result && answer.result.output) {
+                console.log('Output: ', JSON.parse(answer.result.output));
+            }
+            
+            const id = answer.id
+            const cback = Calls[id] || APIResCB
+            delete Calls[id]
+            
+            if (answer.error) {
+                return cback(answer)
+            }
+
+            if (!answer.result) {
+                return cback({
+                    error: "no valid api call result", 
+                    answer
+                })
+            }
+
+            if (typeof answer.result.output == 'string') {
+                // this is shader result
+                let shaderAnswer = JSON.parse(answer.result.output)
+                if (shaderAnswer.error) {
+                    return cback({
+                        error: shaderAnswer.error,
+                        answer
+                    })
+                }
+                return cback(null, shaderAnswer, answer)
+            }
+            else
+            {
+                return cback(null, answer.result, answer)
+            }
+        }
+        catch (err)
+        {
+            APIResCB({
+                error: err.toString(),
+                answer: answer || json
+            })
+        }
+    }
+
     static async initialize(params, initcback) {
-        let apirescb = params["apiResultHandler"]
+        APIResCB = params["apiResultHandler"]
+        
         try
         {
             if (Utils.isDesktop()) {
-                BEAM = await Utils.createDesktopAPI(apirescb)
+                BEAM = await Utils.createDesktopAPI((...args) => Utils.handleApiResult(...args))
             } 
             
             if (Utils.isWeb()) {
@@ -94,12 +173,12 @@ export default class Utils {
                 let apiver    = params["api_version"] || "current"
                 let apivermin = params["min_api_version"] || ""
                 let appname   = params["appname"]
-                BEAM = await Utils.createWebAPI(apiver, apivermin, appname, apirescb)
+                BEAM = await Utils.createWebAPI(apiver, apivermin, appname, (...args) => Utils.handleApiResult(...args))
                 Utils.hideWebLoading()
             }
 
             if (Utils.isMobile()) {
-                BEAM = await Utils.createMobileAPI(apirescb)
+                BEAM = await Utils.createMobileAPI((...args) => Utils.handleApiResult(...args))
             }
 
             let styles = Utils.getStyles()
@@ -131,10 +210,6 @@ export default class Utils {
     }
 
     static applyStyles(style) {
-        // TODO: как-то это все неправильно тут
-        let topColor =  [style.appsGradientOffset, "px,"].join('');
-        let mainColor = [style.appsGradientTop, "px,"].join('');
-
         if (!Utils.isDesktop()) {
             document.head.innerHTML += '<meta name="viewport" content="width=device-width, initial-scale=1" />';
         }
@@ -146,25 +221,6 @@ export default class Utils {
         if (Utils.isWeb()) {
             document.body.classList.add('web');
         }
-        
-        document.body.style.color = style.content_main;
-        document.querySelectorAll('.popup').forEach(item => {
-            item.style.backgroundImage = `linear-gradient(to bottom,
-            ${Utils.hex2rgba(style.background_main_top, 0.6)} ${topColor}
-            ${Utils.hex2rgba(style.background_main, 0.6)} ${mainColor}
-            ${Utils.hex2rgba(style.background_main, 0.6)}`;
-        });
-        
-        document.querySelectorAll('.popup__content').forEach(item => {
-            item.style.backgroundColor = Utils.hex2rgba(style.background_popup, 1);
-        });
-
-
-        let ef = document.getElementById('error-full');
-        if (ef) ef.style.color = style.validator_error;
-        
-        let ec = document.getElementById('error-common');
-        if (ec) ec.style.color = style.validator_error;
     }
     
     //
@@ -249,13 +305,6 @@ export default class Utils {
         return result;
     }
 
-    // static handleString(next) {
-    //     const REG_AMOUNT = /^(?:[1-9]\d*|0)?(?:\.(\d+)?)?$/;
-    //     if (REG_AMOUNT.test(next)) {
-    //         return false;
-    //     }
-    // }
-
     static showWebLoading() {
         let styles = Utils.getStyles()
         Utils.applyStyles(styles);
@@ -265,6 +314,7 @@ export default class Utils {
         let bg = document.createElement("div");
         bg.style.width = "100%";
         bg.style.height = "100%";
+        bg.style.color = "#fff";
         bg.id = "dapp-loader";
         bg.style.position = "absolute";
         bg.style.backgroundImage = [
@@ -286,19 +336,57 @@ export default class Utils {
         let titleElem = document.createElement("h3");
         titleElem.innerText = "Connecting to BEAM Web Wallet."; 
         let subtitle = document.createElement("p");
-        subtitle.innerText = "To use BEAM Faucet you should have BEAM Web Wallet installed and allow connection.";
+        subtitle.innerText = "To use BEAM DAO Core you should have BEAM Web Wallet installed and allow connection.";
 
         let reconnectButton = document.createElement("button");
         reconnectButton.innerText = "Try to connect again";
+        reconnectButton.style.height = "44px";
+        reconnectButton.style.padding = "13px 30px";
+        reconnectButton.style.borderRadius = "50px";
+        reconnectButton.style.border = "none";
+        reconnectButton.style.color = "#fff";
+        reconnectButton.style.cursor = "pointer";
+        reconnectButton.style.fontWeight = "bold";
+        reconnectButton.style.fontSize = "14px";
+        reconnectButton.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+
+        reconnectButton.addEventListener("mouseover", () => {
+            reconnectButton.style.boxShadow = "0 0 8px white";
+        }, false);
+        reconnectButton.addEventListener("mouseout", () => {
+            reconnectButton.style.boxShadow = "none";
+        }, false);
+
+
         reconnectButton.addEventListener('click', () => {
             Utils.reload();
         });
         let installButton = document.createElement("button");
         installButton.innerText = "Install BEAM Web Wallet";
+        installButton.style.height = "44px";
+        installButton.style.padding = "13px 30px";
+        installButton.style.borderRadius = "50px";
+        installButton.style.border = "none";
+        installButton.style.color = "#042548";
+        installButton.style.cursor = "pointer";
+        installButton.style.fontWeight = "bold";
+        installButton.style.fontSize = "14px";
+        installButton.style.backgroundColor = "#00f6d2";
+        installButton.addEventListener('click', () => {
+            window.open('https://chrome.google.com/webstore/detail/beam-web-wallet/ilhaljfiglknggcoegeknjghdgampffk', 
+                '_blank');
+        });
 
+        installButton.addEventListener("mouseover", () => {
+            installButton.style.boxShadow = "0 0 8px white";
+        }, false);
+        installButton.addEventListener("mouseout", () => {
+            installButton.style.boxShadow = "none";
+        }, false);
         installButton.style.marginLeft = '30px';
         
         let controlsArea = document.createElement("div");
+        controlsArea.style.marginTop = "50px";
         
         loadContainer.appendChild(titleElem);
         loadContainer.appendChild(subtitle);
@@ -338,5 +426,35 @@ export default class Utils {
         return (rate > 0 && value > 0
           ? (rateVal > 0.1 ? (Utils.numberWithCommas(rateVal) + ' USD') : '< 1 cent')
           : '0 USD');
+    }
+
+    static ensureField(obj, name, type) {
+        if (obj[name] == undefined) {
+            throw `No '${name}' field on object`
+        }
+
+        if (type == 'array') {
+            if (!Array.isArray(obj[name])) {
+                throw `${name} is expected to be an array`
+            }
+            return
+        }
+
+        if (type) {
+            let tof = typeof obj[name]
+            if (tof !== type) {
+                throw `Bad type '${tof}' for '${name}'. '${type}' expected.`
+            }
+            return
+        }
+    }
+
+    static isUserCancelled (err) {
+        return err.error && err.error.code == -32021
+    }
+
+    static formatJSON(obj) {
+        let res = JSON.stringify(obj, null, 2)
+        return res == "{}" ? obj.toString() : res
     }
 }

@@ -1,5 +1,7 @@
 import Utils from "./../../libs/utils.js";
-import * as consts from "./../../consts/consts.js"; 
+import * as consts from "./../../consts/consts.js";
+
+var inputTimer;
 
 class DepositPopupComponent extends HTMLElement {
     switcherValues = {
@@ -145,17 +147,15 @@ class DepositPopupComponent extends HTMLElement {
 
     triggerYeildCalc() {
         const value = $('#deposit-input').val();
-        if (value > 0) {
-            let event = new CustomEvent("global-event", {
-                detail: {
-                type: 'calc-yeild',
-                from: 'deposit',
-                amount: (Big($('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
-                hPeriod: this.componentParams.switcherSelectedValue.height
-                }
-            });
-            document.dispatchEvent(event);
-        }
+        let event = new CustomEvent("global-event", {
+            detail: {
+            type: 'calc-yeild',
+            from: 'deposit',
+            amount: (Big(+$('#deposit-input').val()).times(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM)).toFixed(),
+            hPeriod: this.componentParams.switcherSelectedValue.height
+            }
+        });
+        document.dispatchEvent(event);
     }
   
     render() {
@@ -180,7 +180,7 @@ class DepositPopupComponent extends HTMLElement {
                   });
                 document.dispatchEvent(event);
                 $('deposit-popup-component').hide();
-            })
+            });
 
             $('.popup__content.deposit-tmpl').css('height', 'unset');
             $('deposit-popup-component').show();
@@ -189,7 +189,16 @@ class DepositPopupComponent extends HTMLElement {
                 const value = $('#deposit-input').val();
                 $('#deposit-input-rate').text(Utils.getRateStr(value.length > 0 ? value : 0, this.componentParams.rate));
 
-                this.triggerYeildCalc();
+                if(inputTimer) {
+                    clearTimeout(inputTimer);
+                }
+
+                if (value > 15) {
+                    inputTimer = setTimeout(this.triggerYeildCalc.bind(this), 300);
+                } else {
+                    $('#deposit-weekly-reward').text('0 BEAMX');
+                    $('#deposit-estimation').text('0 BEAMX');
+                }
              });
 
             $('#deposit-input').keydown((event) => {
