@@ -119,6 +119,7 @@ html {
     font-weight: bold;
     letter-spacing: 3.11px;
     color: #ffffff;
+    display: flex;
 }
 
 .container-title {
@@ -241,8 +242,9 @@ html {
     height: 100%;
     overflow: hidden;
     position: fixed;
+    left: 0;
     top: 0px;
-    display: flex;
+    overflow: hidden;
     justify-content: center;
     align-items: center;
     z-index: 100;
@@ -250,7 +252,7 @@ html {
 }
 
 .popup .popup__content{
-    margin: 40px auto 0px auto;
+    margin: 100px auto 0px auto;
     padding: 30px;
     width: 460px;
     height: 139px;
@@ -403,7 +405,13 @@ html {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+    align-items: center;
     color: #ffffff;
+}
+
+.m-area-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .m-switch__item {
@@ -537,4 +545,26 @@ html {
 #m-add-max-control {
     margin-left: auto;
     margin-top: 0;
+}
+
+.m-withdraw-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.m-withdraw-subtitle.rate {
+    opacity: .5;
+}
+
+.m-area-header__icon {
+    width: 13px;
+    height: 8px;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+#gov-content {
+    display: flex;
+    flex-direction: column;
 }

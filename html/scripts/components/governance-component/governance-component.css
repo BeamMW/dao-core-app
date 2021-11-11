@@ -4,8 +4,11 @@
     padding: 20px;
     background-color: rgba(0, 246, 210, .1);
     border-radius: 10px;
-    height: 359px;
-}
+ }
+
+/* .mobile .governance {
+    height: auto;
+} */
 
 .container-mobile .governance {
     border-radius: unset;
@@ -42,7 +45,7 @@
 .governance__separator {
     height: 1px;
     width: 100%;
-    margin: auto 0;
+    margin: 30px 0;
     background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -155,4 +158,13 @@
     height: 16px;
     margin-left: 8px;
     cursor: pointer;
+}
+
+#gov-area-icon {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+#gov-area-icon {
+    display: none;
 }

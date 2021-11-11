@@ -349,3 +349,9 @@
     margin-top: 2px;
     margin-bottom: auto;
 }
+
+#alloc-area-icon {
+    margin-left: auto;
+    cursor: pointer;
+    display: none;
+}

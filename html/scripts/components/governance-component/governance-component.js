@@ -13,7 +13,7 @@ class GovernanceComponent extends HTMLElement {
       totalSupplyStr: '',
       totalGraph: '',
       distrGraph: '',
-      availGraph: ''
+      availGraph: '',
     }
   
     constructor() {
@@ -24,66 +24,68 @@ class GovernanceComponent extends HTMLElement {
       const TEMPLATE =
       `<div class="governance">
           <div class="container__header">
-            BEAMX GOVERNANCE
-            
+            <span>BEAMX GOVERNANCE</span>
+            <img id="gov-area-icon" class="m-area-header__icon" src="./icons/mobile-arrow-down.svg"/>
           </div>
-          <div class="governance__title">Total supply</div>
-          <div class="governance__value total">
-            <span id="gov-total-value">0</span> BEAMX
-          </div>
-          <div class="gov-container">
-            <div class="gov-container__left">
-              <div class="governance__title">Distributed</div>
-              <div class="governance__value">
-                <span id="gov-distr-full-value">0</span> BEAMX
-              </div>
-              <div class="governance__title">
-                <span>Available</span>
-                <img class="governance__title__icon" id="avail-info" src="./icons/icon-info.svg" />
-                <info-popup-component id="avail-info-popup"></info-popup-component>
-              </div>
-              <div class="governance__value">
-                <span id="gov-full-avail-value">0</span> BEAMX
-              </div>
-              <div class="governance__title">
-                <span>Locked</span>
-                <img class="governance__title__icon" id="locked-info" src="./icons/icon-info.svg" />
-                <info-popup-component id="locked-info-popup"></info-popup-component>
-              </div>
-              <div class="governance__value">
-                <span id="gov-locked-value">0</span> BEAMX
-              </div>
+          <div id="gov-content">
+            <div class="governance__title">Total supply</div>
+            <div class="governance__value total">
+              <span id="gov-total-value">0</span> BEAMX
             </div>
-            <div class="gov-container__right">
-              <span class="gov-graph-supply-top gov-graph-text"> 
-                <span id="gov-supply-value-top"></span>
-              </span>
-              <div class="gov__graph">
-                <span class="gov-graph-supply gov-graph-text"> 
-                  <span id="gov-supply-value"></span>
+            <div class="gov-container">
+              <div class="gov-container__left">
+                <div class="governance__title">Distributed</div>
+                <div class="governance__value">
+                  <span id="gov-distr-full-value">0</span> BEAMX
+                </div>
+                <div class="governance__title">
+                  <span>Available</span>
+                  <img class="governance__title__icon" id="avail-info" src="./icons/icon-info.svg" />
+                  <info-popup-component id="avail-info-popup"></info-popup-component>
+                </div>
+                <div class="governance__value">
+                  <span id="gov-full-avail-value">0</span> BEAMX
+                </div>
+                <div class="governance__title">
+                  <span>Locked</span>
+                  <img class="governance__title__icon" id="locked-info" src="./icons/icon-info.svg" />
+                  <info-popup-component id="locked-info-popup"></info-popup-component>
+                </div>
+                <div class="governance__value">
+                  <span id="gov-locked-value">0</span> BEAMX
+                </div>
+              </div>
+              <div class="gov-container__right">
+                <span class="gov-graph-supply-top gov-graph-text"> 
+                  <span id="gov-supply-value-top"></span>
                 </span>
-                <div class="gov__graph__available" id="gov-progress-available">
-                  <span class="gov-graph-aval gov-graph-text"> 
-                    <span id="gov-avail-value"></span>
+                <div class="gov__graph">
+                  <span class="gov-graph-supply gov-graph-text"> 
+                    <span id="gov-supply-value"></span>
                   </span>
+                  <div class="gov__graph__available" id="gov-progress-available">
+                    <span class="gov-graph-aval gov-graph-text"> 
+                      <span id="gov-avail-value"></span>
+                    </span>
+                  </div>
+                  <div class="gov__graph__value" id="gov-progress-value">
+                    <span class="gov-graph-aval-inside"> 
+                      <span id="gov-avail-value-inside"></span>
+                    </span>
+                    <span class="gov-graph-distr">
+                      <span id="gov-distr-value"></span>
+                    </span>
+                  </div>
                 </div>
-                <div class="gov__graph__value" id="gov-progress-value">
-                  <span class="gov-graph-aval-inside"> 
-                    <span id="gov-avail-value-inside"></span>
-                  </span>
-                  <span class="gov-graph-distr">
-                    <span id="gov-distr-value"></span>
-                  </span>
-                </div>
+                <span class="gov-graph-distr-bottom gov-graph-text">
+                  <span id="gov-distr-value-bottom"></span>
+                </span>
               </div>
-              <span class="gov-graph-distr-bottom gov-graph-text">
-                <span id="gov-distr-value-bottom"></span>
-              </span>
             </div>
-          </div>
-          <div class="governance__separator"></div>
-          <div class="governance__pkey">
-            <span class="governance__pkey__text" id="governance-show-key">Show my public key</span>
+            <div class="governance__separator"></div>
+            <div class="governance__pkey">
+              <span class="governance__pkey__text" id="governance-show-key">Show my public key</span>
+            </div>
           </div>
       </div>`;
 

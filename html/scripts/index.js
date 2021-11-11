@@ -61,7 +61,9 @@ class DaoCore {
             max_val: 0,
             switcherSelectedValue: this.switcherValues['m-switch-one-week'],
             prevSwitcherValue: 'm-switch-one-week',
-            isWVAlid: true
+            isWVAlid: true,
+            m_calc_is_exp: true,
+            is_gov_expanded: true,
         }
     }
 
@@ -302,6 +304,18 @@ class DaoCore {
             $('#error-full-container').hide();
             $('#error-common').hide();
             $('staking-component').attr('loaded', this.pluginData.mainLoaded | 0);
+
+            if (Utils.isMobile()) {
+                daoCore.pluginData.is_gov_expanded ? $('#gov-content').show() : $('#gov-content').hide();
+                
+                $('#gov-area-icon').show();
+                $('#gov-area-icon').on('click', () => {
+                daoCore.pluginData.is_gov_expanded = !daoCore.pluginData.is_gov_expanded;
+                daoCore.pluginData.is_gov_expanded ? $('#gov-content').show() : $('#gov-content').hide();
+                $("#gov-area-icon").attr("src", daoCore.pluginData.is_gov_expanded ? "./icons/mobile-arrow-down.svg" 
+                    : "./icons/mobile-arrow-up.svg");
+                })
+            }
         }
         this.refresh(false);
     }
@@ -454,6 +468,16 @@ Utils.initialize({
                 $('#m-switch-three-months').attr('hval', daoCore.switcherValues['m-switch-three-months'].height);
                 $('#m-switch-three-months').text(daoCore.switcherValues['m-switch-three-months'].value);
                 $('#m-selector-value').text(daoCore.switcherValues['m-switch-one-week'].value);
+
+                
+                daoCore.pluginData.m_calc_is_exp ? $('#calc-area').show() : $('#calc-area').hide();
+
+                $('#calc-area-icon').click(() => {
+                    daoCore.pluginData.m_calc_is_exp = !daoCore.pluginData.m_calc_is_exp;
+                    daoCore.pluginData.m_calc_is_exp ? $('#calc-area').show() : $('#calc-area').hide();
+                    $("#calc-area-icon").attr("src", daoCore.pluginData.m_calc_is_exp ? "./icons/mobile-arrow-down.svg" 
+                        : "./icons/mobile-arrow-up.svg");
+                });
 
                 $('.m-switch__item').click((event) => {
                     let targetItem = $(event.target);
