@@ -201,7 +201,7 @@ class DepositPopupComponent extends HTMLElement {
                 }
              });
 
-            $('#deposit-input').keydown((event) => {
+            $('#deposit-input').on('keydown', (event) => {
                 const specialKeys = [
                     'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
                     'Control', 'Delete', 'F5'

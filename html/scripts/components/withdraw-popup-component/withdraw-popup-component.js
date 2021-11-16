@@ -120,7 +120,7 @@ class WithdrawPopupComponent extends HTMLElement {
                 }
              });
 
-            $('#withdraw-input').keydown((event) => {
+            $('#withdraw-input').on('keydown', (event) => {
                 const specialKeys = [
                     'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
                     'Control', 'Delete', 'F5'

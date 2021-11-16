@@ -513,7 +513,7 @@ Utils.initialize({
                     }
                 });
     
-                $('#m-deposit-input').keydown((event) => {
+                $('#m-deposit-input').on('keydown', (event) => {
                     const specialKeys = [
                         'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
                         'Control', 'Delete', 'F5'
@@ -623,7 +623,7 @@ Utils.initialize({
                     }
                 });
 
-                $('#m-withdraw-input').keydown((event) => {
+                $('#m-withdraw-input').on('keydown', (event) => {
                     const specialKeys = [
                         'Backspace', 'Tab', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowUp',
                         'Control', 'Delete', 'F5'
