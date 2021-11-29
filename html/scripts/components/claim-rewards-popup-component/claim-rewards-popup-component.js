@@ -24,7 +24,7 @@ class ClaimRewardsPopupComponent extends HTMLElement {
                     </span>
                 </div>
                 <div class="popup__content__controls claim-controls">
-                    <button class="container__main__controls__cancel ui-button" id="claim-cancel">
+                    <button class="container__main__controls__cancel ui-button cancel" id="claim-cancel">
                         <span class="ui-button__inner-wrapper">
                             <div class="ui-button__icon">
                                 <img src="./icons/icon-cancel.svg"/>

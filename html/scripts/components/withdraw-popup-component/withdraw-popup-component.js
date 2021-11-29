@@ -55,7 +55,7 @@ class WithdrawPopupComponent extends HTMLElement {
                     
                 </div>
                 <div class="withdraw-area__controls">
-                    <button class="container__main__controls__cancel ui-button" id="withdraw-cancel">
+                    <button class="container__main__controls__cancel ui-button cancel" id="withdraw-cancel">
                         <span class="ui-button__inner-wrapper">
                             <div class="ui-button__icon">
                                 <img src="./icons/icon-cancel.svg"/>

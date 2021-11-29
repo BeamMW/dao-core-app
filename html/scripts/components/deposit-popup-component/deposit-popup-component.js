@@ -76,7 +76,7 @@ class DepositPopupComponent extends HTMLElement {
                         </div>
                     </div>
                     <div class="deposit-area__controls">
-                        <button class="container__main__controls__cancel ui-button" id="deposit-cancel">
+                        <button class="container__main__controls__cancel ui-button cancel" id="deposit-cancel">
                             <span class="ui-button__inner-wrapper">
                                 <div class="ui-button__icon">
                                     <img src="./icons/icon-cancel.svg"/>

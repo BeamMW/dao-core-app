@@ -19,7 +19,7 @@ class PublicKeyPopupComponent extends HTMLElement {
                     <img class="popup-key-icon" id="key-copy-icon" src="./icons/icon-copy.svg"/>
                 </div>
                 <div class="popup__content__controls popup-key-controls">
-                    <button class="container__main__controls__cancel ui-button" id="public-key-cancel">
+                    <button class="container__main__controls__cancel ui-button cancel" id="public-key-cancel">
                         <span class="ui-button__inner-wrapper">
                             <div class="ui-button__icon">
                                 <img src="./icons/icon-cancel.svg"/>
