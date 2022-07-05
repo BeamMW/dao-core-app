@@ -154,11 +154,11 @@ class DaoCore {
     }
 
     onFarmViewLoaded = (err, res) => {
-        if (res.farming.h >= res.farming.h0) {
+        //if (res.farming.h >= res.farming.h0) {
             this.showStaking();
-        } else {
-            this.showStakingTimer(res.farming.h0 - res.farming.h);
-        }
+        // } else {
+        //     this.showStakingTimer(res.farming.h0 - res.farming.h);
+        // }
     
         const stakingComponent = $('staking-component');
         stakingComponent.attr('beam-value', res.user.beams_locked);
