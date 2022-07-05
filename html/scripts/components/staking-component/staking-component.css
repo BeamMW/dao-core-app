@@ -16,7 +16,7 @@
 }
 
 .staking-content-empty {
-    padding: 50px 0;
+    padding: 89.5px 0;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -260,7 +260,7 @@
 
 .staking__separator {
     height: 1px;
-    margin: 20px 0;
+    margin: 55px 0;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.1);
 }
