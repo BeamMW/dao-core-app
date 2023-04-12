@@ -1,0 +1,43 @@
+@media only screen and (max-width: 768px) {
+    .container__main{
+        flex-direction: column;
+    }
+    governance-component{
+        width: 100%;
+    }
+    .container__sub{
+        width: 100%;
+        margin: 20px 0;
+    }
+    .popup .popup__content{
+        margin-top: 50px;
+    }
+    .container__content__vesting{
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+    .container__content__info{
+        width: 100%;
+    }
+    .container__content__info__stats{
+        margin-left: 0;
+    }
+    .container__content{
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .popup .popup__content.popup-key{
+        width: 300px;
+    }
+    .popup-key-value{
+        width: 250px;
+    }
+    .web .container, .mobile-deposit{
+        padding: 10px 10px 0 10px;
+    }
+}

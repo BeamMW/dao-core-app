@@ -1,6 +1,7 @@
 .popup .popup__content.popup-key {
     padding: 50px 30px;
-    width: 460px;
+    max-width: 460px;
+    width: 100%;
     border-radius: 10px;
     background-color: #00446c;
     display: flex;
