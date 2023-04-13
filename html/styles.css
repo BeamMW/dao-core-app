@@ -9,6 +9,7 @@
 @import './scripts/components/withdraw-popup-component/withdraw-popup-component.css';
 @import './scripts/components/info-popup-component/info-popup-component.css';
 
+
 /* plugin area start  */
 
 .background {
@@ -572,4 +573,10 @@ html {
 #gov-content {
     display: flex;
     flex-direction: column;
+}
+.m-deposit-area, .m-calc-area{
+    border-radius: 10px;
+}
+.mobile-deposit{
+    padding: 0 5%;
 }
