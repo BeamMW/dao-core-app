@@ -25,7 +25,7 @@ class StakingComponent extends HTMLElement {
     const TEMPLATE = 
       `<div class="staking">
           <div class="staking__header">
-            <div class="container__header">STAKING</div>
+            <div class="container__header">STAKING (NO LONGER ACTIVE)</div>
             <div class="staking__header__info">
               <div class="info-tvl">
                 <div class="info-title">Total value locked</div>
@@ -97,19 +97,19 @@ class StakingComponent extends HTMLElement {
                 </div>
               </div>
           </div>
-          <div class="staking-content-empty" id="staking-component-empty">
-              <div class="staking-empty__text">Deposit your BEAM and get BEAMX</div>
-              <div>
-                  <button class="staking-empty__deposit-button ui-button" id="empty-deposit">
-                      <span class="ui-button__inner-wrapper">
-                          <div class="ui-button__icon">
-                              <img src="./icons/icon-send-blue.svg"/>
-                          </div>
-                          <span class="ui-button__text">deposit</span>
-                      </span>
-                  </button>
-              </div>
-          </div>
+<!--          <div class="staking-content-empty" id="staking-component-empty">-->
+<!--              <div class="staking-empty__text">Deposit your BEAM and get BEAMX</div>-->
+<!--              <div>-->
+<!--                  <button class="staking-empty__deposit-button ui-button" id="empty-deposit">-->
+<!--                      <span class="ui-button__inner-wrapper">-->
+<!--                          <div class="ui-button__icon">-->
+<!--                              <img src="./icons/icon-send-blue.svg"/>-->
+<!--                          </div>-->
+<!--                          <span class="ui-button__text">deposit</span>-->
+<!--                      </span>-->
+<!--                  </button>-->
+<!--              </div>-->
+<!--          </div>-->
       </div>`;
 
       return this.componentParams.loaded > 0
@@ -118,7 +118,7 @@ class StakingComponent extends HTMLElement {
   }
 
   beamxAreaCheck() {
-    if (this.componentParams.beamx > 0) { 
+    if (this.componentParams.beamx > 0) {
       $('#staking-farmed-claim').show();
       $('#staking-farmed-empty').hide();
     } else {
@@ -128,7 +128,7 @@ class StakingComponent extends HTMLElement {
   }
 
   beamComponentCheck() {
-    if (this.componentParams.beam > 0 || this.componentParams.beamx > 0) { 
+    if (this.componentParams.beam > 0 || this.componentParams.beamx > 0) {
       $('#staking-component-elem').show();
       $('#staking-component-empty').hide();
       $('#my-weekly').show();
@@ -175,7 +175,7 @@ class StakingComponent extends HTMLElement {
           detail: {
             type: 'deposit-mobile-open',
           }
-        });  
+        });
       } else {
         event = new CustomEvent("global-event", {
           detail: {
@@ -220,7 +220,7 @@ class StakingComponent extends HTMLElement {
   connectedCallback() {
     this.render();
   }
-  
+
   triggerCalcYeild() {
     let event = new CustomEvent("global-event", {
       detail: {
@@ -263,15 +263,15 @@ class StakingComponent extends HTMLElement {
       $('#beam-total-value-rate').text(Utils.getRateStr(this.componentParams.beamTotalLockedStr, this.componentParams.rate));
     } else if (name === 'yeild') {
       const yeild= Big(newValue).div(consts.GLOBAL_CONSTS.GROTHS_IN_BEAM);
-          
-      this.componentParams.yeildStr = (parseFloat(yeild) > 0 
-          ? Utils.numberWithCommas(Utils.formateValue(yeild)) 
+
+      this.componentParams.yeildStr = (parseFloat(yeild) > 0
+          ? Utils.numberWithCommas(Utils.formateValue(yeild))
           : '0') + ' BEAMX';
       $('#staking-weekly-yeild').text(this.componentParams.yeildStr);
     }
   }
 
-  
+
   static get observedAttributes() {
     return ['beam-value', 'beamx-value', 'loaded', 'rate', 'beam_total_locked', 'yeild'];
   }
